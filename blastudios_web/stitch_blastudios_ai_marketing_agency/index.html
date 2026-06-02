@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Blastudios | Agencia de Marketing Digital con IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#301400",
+                        "on-secondary-container": "#b4b5b5",
+                        "surface-bright": "#39393c",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#b9c5f2",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "surface-container-lowest": "#0e0e11",
+                        "on-surface": "#e4e2e5",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary": "#f4ba95",
+                        "on-secondary": "#2f3131",
+                        "background": "#222228",
+                        "surface-dim": "#222228",
+                        "on-primary-fixed": "#0b1a3d",
+                        "on-surface-variant": "#c6c6cf",
+                        "secondary-container": "#454747",
+                        "on-tertiary-container": "#ab7a58",
+                        "surface": "#222228",
+                        "tertiary-fixed": "#ffdcc6",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container-high": "#2a2a2d",
+                        "primary-fixed-dim": "#b9c5f2",
+                        "tertiary-container": "#321500",
+                        "outline": "#8f9099",
+                        "tertiary-fixed-dim": "#f4ba95",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#4a280c",
+                        "on-primary": "#222f53",
+                        "outline-variant": "#45464e",
+                        "inverse-on-surface": "#303033",
+                        "surface-container-low": "#1b1b1e",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#39456b",
+                        "surface-variant": "#343437",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-tertiary-fixed-variant": "#653d20",
+                        "surface-container": "#1f1f22",
+                        "surface-container-highest": "#343437",
+                        "inverse-primary": "#515d84",
+                        "on-error-container": "#ffdad6",
+                        "secondary": "#c6c6c7",
+                        "inverse-surface": "#e4e2e5",
+                        "on-background": "#e4e2e5",
+                        "on-primary-container": "#7784ad",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "primary-container": "#0d1b3e",
+                        "primary": "#b9c5f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "section-gap": "120px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "button": ["Inter"],
+                        "h1": ["Space Grotesk"],
+                        "h4": ["Space Grotesk"],
+                        "h2": ["Space Grotesk"],
+                        "h3": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "button": ["16px", { "lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "h1": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h4": ["24px", { "lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "h2": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "h3": ["32px", { "lineHeight": "1.3", "letterSpacing": "0em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(13, 27, 62, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 226, 226, 0.1);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(185, 197, 242, 0.3);
+        }
+        /* Loader */
+        #bs-loader {
+            position: fixed; inset: 0; z-index: 99999;
+            background: #222228;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+        }
+        #bs-loader-bar-track {
+            width: 160px; height: 2px; background: rgba(185,197,242,0.1); border-radius: 2px; overflow: hidden;
+        }
+        #bs-loader-bar {
+            height: 100%; width: 0%; background: #2563EB; border-radius: 2px;
+        }
+        /* Cursor glow */
+        #cursor-glow {
+            position: fixed; width: 380px; height: 380px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 65%);
+            pointer-events: none; z-index: 9990;
+            transform: translate(-50%,-50%);
+            transition: opacity 0.3s;
+        }
+        /* Reveal base state */
+        .bs-reveal { opacity: 0; transform: translateY(48px); }
+        .bs-reveal-left { opacity: 0; transform: translateX(-48px); }
+        .bs-reveal-right { opacity: 0; transform: translateX(48px); }
+        /* Word split */
+        .word-outer { display: inline-block; overflow: hidden; vertical-align: bottom; }
+        .word-inner { display: inline-block; }
+        /* Hero gradient pulse */
+        @keyframes gradientPulse {
+            0%,100% { opacity: 0.18; }
+            50% { opacity: 0.32; }
+        }
+        .hero-gradient-pulse { animation: gradientPulse 5s ease-in-out infinite; }
+        /* Floating orbs */
+        @keyframes floatOrb {
+            0%,100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-24px) scale(1.04); }
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; animation: floatOrb 8s ease-in-out infinite; }
+        /* Parallax image containers */
+        .parallax-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .parallax-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 130%;
+            top: -15%;
+            object-fit: cover;
+            object-position: center;
+            will-change: transform;
+            transform-origin: center;
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-primary">
+
+<!-- Loader -->
+<div id="bs-loader">
+  <svg viewBox="0 0 110 110" width="72" height="72" id="bs-loader-logo" style="opacity:0;">
+    <circle cx="55" cy="55" r="55" fill="#0D1F3C"/>
+    <rect x="33" y="18" width="13" height="62" rx="6.5" fill="white"/>
+    <circle cx="64" cy="74" r="20" fill="white"/>
+    <circle cx="64" cy="74" r="11" fill="#0D1F3C"/>
+  </svg>
+  <div id="bs-loader-bar-track"><div id="bs-loader-bar"></div></div>
+</div>
+
+<!-- Cursor glow -->
+<div id="cursor-glow"></div>
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md dark:bg-background/80 border-b border-outline-variant/10 shadow-sm dark:shadow-[0_4px_20px_rgba(13,27,62,0.15)]">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop h-20 w-full max-w-container-max mx-auto">
+<div class="flex items-center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 110" height="48">
+  <rect x="5" y="5" width="100" height="100" rx="20" fill="#2563EB"/>
+  <rect x="30" y="17" width="12" height="76" rx="6" fill="white"/>
+  <circle cx="61" cy="76" r="19" fill="white"/>
+  <circle cx="61" cy="76" r="10" fill="#2563EB"/>
+  <text x="125" y="78" font-family="system-ui,-apple-system,Helvetica Neue,Arial,sans-serif" font-size="58" font-weight="800" fill="white" letter-spacing="-2">bla<tspan font-weight="300">studios</tspan></text>
+  <text x="127" y="100" font-family="system-ui,-apple-system,Helvetica Neue,Arial,sans-serif" font-size="13" font-weight="500" fill="#2563EB" letter-spacing="4">DIGITAL MARKETING AGENCY</text>
+</svg>
+</div>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-button text-button text-primary dark:text-primary hover:text-primary transition-colors duration-200" href="#">Inicio</a>
+<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#quienes">Nosotros</a>
+<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#servicios">Servicios</a>
+<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#proceso">Proceso</a>
+<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#contacto">Contacto</a>
+</nav>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary dark:text-primary hover:text-primary transition-colors duration-200 Active: opacity-80 scale-95 transition-all">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+</div>
+</header>
+<!-- NavigationDrawer (Mobile Hidden by default, showing structure for completeness) -->
+<aside class="hidden fixed right-0 top-0 h-full z-[60] p-6 bg-surface-container-high dark:bg-surface-container-high rounded-l-xl w-80 shadow-2xl">
+<div class="flex flex-col h-full">
+<div class="mb-8">
+<span class="font-h3 text-h3 font-bold text-primary">Blastudios AI</span>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 p-4 bg-primary-container text-on-primary-container rounded-lg font-bold font-body-md text-body-md Active: scale-98 transition-transform" href="#">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Inicio
+                </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant rounded-lg font-body-md text-body-md hover:bg-surface-variant/50 transition-all" href="#servicios">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>
+                    Servicios
+                </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant rounded-lg font-body-md text-body-md hover:bg-surface-variant/50 transition-all" href="#proceso">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    Proceso
+                </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant rounded-lg font-body-md text-body-md hover:bg-surface-variant/50 transition-all" href="#casos">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Casos de Éxito
+                </a>
+<a class="flex items-center gap-4 p-4 text-on-surface-variant hover:bg-surface-variant rounded-lg font-body-md text-body-md hover:bg-surface-variant/50 transition-all" href="#contacto">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Contacto
+                </a>
+</nav>
+</div>
+</aside>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-surface-container-lowest">
+<!-- Orbs -->
+<div class="orb" style="width:500px;height:500px;background:rgba(37,99,235,0.12);top:-100px;right:-100px;animation-delay:0s;"></div>
+<div class="orb" style="width:350px;height:350px;background:rgba(185,197,242,0.07);bottom:50px;left:-80px;animation-delay:3s;"></div>
+<!-- Grid -->
+<div class="absolute inset-0 opacity-20 hero-gradient-pulse" style="background-image: radial-gradient(#b9c5f2 1px, transparent 1px); background-size: 32px 32px;"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-primary-container/20 to-surface-container-lowest pointer-events-none"></div>
+<div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center flex flex-col items-center gap-8">
+<div id="hero-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-primary/30" style="opacity:0;">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary tracking-widest">INNOVACIÓN AI DE ALTO RENDIMIENTO</span>
+</div>
+<h1 id="hero-title" class="font-h1 text-h1 md:text-[80px] leading-tight text-on-surface text-glow max-w-4xl mx-auto" style="opacity:0;">
+                    Haz crecer tu negocio con el poder de la <span class="text-primary">IA</span>
+</h1>
+<p id="hero-sub" class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto" style="opacity:0;">
+                    Somos Blastudios. Diseño web, campañas digitales y automatizaciones con Inteligencia Artificial para empresas que quieren liderar el futuro.
+                </p>
+<div id="hero-btns" class="flex flex-col sm:flex-row items-center gap-4 mt-4 w-full sm:w-auto" style="opacity:0;">
+<a class="w-full sm:w-auto px-8 py-4 bg-primary text-on-primary font-button text-button rounded-lg hover:shadow-[0_0_20px_rgba(185,197,242,0.4)] transition-all duration-300 text-center" href="#contacto">
+                        Empieza hoy
+                    </a>
+<a class="w-full sm:w-auto px-8 py-4 border border-primary text-primary font-button text-button rounded-lg hover:bg-primary/10 transition-all duration-300 text-center" href="#servicios">
+                        Ver servicios
+                    </a>
+</div>
+</div>
+</section>
+<!-- Quiénes Somos Section -->
+<section id="quienes" class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto">
+
+  <!-- Main grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-20">
+
+    <!-- Logo + persona -->
+    <div class="flex flex-col items-center md:items-start gap-8">
+      <!-- Logo circular -->
+      <div class="relative">
+        <svg viewBox="0 0 110 110" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="55" cy="55" r="55" fill="#0D1F3C"/>
+          <rect x="33" y="18" width="13" height="62" rx="6.5" fill="white"/>
+          <circle cx="64" cy="74" r="20" fill="white"/>
+          <circle cx="64" cy="74" r="11" fill="#0D1F3C"/>
+        </svg>
+        <span style="position:absolute;bottom:8px;right:8px;width:16px;height:16px;border-radius:50%;background:#22c55e;border:2px solid #0e0e11;display:block;"></span>
+      </div>
+
+      <!-- Nombre + rol -->
+      <div>
+        <h3 class="font-h3 text-h3 text-on-surface font-bold leading-tight">Bautista<br>López Albino</h3>
+        <p class="text-primary font-body-md text-body-md font-semibold mt-1">Fundador · blastudios</p>
+        <div class="w-10 h-0.5 bg-primary mt-3"></div>
+      </div>
+
+      <!-- Pills de datos -->
+      <div class="flex flex-wrap gap-3">
+        <span class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-outline-variant/20 font-body-sm text-body-sm text-on-surface-variant">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Argentino en España
+        </span>
+        <span class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-outline-variant/20 font-body-sm text-body-sm text-on-surface-variant">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          17 años
+        </span>
+        <span class="flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-outline-variant/20 font-body-sm text-body-sm text-on-surface-variant">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          100% digital
+        </span>
+      </div>
+
+      <!-- Quote -->
+      <blockquote class="border-l-2 border-primary pl-5 text-on-surface-variant font-body-md text-body-md italic max-w-sm">
+        "Construí este proyecto con seriedad, no con excusas. Cada cliente merece resultados reales."
+      </blockquote>
+    </div>
+
+    <!-- Texto principal -->
+    <div class="flex flex-col gap-6">
+      <h2 class="font-h2 text-h2 text-on-surface leading-tight">
+        Detrás de <span class="text-primary">blastudios</span> hay una persona real.
+      </h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">Joven, comprometido y enfocado en resultados. No somos una gran corporación — somos un equipo ágil que trabaja cada proyecto como si fuera el nuestro.</p>
+
+      <div class="flex flex-col gap-3 mt-2">
+        <div class="glass-panel px-6 py-4 rounded-xl flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+          <span class="font-body-md text-body-md text-on-surface font-semibold">Presencia digital real</span>
+        </div>
+        <div class="glass-panel px-6 py-4 rounded-xl flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+          <span class="font-body-md text-body-md text-on-surface font-semibold">Marketing que funciona</span>
+        </div>
+        <div class="glass-panel px-6 py-4 rounded-xl flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+          <span class="font-body-md text-body-md text-on-surface font-semibold">Automatización inteligente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fotos strip quienes somos -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 mb-4">
+    <div class="parallax-container rounded-xl" style="height:180px;">
+      <img class="parallax-img" src="../../Fotos/quienes-somos-01.jpg" alt="" loading="lazy">
+    </div>
+    <div class="parallax-container rounded-xl" style="height:180px;">
+      <img class="parallax-img" src="../../Fotos/quienes-somos-02.jpg" alt="" loading="lazy">
+    </div>
+    <div class="parallax-container rounded-xl" style="height:180px;">
+      <img class="parallax-img" src="../../Fotos/quienes-somos-03.jpg" alt="" loading="lazy">
+    </div>
+    <div class="parallax-container rounded-xl" style="height:180px;">
+      <img class="parallax-img" src="../../Fotos/quienes-somos-04.jpg" alt="" loading="lazy">
+    </div>
+  </div>
+
+  <!-- Misión -->
+  <div class="border-t border-outline-variant/10 pt-16">
+    <div class="text-center mb-12">
+      <h3 class="font-h2 text-h2 text-on-surface">Llevar tu negocio al <span class="text-primary">mundo digital.</span></h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="glass-panel p-6 rounded-xl">
+        <span class="text-primary font-h3 text-h3 font-bold">01</span>
+        <h4 class="font-h4 text-h4 text-on-surface mt-2 mb-1">Presencia online</h4>
+        <p class="font-body-md text-body-md text-on-surface-variant">Que te encuentren antes que a tu competencia</p>
+      </div>
+      <div class="glass-panel p-6 rounded-xl">
+        <span class="text-primary font-h3 text-h3 font-bold">02</span>
+        <h4 class="font-h4 text-h4 text-on-surface mt-2 mb-1">Marketing con estrategia</h4>
+        <p class="font-body-md text-body-md text-on-surface-variant">Contenido y campañas que generan clientes reales</p>
+      </div>
+      <div class="glass-panel p-6 rounded-xl">
+        <span class="text-primary font-h3 text-h3 font-bold">03</span>
+        <h4 class="font-h4 text-h4 text-on-surface mt-2 mb-1">Automatización 24/7</h4>
+        <p class="font-body-md text-body-md text-on-surface-variant">Tu negocio trabajando incluso cuando no estás</p>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <p class="font-body-lg text-body-lg text-on-surface-variant">No es edad, es <span class="text-primary font-semibold">actitud.</span></p>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">No es suerte, es <span class="text-primary font-semibold">sistema.</span></p>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- Services Section -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-[#F8FAFC] dark:bg-surface-container-low text-on-background" id="servicios">
+<div class="max-w-container-max mx-auto">
+<div class="mb-16 text-center md:text-left">
+<h2 class="font-h2 text-h2 text-on-surface mb-4">Nuestros Servicios</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Soluciones integrales impulsadas por tecnología de última generación para escalar tu negocio.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Service Card 1 -->
+<div class="glass-panel p-8 rounded-xl hover:-translate-y-2 transition-transform duration-300 group">
+<div class="w-14 h-14 rounded-lg bg-primary-container flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-3">Diseño de Páginas Web</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Experiencias digitales optimizadas para conversión, con arquitecturas robustas y estéticas premium.</p>
+</div>
+<!-- Service Card 2 -->
+<div class="glass-panel p-8 rounded-xl hover:-translate-y-2 transition-transform duration-300 group">
+<div class="w-14 h-14 rounded-lg bg-primary-container flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-3">Campañas Digitales para Empresas</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Estrategias de adquisición basadas en datos y segmentación predictiva para maximizar el ROI.</p>
+</div>
+<!-- Service Card 3 -->
+<div class="glass-panel p-8 rounded-xl hover:-translate-y-2 transition-transform duration-300 group">
+<div class="w-14 h-14 rounded-lg bg-primary-container flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="18" x2="15" y2="18"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-3">Crecimiento con Inteligencia Artificial</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Implementación de modelos de IA para analizar tendencias, optimizar procesos y escalar operaciones.</p>
+</div>
+<!-- Service Card 4 -->
+<div class="glass-panel p-8 rounded-xl hover:-translate-y-2 transition-transform duration-300 group">
+<div class="w-14 h-14 rounded-lg bg-primary-container flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><circle cx="8" cy="16" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1" fill="currentColor" stroke="none"/><path d="M8 13h8"/></svg>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-3">Automatizaciones con IA</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Sistemas autónomos que reducen la carga operativa y mejoran la eficiencia en atención y ventas.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Parallax Full-Width Banner -->
+<div id="parallax-banner" class="relative overflow-hidden" style="height:320px;" data-md-height="480px">
+  <img id="parallax-banner-img"
+       src="../../Fotos/stories-como-01.jpg"
+       alt="Blastudios en acción"
+       style="position:absolute;inset:0;width:100%;height:130%;top:-15%;object-fit:cover;will-change:transform;transform-origin:center;">
+  <div class="absolute inset-0 z-10" style="background:linear-gradient(to bottom, rgba(14,14,17,0.35) 0%, rgba(14,14,17,0.15) 50%, rgba(14,14,17,0.65) 100%);"></div>
+  <div class="absolute inset-0 flex items-center justify-center z-20 px-6 text-center">
+    <p class="font-h1 text-white text-glow" style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,5vw,56px);font-weight:700;line-height:1.15;letter-spacing:-0.02em;">
+      Donde la <span style="color:#b9c5f2;">tecnología</span><br>se convierte en resultados.
+    </p>
+  </div>
+</div>
+
+<!-- Why Blastudios -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background">
+<div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="font-h2 text-h2 text-on-surface mb-8">Por qué elegir Blastudios</h2>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<div class="mt-1 w-6 h-6 rounded-full bg-primary/20 border border-primary flex items-center justify-center flex-shrink-0">
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+</div>
+<div>
+<h4 class="font-h4 text-h4 text-on-surface">Tecnología de vanguardia</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Utilizamos los últimos frameworks y modelos de lenguaje para mantenerte un paso adelante.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="mt-1 w-6 h-6 rounded-full bg-primary/20 border border-primary flex items-center justify-center flex-shrink-0">
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+</div>
+<div>
+<h4 class="font-h4 text-h4 text-on-surface">Resultados medibles</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Dashboards transparentes y analíticas en tiempo real para que veas el impacto exacto.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="mt-1 w-6 h-6 rounded-full bg-primary/20 border border-primary flex items-center justify-center flex-shrink-0">
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+</div>
+<div>
+<h4 class="font-h4 text-h4 text-on-surface">Soluciones a medida</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">No hay plantillas. Diseñamos ecosistemas digitales adaptados a tus objetivos empresariales.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="relative h-[400px] w-full rounded-2xl overflow-hidden" style="background:#090d18;">
+  <!-- Canvas 3D Neural Network -->
+  <canvas id="neural-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+  <!-- HUD overlay decorations -->
+  <div style="position:absolute;inset:0;pointer-events:none;z-index:5;">
+    <div style="position:absolute;top:14px;left:14px;width:28px;height:28px;border-top:1.5px solid rgba(185,197,242,0.45);border-left:1.5px solid rgba(185,197,242,0.45);border-radius:2px 0 0 0;"></div>
+    <div style="position:absolute;top:14px;right:14px;width:28px;height:28px;border-top:1.5px solid rgba(185,197,242,0.45);border-right:1.5px solid rgba(185,197,242,0.45);border-radius:0 2px 0 0;"></div>
+    <div style="position:absolute;bottom:14px;left:14px;width:28px;height:28px;border-bottom:1.5px solid rgba(185,197,242,0.45);border-left:1.5px solid rgba(185,197,242,0.45);border-radius:0 0 0 2px;"></div>
+    <div style="position:absolute;bottom:14px;right:14px;width:28px;height:28px;border-bottom:1.5px solid rgba(185,197,242,0.45);border-right:1.5px solid rgba(185,197,242,0.45);border-radius:0 0 2px 0;"></div>
+    <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.18em;color:rgba(185,197,242,0.35);">AI · NEURAL NETWORK</div>
+    <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.18em;color:rgba(185,197,242,0.3);">BLASTUDIOS · LIVE</div>
+    <div style="position:absolute;top:50%;left:14px;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:rgba(37,99,235,0.8);box-shadow:0 0 6px rgba(37,99,235,1);animation:pulse 2s infinite;"></div>
+    <div style="position:absolute;top:50%;right:14px;transform:translateY(-50%);font-family:'Inter',sans-serif;font-size:8px;color:rgba(185,197,242,0.3);letter-spacing:0.1em;">●&nbsp;ONLINE</div>
+  </div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container-low" id="proceso">
+<div class="max-w-container-max mx-auto">
+<h2 class="font-h2 text-h2 text-center text-on-surface mb-16">Cómo trabajamos</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+<!-- Connecting Line -->
+<div class="hidden md:block absolute top-[40px] left-[16%] right-[16%] h-[1px] bg-outline-variant/30 z-0"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="w-20 h-20 rounded-full bg-surface-container-highest border border-primary/30 flex items-center justify-center mb-6 text-primary font-h3 text-h3 shadow-[0_0_15px_rgba(185,197,242,0.1)]">1</div>
+<h4 class="font-h4 text-h4 text-on-surface mb-2">Nos contactas</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Agendamos una llamada de descubrimiento para entender tus desafíos.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center text-center mt-8 md:mt-0">
+<div class="w-20 h-20 rounded-full bg-surface-container-highest border border-primary/30 flex items-center justify-center mb-6 text-primary font-h3 text-h3 shadow-[0_0_15px_rgba(185,197,242,0.1)]">2</div>
+<h4 class="font-h4 text-h4 text-on-surface mb-2">Analizamos tu negocio</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Realizamos una auditoría profunda y proponemos una arquitectura AI.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center text-center mt-8 md:mt-0">
+<div class="w-20 h-20 rounded-full bg-primary text-on-primary flex items-center justify-center mb-6 font-h3 text-h3 shadow-[0_0_20px_rgba(185,197,242,0.3)]">3</div>
+<h4 class="font-h4 text-h4 text-on-surface mb-2">Implementamos y crecemos</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Desplegamos las soluciones y optimizamos continuamente los resultados.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Showcase Section -->
+<section id="showcase" class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background">
+  <div class="max-w-container-max mx-auto">
+    <div class="text-center mb-16">
+      <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-4">PORTFOLIO</span>
+      <h2 class="font-h2 text-h2 text-on-surface">Nuestros <span class="text-primary">proyectos</span></h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-xl mx-auto">Contenido, campañas y experiencias digitales que generan impacto real.</p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+      <div class="parallax-container rounded-xl" style="height:200px;">
+        <img class="parallax-img" src="../../Fotos/carrousel-slide-01.jpg" alt="" loading="lazy">
+      </div>
+      <div class="parallax-container rounded-xl" style="height:200px;">
+        <img class="parallax-img" src="../../Fotos/carrousel-slide-02.jpg" alt="" loading="lazy">
+      </div>
+      <div class="parallax-container rounded-xl col-span-2 md:col-span-1" style="height:200px;">
+        <img class="parallax-img" src="../../Fotos/carrousel-slide-03.jpg" alt="" loading="lazy">
+      </div>
+      <div class="parallax-container rounded-xl col-span-2 md:col-span-1" style="height:200px;">
+        <img class="parallax-img" src="../../Fotos/carrousel-slide-04.jpg" alt="" loading="lazy">
+      </div>
+      <div class="parallax-container rounded-xl" style="height:200px;">
+        <img class="parallax-img" src="../../Fotos/carrousel-slide-05.jpg" alt="" loading="lazy">
+      </div>
+      <div class="parallax-container rounded-xl" style="height:200px;">
+        <img class="parallax-img" src="../../Fotos/carrousel-slide-06.jpg" alt="" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container-lowest border-t border-outline-variant/10" id="contacto">
+<div class="max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+<div>
+<h2 class="font-h2 text-h2 text-on-surface mb-6">¿Listo para transformar tu negocio?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12">Hablemos sobre cómo la IA puede optimizar tus procesos y acelerar tu crecimiento. Déjanos un mensaje y nuestro equipo se pondrá en contacto.</p>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.68 3.45a2 2 0 0 1 1.84-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+</div>
+<span class="font-body-md text-body-md text-on-surface">648 021 435</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+</div>
+<span class="font-body-md text-body-md text-on-surface">blastudios.contact@gmail.com</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
+</div>
+<span class="font-body-md text-body-md text-on-surface">@blastudios._</span>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-2xl flex flex-col items-center justify-center gap-8 text-center min-h-[320px]">
+  <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </div>
+  <div>
+    <p class="font-h3 text-h3 text-on-surface mb-3">Escribinos directamente</p>
+    <p class="font-body-md text-body-md text-on-surface-variant">Te respondemos en menos de 24 horas.</p>
+  </div>
+  <a href="mailto:blastudios.contact@gmail.com?subject=Consulta%20desde%20blastudios.com"
+     class="inline-flex items-center gap-3 px-8 py-4 bg-primary text-on-primary font-button text-button rounded-lg hover:shadow-[0_0_20px_rgba(185,197,242,0.4)] transition-all duration-300 w-full justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    Enviar correo
+  </a>
+  <p class="font-body-sm text-body-sm text-on-surface-variant/60">blastudios.contact@gmail.com</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant/20 w-full">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-section-gap w-full max-w-container-max mx-auto gap-8 md:gap-0">
+<div class="flex items-center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 110" height="52">
+  <rect x="5" y="5" width="100" height="100" rx="20" fill="#2563EB"/>
+  <rect x="30" y="17" width="12" height="76" rx="6" fill="white"/>
+  <circle cx="61" cy="76" r="19" fill="white"/>
+  <circle cx="61" cy="76" r="10" fill="#2563EB"/>
+  <text x="125" y="78" font-family="system-ui,-apple-system,Helvetica Neue,Arial,sans-serif" font-size="58" font-weight="800" fill="white" letter-spacing="-2">bla<tspan font-weight="300">studios</tspan></text>
+  <text x="127" y="100" font-family="system-ui,-apple-system,Helvetica Neue,Arial,sans-serif" font-size="13" font-weight="500" fill="#2563EB" letter-spacing="4">DIGITAL MARKETING AGENCY</text>
+</svg>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-body-sm text-body-sm text-on-secondary-container hover:text-primary transition-colors Active: opacity-70" href="#">Privacidad</a>
+<a class="font-body-sm text-body-sm text-on-secondary-container hover:text-primary transition-colors Active: opacity-70" href="#">Términos</a>
+<a class="font-body-sm text-body-sm text-on-secondary-container hover:text-primary transition-colors Active: opacity-70" href="#servicios">Servicios AI</a>
+<a class="font-body-sm text-body-sm text-on-secondary-container hover:text-primary transition-colors Active: opacity-70" href="#contacto">Contacto</a>
+</nav>
+<div class="flex flex-col items-center md:items-end gap-4">
+<a class="text-on-secondary-container hover:text-primary transition-colors" href="#">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+</a>
+<p class="font-body-sm text-body-sm text-on-secondary-container">© 2024 Blastudios. Innovación AI de Alto Rendimiento.</p>
+</div>
+</div>
+</footer>
+
+<!-- FAB -->
+<button onclick="openContactPopup()" style="position:fixed;bottom:32px;right:32px;z-index:9999;width:56px;height:56px;border-radius:50%;background:#2563EB;color:white;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,99,235,0.55);transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<!-- Contact Popup -->
+<div id="contact-popup" onclick="if(event.target===this)closeContactPopup()" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:#1f1f22;border:1px solid rgba(185,197,242,0.15);border-radius:20px;padding:36px;width:340px;max-width:90vw;font-family:system-ui,-apple-system,sans-serif;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+    <button onclick="closeContactPopup()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#8f9099;cursor:pointer;padding:4px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="margin-bottom:24px;">
+      <p style="color:#8f9099;font-size:12px;font-weight:600;letter-spacing:0.1em;margin:0 0 6px;">CONTACTO DIRECTO</p>
+      <h3 style="color:#e4e2e5;font-size:22px;font-weight:700;margin:0;">¿Hablamos?</h3>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <a href="https://wa.me/34648021435?text=Hola%2C%20me%20interesa%20saber%20m%C3%A1s%20sobre%20sus%20servicios." target="_blank" style="display:flex;align-items:center;gap:14px;background:#25D366;color:white;padding:16px 20px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;box-shadow:0 4px 16px rgba(37,211,102,0.3);transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(37,211,102,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(37,211,102,0.3)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <div>
+          <div style="font-size:15px;font-weight:700;">WhatsApp</div>
+          <div style="font-size:12px;opacity:0.85;font-weight:400;">648 021 435</div>
+        </div>
+      </a>
+      <a href="tel:+34648021435" style="display:flex;align-items:center;gap:14px;background:#0D1F3C;color:white;padding:16px 20px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:600;border:1px solid rgba(185,197,242,0.2);box-shadow:0 4px 16px rgba(13,31,60,0.4);transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(13,31,60,0.6)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(13,31,60,0.4)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.68 3.45a2 2 0 0 1 1.84-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <div>
+          <div style="font-size:15px;font-weight:700;">Llamar</div>
+          <div style="font-size:12px;opacity:0.7;font-weight:400;">648 021 435</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── Cursor glow ── */
+const glow = document.getElementById('cursor-glow');
+document.addEventListener('mousemove', e => {
+  gsap.to(glow, { x: e.clientX, y: e.clientY, duration: 0.6, ease: 'power2.out' });
+});
+
+/* ── Loader ── */
+const loaderEl  = document.getElementById('bs-loader');
+const loaderBar = document.getElementById('bs-loader-bar');
+const loaderLogo = document.getElementById('bs-loader-logo');
+
+gsap.fromTo(loaderLogo, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)', delay: 0.1 });
+
+let prog = 0;
+function tick() {
+  prog += Math.random() * 18 + 6;
+  if (prog > 100) prog = 100;
+  gsap.to(loaderBar, { width: prog + '%', duration: 0.15, ease: 'none' });
+  if (prog < 100) setTimeout(tick, 110); else setTimeout(exitLoader, 250);
+}
+setTimeout(tick, 350);
+
+function exitLoader() {
+  gsap.to(loaderEl, {
+    opacity: 0, scale: 1.03, duration: 0.65, ease: 'power2.inOut',
+    onComplete: () => { loaderEl.style.display = 'none'; animateHero(); }
+  });
+}
+
+/* ── Hero ── */
+function animateHero() {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  tl.to('#hero-badge',  { opacity: 1, duration: 0.6 }, 0)
+    .from('#hero-badge', { y: -24, duration: 0.6 }, 0)
+    .to('#hero-title',  { opacity: 1, duration: 0.85 }, 0.25)
+    .from('#hero-title', { y: 56, duration: 0.85 }, 0.25)
+    .to('#hero-sub',    { opacity: 1, duration: 0.7 }, 0.55)
+    .from('#hero-sub',  { y: 36, duration: 0.7 }, 0.55)
+    .to('#hero-btns',   { opacity: 1, duration: 0.6 }, 0.8)
+    .from('#hero-btns', { y: 28, duration: 0.6 }, 0.8);
+}
+
+/* ── Scroll reveals ── */
+// Quiénes somos
+gsap.fromTo('#quienes .grid > div:first-child',
+  { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out',
+    scrollTrigger: { trigger: '#quienes .grid', start: 'top 85%', once: true } });
+gsap.fromTo('#quienes .grid > div:last-child',
+  { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.12,
+    scrollTrigger: { trigger: '#quienes .grid', start: 'top 85%', once: true } });
+
+// Service cards stagger
+gsap.fromTo('#servicios .glass-panel',
+  { opacity: 0, y: 60, scale: 0.96 },
+  { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.14, ease: 'power3.out',
+    scrollTrigger: { trigger: '#servicios .grid', start: 'top 85%', once: true } });
+
+// Why section list items
+document.querySelectorAll('#servicios + section li').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.65, delay: i * 0.15, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+});
+
+// Proceso steps
+gsap.fromTo('#proceso .grid > div',
+  { opacity: 0, y: 50 },
+  { opacity: 1, y: 0, duration: 0.7, stagger: 0.18, ease: 'back.out(1.4)',
+    scrollTrigger: { trigger: '#proceso .grid', start: 'top 85%', once: true } });
+
+// Mission cards
+gsap.fromTo('#quienes .border-t .grid > div',
+  { opacity: 0, y: 44 },
+  { opacity: 1, y: 0, duration: 0.65, stagger: 0.13, ease: 'power3.out',
+    scrollTrigger: { trigger: '#quienes .border-t', start: 'top 85%', once: true } });
+
+// Contact
+gsap.fromTo('#contacto .grid > div:first-child',
+  { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#contacto .grid', start: 'top 82%', once: true } });
+gsap.fromTo('#contacto .glass-panel',
+  { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out',
+    scrollTrigger: { trigger: '#contacto .grid', start: 'top 82%', once: true } });
+
+/* ── Nav shadow on scroll ── */
+ScrollTrigger.create({
+  start: 'top -60',
+  onUpdate: self => {
+    document.querySelector('header').style.boxShadow =
+      self.progress > 0 ? '0 4px 32px rgba(13,27,62,0.4)' : '';
+  }
+});
+
+function openContactPopup() {
+  const p = document.getElementById('contact-popup');
+  p.style.display = 'flex';
+  requestAnimationFrame(() => { p.style.opacity = '1'; });
+}
+function closeContactPopup() {
+  document.getElementById('contact-popup').style.display = 'none';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeContactPopup(); });
+
+// ── EmailJS config ──────────────────────────────
+
+/* ── Parallax: images expand smoothly on scroll ── */
+gsap.utils.toArray('.parallax-container').forEach(container => {
+    const img = container.querySelector('img');
+    if (!img) return;
+
+    // Expansion effect: image scales from 1.0 → 1.12 as it enters viewport
+    gsap.fromTo(img,
+        { scale: 1.0 },
+        {
+            scale: 1.12,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: container,
+                start: 'top bottom',
+                end: 'center center',
+                scrub: 1.5
+            }
+        }
+    );
+
+    // Reveal: container fades in and rises from below on entry
+    gsap.fromTo(container,
+        { opacity: 0, y: 48 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: container,
+                start: 'top 90%',
+                once: true
+            }
+        }
+    );
+});
+
+/* ── Full-width banner parallax ── */
+const bannerImg = document.getElementById('parallax-banner-img');
+if (bannerImg) {
+    gsap.fromTo(bannerImg,
+        { yPercent: -8 },
+        {
+            yPercent: 8,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#parallax-banner',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.5
+            }
+        }
+    );
+}
+
+/* ── Hero orbs parallax on scroll ── */
+document.querySelectorAll('.orb').forEach((orb, i) => {
+    gsap.to(orb, {
+        y: i === 0 ? -200 : -110,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: 'body',
+            start: 'top top',
+            end: '+=1000',
+            scrub: i === 0 ? 1.8 : 1.2
+        }
+    });
+});
+
+/* ── Hero grid subtle parallax ── */
+const heroGridEl = document.querySelector('.hero-gradient-pulse');
+if (heroGridEl) {
+    gsap.to(heroGridEl, {
+        yPercent: 30,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: heroGridEl.closest('section'),
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1
+        }
+    });
+}
+</script>
+
+<!-- 3D Neural Network Animation -->
+<script>
+(function () {
+  const canvas = document.getElementById('neural-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    W = canvas.width  = Math.round(rect.width);
+    H = canvas.height = Math.round(rect.height);
+  }
+  resize();
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas);
+
+  /* ── Nodes in 3D space ── */
+  const N = 72;
+  const nodes = Array.from({ length: N }, () => ({
+    ox: (Math.random() - 0.5) * 480,
+    oy: (Math.random() - 0.5) * 300,
+    oz: (Math.random() - 0.5) * 480,
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: (Math.random() - 0.5) * 0.35,
+    vz: (Math.random() - 0.5) * 0.35,
+    r:  Math.random() * 1.8 + 0.9,
+    ph: Math.random() * Math.PI * 2
+  }));
+
+  const FOV   = 360;
+  let angle   = 0;
+  let elapsed = 0;
+
+  /* ── Perspective projection ── */
+  function project(ox, oy, oz) {
+    const ca = Math.cos(angle), sa = Math.sin(angle);
+    const rx = ox * ca - oz * sa;
+    const rz = ox * sa + oz * ca + 260;          // push away from camera
+    const s  = FOV / Math.max(FOV + rz, 1);
+    return { x: rx * s + W * 0.5, y: oy * s + H * 0.5, s, z: rz };
+  }
+
+  /* ── Main draw loop ── */
+  function draw() {
+    requestAnimationFrame(draw);
+    if (!W || !H) return;
+
+    ctx.clearRect(0, 0, W, H);
+
+    /* background */
+    const bg = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, Math.max(W, H) * 0.75);
+    bg.addColorStop(0,   '#0d1b3e');
+    bg.addColorStop(0.6, '#090d18');
+    bg.addColorStop(1,   '#06080f');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    angle   += 0.0035;
+    elapsed += 0.014;
+
+    /* move nodes */
+    nodes.forEach(n => {
+      n.ox += n.vx; n.oy += n.vy; n.oz += n.vz;
+      if (Math.abs(n.ox) > 260) n.vx *= -1;
+      if (Math.abs(n.oy) > 170) n.vy *= -1;
+      if (Math.abs(n.oz) > 260) n.vz *= -1;
+    });
+
+    /* project all */
+    const pts = nodes.map(n => ({ ...project(n.ox, n.oy, n.oz), r: n.r, ph: n.ph }));
+
+    /* edges */
+    for (let i = 0; i < N - 1; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = nodes[i].ox - nodes[j].ox;
+        const dy = nodes[i].oy - nodes[j].oy;
+        const dz = nodes[i].oz - nodes[j].oz;
+        const d3 = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (d3 < 155) {
+          const alpha = (1 - d3 / 155) * 0.38 * Math.min(pts[i].s, pts[j].s) * 2.2;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(185,197,242,${alpha.toFixed(3)})`;
+          ctx.lineWidth = 0.65;
+          ctx.stroke();
+        }
+      }
+    }
+
+    /* nodes – back to front */
+    pts.slice().sort((a, b) => a.z - b.z).forEach(p => {
+      const pulse  = 1 + 0.22 * Math.sin(elapsed + p.ph);
+      const radius = Math.max(0.5, p.r * p.s * 2.2 * pulse);
+      const alpha  = Math.min(1, p.s * 1.6);
+
+      const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 5.5);
+      grd.addColorStop(0,   `rgba(37,99,235,${(alpha * 0.65).toFixed(3)})`);
+      grd.addColorStop(0.4, `rgba(185,197,242,${(alpha * 0.18).toFixed(3)})`);
+      grd.addColorStop(1,   'rgba(37,99,235,0)');
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius * 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(185,197,242,${alpha.toFixed(3)})`;
+      ctx.fill();
+    });
+
+    /* decorative rings */
+    const cx = W * 0.5, cy = H * 0.5;
+    [0.38, 0.58].forEach((f, i) => {
+      const r = Math.min(W, H) * f;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = i === 0 ? 'rgba(37,99,235,0.07)' : 'rgba(185,197,242,0.04)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    });
+
+    /* scan line */
+    const sy = cy + Math.sin(elapsed * 0.45) * H * 0.38;
+    const sg = ctx.createLinearGradient(0, sy - 18, 0, sy + 18);
+    sg.addColorStop(0,   'rgba(185,197,242,0)');
+    sg.addColorStop(0.5, 'rgba(185,197,242,0.025)');
+    sg.addColorStop(1,   'rgba(185,197,242,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, sy - 18, W, 36);
+  }
+
+  draw();
+})();
+</script>
+
+</body></html>
