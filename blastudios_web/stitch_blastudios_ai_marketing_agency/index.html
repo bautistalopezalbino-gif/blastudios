@@ -166,6 +166,19 @@
             transform-origin: center;
             display: block;
         }
+        /* 3D cursor-follow tilt */
+        .tilt-shine {
+            position: absolute; inset: 0; border-radius: inherit;
+            background: radial-gradient(circle at var(--sx,50%) var(--sy,50%), rgba(185,197,242,0.14) 0%, rgba(37,99,235,0.07) 38%, transparent 65%);
+            pointer-events: none; z-index: 20; opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        /* Icon glow pulse inside cards */
+        @keyframes iconGlow {
+            0%,100% { opacity: 0.10; }
+            50% { opacity: 0.18; }
+        }
+        .card-icon-bg { animation: iconGlow 4s ease-in-out infinite; }
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-primary">
@@ -391,6 +404,101 @@
   </div>
 
 </div>
+</section>
+
+<!-- Razones Section -->
+<section id="razones" class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background">
+  <div class="max-w-container-max mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+      <!-- Intro card -->
+      <div class="glass-panel p-8 rounded-xl flex flex-col justify-between" style="min-height:340px;">
+        <div>
+          <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-5">blastudios</span>
+          <h2 class="font-h2 text-h2 text-on-surface leading-tight">
+            Tu empresa<br>no está<br><span class="text-primary">creciendo.</span>
+          </h2>
+          <div class="w-10 h-0.5 bg-primary mt-5 mb-5"></div>
+          <p class="font-body-md text-body-md text-on-surface-variant">No es casualidad. Hay 5 razones concretas que te están frenando, y soluciones reales que podemos aplicar hoy.</p>
+        </div>
+        <a href="#contacto" class="mt-8 inline-flex items-center gap-2 text-primary font-body-md text-body-md font-semibold hover:gap-4 transition-all duration-200">
+          Hablemos
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Razón 01 -->
+      <div class="glass-panel p-8 rounded-xl relative overflow-hidden" style="min-height:340px;">
+        <div class="card-icon-bg absolute top-4 right-4 pointer-events-none">
+          <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#b9c5f2" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/><line x1="3.5" y1="3.5" x2="8.5" y2="8.5" stroke="#ef4444" stroke-width="1.2"/><line x1="8.5" y1="3.5" x2="3.5" y2="8.5" stroke="#ef4444" stroke-width="1.2"/></svg>
+        </div>
+        <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-4">RAZÓN 01 DE 05</span>
+        <h3 class="font-h3 text-h3 text-on-surface mb-3">No usas<br>tus datos.</h3>
+        <div class="w-8 h-0.5 bg-primary mb-5"></div>
+        <p class="font-label-caps text-label-caps text-primary tracking-widest mb-2">EL PROBLEMA</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Tomas decisiones "a ojo" sin basarte en información real.</p>
+        <p class="font-label-caps text-label-caps tracking-widest mb-1" style="color:rgba(185,197,242,0.5);">LO QUE HACEMOS</p>
+        <p class="font-body-md text-body-md text-on-surface font-semibold">Dashboards y analítica en tiempo real para que cada decisión genere resultados.</p>
+      </div>
+
+      <!-- Razón 02 -->
+      <div class="glass-panel p-8 rounded-xl relative overflow-hidden" style="min-height:340px;">
+        <div class="card-icon-bg absolute top-4 right-4 pointer-events-none">
+          <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#b9c5f2" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-4">RAZÓN 02 DE 05</span>
+        <h3 class="font-h3 text-h3 text-on-surface mb-3">Procesos<br>lentos y<br>manuales.</h3>
+        <div class="w-8 h-0.5 bg-primary mb-5"></div>
+        <p class="font-label-caps text-label-caps text-primary tracking-widest mb-2">EL PROBLEMA</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Pierdes tiempo en tareas repetitivas que te quitan foco del negocio.</p>
+        <p class="font-label-caps text-label-caps tracking-widest mb-1" style="color:rgba(185,197,242,0.5);">LO QUE HACEMOS</p>
+        <p class="font-body-md text-body-md text-on-surface font-semibold">Automatizaciones con IA que liberan tu tiempo y escalan sin esfuerzo.</p>
+      </div>
+
+      <!-- Razón 03 -->
+      <div class="glass-panel p-8 rounded-xl relative overflow-hidden" style="min-height:340px;">
+        <div class="card-icon-bg absolute top-4 right-4 pointer-events-none">
+          <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#b9c5f2" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2.5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/></svg>
+        </div>
+        <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-4">RAZÓN 03 DE 05</span>
+        <h3 class="font-h3 text-h3 text-on-surface mb-3">No conoces<br>a tu<br>cliente.</h3>
+        <div class="w-8 h-0.5 bg-primary mb-5"></div>
+        <p class="font-label-caps text-label-caps text-primary tracking-widest mb-2">EL PROBLEMA</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Tu mensaje es genérico y no conecta con nadie en particular.</p>
+        <p class="font-label-caps text-label-caps tracking-widest mb-1" style="color:rgba(185,197,242,0.5);">LO QUE HACEMOS</p>
+        <p class="font-body-md text-body-md text-on-surface font-semibold">Segmentación precisa para que tu mensaje llegue a quien debe llegar.</p>
+      </div>
+
+      <!-- Razón 04 -->
+      <div class="glass-panel p-8 rounded-xl relative overflow-hidden" style="min-height:340px;">
+        <div class="card-icon-bg absolute top-4 right-4 pointer-events-none">
+          <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#b9c5f2" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="15.54" y1="8.46" x2="19.07" y2="11.99"/><line x1="19.07" y1="8.46" x2="15.54" y2="11.99"/></svg>
+        </div>
+        <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-4">RAZÓN 04 DE 05</span>
+        <h3 class="font-h3 text-h3 text-on-surface mb-3">Marketing<br>sin<br>estrategia.</h3>
+        <div class="w-8 h-0.5 bg-primary mb-5"></div>
+        <p class="font-label-caps text-label-caps text-primary tracking-widest mb-2">EL PROBLEMA</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Publicar contenido sin dirección ni análisis de resultados es dinero tirado.</p>
+        <p class="font-label-caps text-label-caps tracking-widest mb-1" style="color:rgba(185,197,242,0.5);">LO QUE HACEMOS</p>
+        <p class="font-body-md text-body-md text-on-surface font-semibold">Estrategia de contenido basada en datos que convierte visitas en clientes.</p>
+      </div>
+
+      <!-- Razón 05 -->
+      <div class="glass-panel p-8 rounded-xl relative overflow-hidden" style="min-height:340px;">
+        <div class="card-icon-bg absolute top-4 right-4 pointer-events-none">
+          <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#b9c5f2" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+        </div>
+        <span class="font-label-caps text-label-caps text-primary tracking-widest block mb-4">RAZÓN 05 DE 05</span>
+        <h3 class="font-h3 text-h3 text-on-surface mb-3">Falta de<br>innovación.</h3>
+        <div class="w-8 h-0.5 bg-primary mb-5"></div>
+        <p class="font-label-caps text-label-caps text-primary tracking-widest mb-2">EL PROBLEMA</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Seguir haciendo lo mismo mientras el mercado evoluciona es quedarse atrás.</p>
+        <p class="font-label-caps text-label-caps tracking-widest mb-1" style="color:rgba(185,197,242,0.5);">LO QUE HACEMOS</p>
+        <p class="font-body-md text-body-md text-on-surface font-semibold">Implementamos soluciones innovadoras que te dan ventaja sobre la competencia.</p>
+      </div>
+
+    </div>
+  </div>
 </section>
 
 <!-- Services Section -->
@@ -744,6 +852,12 @@ gsap.fromTo('#proceso .grid > div',
   { opacity: 1, y: 0, duration: 0.7, stagger: 0.18, ease: 'back.out(1.4)',
     scrollTrigger: { trigger: '#proceso .grid', start: 'top 85%', once: true } });
 
+// Razones section cards stagger
+gsap.fromTo('#razones .glass-panel',
+  { opacity: 0, y: 60, scale: 0.95 },
+  { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.11, ease: 'power3.out',
+    scrollTrigger: { trigger: '#razones .grid', start: 'top 85%', once: true } });
+
 // Mission cards
 gsap.fromTo('#quienes .border-t .grid > div',
   { opacity: 0, y: 44 },
@@ -862,6 +976,129 @@ if (heroGridEl) {
         }
     });
 }
+</script>
+
+<!-- 3D cursor-follow animations -->
+<script>
+(function () {
+  /* ── 3D tilt with cursor-glow for all cards ── */
+  function initTilt(selector, maxDeg, sc) {
+    document.querySelectorAll(selector).forEach(function (el) {
+      // Skip tiny elements (pill list items etc.)
+      if (el.offsetHeight < 100) return;
+
+      if (window.getComputedStyle(el).position === 'static') el.style.position = 'relative';
+
+      // Remove conflicting Tailwind hover translate so GSAP owns the transform
+      el.classList.remove('hover:-translate-y-2', 'transition-transform', 'duration-300');
+
+      // Inject cursor glow overlay
+      var shine = document.createElement('div');
+      shine.className = 'tilt-shine';
+      el.appendChild(shine);
+
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        gsap.to(el, {
+          rotateX: -(y - 0.5) * maxDeg * 2,
+          rotateY:  (x - 0.5) * maxDeg * 2,
+          y: -8,
+          scale: sc,
+          ease: 'power2.out',
+          duration: 0.4,
+          transformPerspective: 900,
+          overwrite: 'auto'
+        });
+        shine.style.setProperty('--sx', (x * 100) + '%');
+        shine.style.setProperty('--sy', (y * 100) + '%');
+        shine.style.opacity = '1';
+      });
+
+      el.addEventListener('mouseleave', function () {
+        gsap.to(el, {
+          rotateX: 0, rotateY: 0, y: 0, scale: 1,
+          ease: 'power3.out', duration: 0.65,
+          overwrite: 'auto'
+        });
+        shine.style.opacity = '0';
+      });
+    });
+  }
+
+  // Apply to all glass-panel cards
+  initTilt('.glass-panel', 8, 1.03);
+
+  /* ── Proceso steps 3D ── */
+  document.querySelectorAll('#proceso .grid > div').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width;
+      var y = (e.clientY - r.top) / r.height;
+      gsap.to(el, {
+        rotateX: -(y - 0.5) * 16,
+        rotateY:  (x - 0.5) * 16,
+        scale: 1.05,
+        ease: 'power2.out', duration: 0.35,
+        transformPerspective: 700, overwrite: 'auto'
+      });
+      // Glow on the step circle
+      var circle = el.querySelector('.w-20.h-20');
+      if (circle) gsap.to(circle, { boxShadow: '0 0 28px rgba(185,197,242,0.35)', duration: 0.3, overwrite: 'auto' });
+    });
+    el.addEventListener('mouseleave', function () {
+      gsap.to(el, {
+        rotateX: 0, rotateY: 0, scale: 1,
+        ease: 'power3.out', duration: 0.6, overwrite: 'auto'
+      });
+      var circle = el.querySelector('.w-20.h-20');
+      if (circle) gsap.to(circle, { boxShadow: '', duration: 0.5, overwrite: 'auto' });
+    });
+  });
+
+  /* ── Banner text cursor depth parallax ── */
+  var banner = document.getElementById('parallax-banner');
+  var bannerTxt = banner && banner.querySelector('.absolute.inset-0.flex');
+  if (banner && bannerTxt) {
+    bannerTxt.style.transition = 'transform 0.14s ease-out';
+    banner.addEventListener('mousemove', function (e) {
+      var r = banner.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      bannerTxt.style.transform = 'translate3d(' + (x * -30) + 'px,' + (y * -20) + 'px,0)';
+    });
+    banner.addEventListener('mouseleave', function () {
+      bannerTxt.style.transition = 'transform 0.85s ease-out';
+      bannerTxt.style.transform = '';
+      setTimeout(function () { bannerTxt.style.transition = 'transform 0.14s ease-out'; }, 850);
+    });
+  }
+
+  /* ── Hero section: card in center follows cursor depth ── */
+  var heroSec = document.querySelector('section.relative.min-h-screen');
+  if (heroSec) {
+    var heroBadge = document.getElementById('hero-badge');
+    var heroTitle = document.getElementById('hero-title');
+    var heroSub   = document.getElementById('hero-sub');
+    var heroBtns  = document.getElementById('hero-btns');
+    heroSec.addEventListener('mousemove', function (e) {
+      var r = heroSec.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      // Layered parallax: each element at a different depth
+      if (heroBadge) gsap.to(heroBadge, { x: x * -14, y: y * -10, duration: 1.2, ease: 'power2.out', overwrite: 'auto' });
+      if (heroTitle) gsap.to(heroTitle, { x: x * -22, y: y * -16, duration: 1.4, ease: 'power2.out', overwrite: 'auto' });
+      if (heroSub)   gsap.to(heroSub,   { x: x * -10, y: y * -7,  duration: 1.6, ease: 'power2.out', overwrite: 'auto' });
+      if (heroBtns)  gsap.to(heroBtns,  { x: x * -6,  y: y * -4,  duration: 1.8, ease: 'power2.out', overwrite: 'auto' });
+    });
+    heroSec.addEventListener('mouseleave', function () {
+      [heroBadge, heroTitle, heroSub, heroBtns].forEach(function (el) {
+        if (el) gsap.to(el, { x: 0, y: 0, duration: 1.2, ease: 'power3.out', overwrite: 'auto' });
+      });
+    });
+  }
+})();
 </script>
 
 <!-- 3D Neural Network Animation -->
