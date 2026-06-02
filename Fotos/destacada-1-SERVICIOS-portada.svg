@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- DESTACADA 1 — SERVICIOS                -->
+  <!-- blastudios · Digital Marketing Agency  -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Fondo -->
+  <rect width="1080" height="1080" fill="#0D1F3C"/>
+
+  <!-- Círculo decorativo exterior (zona segura highlight) -->
+  <circle cx="540" cy="540" r="460" fill="none" stroke="#2563EB" stroke-width="3" opacity="0.35"/>
+  <circle cx="540" cy="540" r="430" fill="none" stroke="#2563EB" stroke-width="1" opacity="0.2"/>
+
+  <!-- Icono: Rayo (Servicios) -->
+  <polygon
+    points="560,240 480,540 550,540 490,840 630,500 550,500 620,240"
+    fill="#2563EB"/>
+  <!-- Brillo interior del rayo -->
+  <polygon
+    points="555,270 500,510 555,510 505,760 600,510 545,510 600,270"
+    fill="white" opacity="0.25"/>
+
+  <!-- Etiqueta de Destacada -->
+  <text
+    x="540" y="900"
+    font-family="system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="90"
+    font-weight="800"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="6">SERVICIOS</text>
+
+  <!-- Línea decorativa bajo el texto -->
+  <rect x="340" y="920" width="400" height="4" rx="2" fill="#2563EB"/>
+
+  <!-- Logo bla icon pequeño -->
+  <rect x="502" y="960" width="10" height="54" rx="5" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="14" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="7" fill="#0D1F3C"/>
+
+</svg>

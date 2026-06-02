@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- DESTACADA 4 — PROCESO                  -->
+  <!-- blastudios · Digital Marketing Agency  -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Fondo -->
+  <rect width="1080" height="1080" fill="#0D1F3C"/>
+
+  <!-- Círculo decorativo -->
+  <circle cx="540" cy="540" r="460" fill="none" stroke="#2563EB" stroke-width="3" opacity="0.35"/>
+  <circle cx="540" cy="540" r="430" fill="none" stroke="#2563EB" stroke-width="1" opacity="0.2"/>
+
+  <!-- Pasos del proceso: 3 círculos conectados verticalmente -->
+
+  <!-- Línea conectora -->
+  <line x1="540" y1="330" x2="540" y2="720" stroke="#2563EB" stroke-width="4" stroke-dasharray="12,8" opacity="0.5"/>
+
+  <!-- Paso 1: Brief -->
+  <circle cx="540" cy="310" r="62" fill="#2563EB"/>
+  <text x="540" y="318" font-family="system-ui, Arial, sans-serif" font-size="48" font-weight="800" fill="white" text-anchor="middle">1</text>
+  <text x="650" y="322" font-family="system-ui, Arial, sans-serif" font-size="34" font-weight="600" fill="white" opacity="0.9">Brief</text>
+
+  <!-- Paso 2: Estrategia -->
+  <circle cx="540" cy="510" r="62" fill="#2563EB" opacity="0.75"/>
+  <text x="540" y="518" font-family="system-ui, Arial, sans-serif" font-size="48" font-weight="800" fill="white" text-anchor="middle">2</text>
+  <text x="650" y="522" font-family="system-ui, Arial, sans-serif" font-size="34" font-weight="600" fill="white" opacity="0.9">Estrategia</text>
+
+  <!-- Paso 3: Entrega -->
+  <circle cx="540" cy="710" r="62" fill="#2563EB" opacity="0.5"/>
+  <text x="540" y="718" font-family="system-ui, Arial, sans-serif" font-size="48" font-weight="800" fill="white" text-anchor="middle">3</text>
+  <text x="650" y="722" font-family="system-ui, Arial, sans-serif" font-size="34" font-weight="600" fill="white" opacity="0.9">Entrega</text>
+
+  <!-- Flecha final hacia abajo -->
+  <polygon points="540,790 520,760 560,760" fill="#2563EB" opacity="0.6"/>
+
+  <!-- Etiqueta -->
+  <text
+    x="540" y="900"
+    font-family="system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="90"
+    font-weight="800"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="6">PROCESO</text>
+
+  <!-- Línea decorativa -->
+  <rect x="355" y="920" width="370" height="4" rx="2" fill="#2563EB"/>
+
+  <!-- Logo bla icon pequeño -->
+  <rect x="502" y="960" width="10" height="54" rx="5" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="14" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="7" fill="#0D1F3C"/>
+
+</svg>

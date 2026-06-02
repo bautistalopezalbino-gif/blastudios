@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- DESTACADA 3 — CLIENTES                 -->
+  <!-- blastudios · Digital Marketing Agency  -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Fondo -->
+  <rect width="1080" height="1080" fill="#0D1F3C"/>
+
+  <!-- Círculo decorativo -->
+  <circle cx="540" cy="540" r="460" fill="none" stroke="#2563EB" stroke-width="3" opacity="0.35"/>
+  <circle cx="540" cy="540" r="430" fill="none" stroke="#2563EB" stroke-width="1" opacity="0.2"/>
+
+  <!-- Comillas de apertura (grande) -->
+  <!-- Comilla izquierda -->
+  <circle cx="400" cy="340" r="50" fill="#2563EB"/>
+  <circle cx="460" cy="340" r="50" fill="#2563EB"/>
+  <rect x="350" y="340" width="210" height="120" rx="0" fill="#2563EB"/>
+  <rect x="395" y="410" width="55" height="80" rx="10" fill="#2563EB"/>
+
+  <!-- Comilla derecha -->
+  <circle cx="620" cy="340" r="50" fill="#2563EB" opacity="0.5"/>
+  <circle cx="680" cy="340" r="50" fill="#2563EB" opacity="0.5"/>
+  <rect x="570" y="340" width="210" height="120" fill="#2563EB" opacity="0.5"/>
+  <rect x="630" y="410" width="55" height="80" rx="10" fill="#2563EB" opacity="0.5"/>
+
+  <!-- Estrellas de valoración: 5 -->
+  <!-- Estrella 1 -->
+  <polygon points="300,580 315,560 330,580 308,595 322,595" fill="#2563EB"/>
+  <polygon points="300,580 315,555 330,580 310,596 320,596" fill="white" opacity="0.9"/>
+  <!-- Estrella 2 -->
+  <polygon points="370,580 385,555 400,580 378,596 392,596" fill="white" opacity="0.9"/>
+  <!-- Estrella 3 -->
+  <polygon points="440,580 455,555 470,580 448,596 462,596" fill="white" opacity="0.9"/>
+  <!-- Estrella 4 -->
+  <polygon points="510,580 525,555 540,580 518,596 532,596" fill="white" opacity="0.9"/>
+  <!-- Estrella 5 -->
+  <polygon points="580,580 595,555 610,580 588,596 602,596" fill="white" opacity="0.9"/>
+
+  <!-- 5 estrellas — usando path correcto -->
+  <g transform="translate(210, 530)">
+    <!-- Estrella 1 -->
+    <path d="M60,10 L65,35 L90,35 L70,50 L78,75 L60,60 L42,75 L50,50 L30,35 L55,35 Z" fill="white"/>
+    <!-- Estrella 2 -->
+    <path d="M145,10 L150,35 L175,35 L155,50 L163,75 L145,60 L127,75 L135,50 L115,35 L140,35 Z" fill="white"/>
+    <!-- Estrella 3 -->
+    <path d="M230,10 L235,35 L260,35 L240,50 L248,75 L230,60 L212,75 L220,50 L200,35 L225,35 Z" fill="white"/>
+    <!-- Estrella 4 -->
+    <path d="M315,10 L320,35 L345,35 L325,50 L333,75 L315,60 L297,75 L305,50 L285,35 L310,35 Z" fill="white"/>
+    <!-- Estrella 5 -->
+    <path d="M400,10 L405,35 L430,35 L410,50 L418,75 L400,60 L382,75 L390,50 L370,35 L395,35 Z" fill="white"/>
+  </g>
+
+  <!-- Texto reseña simulada -->
+  <text x="540" y="690"
+    font-family="system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="38" fill="white" text-anchor="middle" opacity="0.7"
+    font-style="italic">"Transformaron nuestra presencia digital"</text>
+
+  <!-- Etiqueta -->
+  <text
+    x="540" y="900"
+    font-family="system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="90"
+    font-weight="800"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="6">CLIENTES</text>
+
+  <!-- Línea decorativa -->
+  <rect x="340" y="920" width="400" height="4" rx="2" fill="#2563EB"/>
+
+  <!-- Logo bla icon pequeño -->
+  <rect x="502" y="960" width="10" height="54" rx="5" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="14" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="7" fill="#0D1F3C"/>
+
+</svg>

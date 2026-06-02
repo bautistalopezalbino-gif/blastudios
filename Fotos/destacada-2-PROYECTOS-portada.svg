@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- DESTACADA 2 — PROYECTOS                -->
+  <!-- blastudios · Digital Marketing Agency  -->
+  <!-- ═══════════════════════════════════════ -->
+
+  <!-- Fondo -->
+  <rect width="1080" height="1080" fill="#0D1F3C"/>
+
+  <!-- Círculo decorativo -->
+  <circle cx="540" cy="540" r="460" fill="none" stroke="#2563EB" stroke-width="3" opacity="0.35"/>
+  <circle cx="540" cy="540" r="430" fill="none" stroke="#2563EB" stroke-width="1" opacity="0.2"/>
+
+  <!-- Icono: Ojo / Portfolio -->
+  <!-- Ojo exterior -->
+  <ellipse cx="540" cy="490" rx="200" ry="120" fill="none" stroke="white" stroke-width="22"/>
+  <!-- Iris -->
+  <circle cx="540" cy="490" r="75" fill="#2563EB"/>
+  <!-- Pupila -->
+  <circle cx="540" cy="490" r="38" fill="#0D1F3C"/>
+  <!-- Brillo -->
+  <circle cx="565" cy="465" r="16" fill="white" opacity="0.9"/>
+  <!-- Pestañas decorativas -->
+  <line x1="540" y1="330" x2="540" y2="360" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+  <line x1="460" y1="355" x2="475" y2="380" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+  <line x1="620" y1="355" x2="605" y2="380" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+  <!-- Grid de cuadrados (portafolio) -->
+  <rect x="310" y="640" width="110" height="110" rx="14" fill="#2563EB" opacity="0.85"/>
+  <rect x="440" y="640" width="110" height="110" rx="14" fill="#2563EB" opacity="0.55"/>
+  <rect x="570" y="640" width="110" height="110" rx="14" fill="#2563EB" opacity="0.85"/>
+  <rect x="700" y="640" width="110" height="110" rx="14" fill="#2563EB" opacity="0.55"/>
+
+  <!-- Etiqueta -->
+  <text
+    x="540" y="900"
+    font-family="system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="90"
+    font-weight="800"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="6">PROYECTOS</text>
+
+  <!-- Línea decorativa -->
+  <rect x="320" y="920" width="440" height="4" rx="2" fill="#2563EB"/>
+
+  <!-- Logo bla icon pequeño -->
+  <rect x="502" y="960" width="10" height="54" rx="5" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="14" fill="white" opacity="0.6"/>
+  <circle cx="530" cy="1000" r="7" fill="#0D1F3C"/>
+
+</svg>
