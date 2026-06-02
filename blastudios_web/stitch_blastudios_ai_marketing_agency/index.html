@@ -256,14 +256,11 @@
 </aside>
 <main>
 <!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-surface-container-lowest">
-<!-- Orbs -->
-<div class="orb" style="width:500px;height:500px;background:rgba(37,99,235,0.12);top:-100px;right:-100px;animation-delay:0s;"></div>
-<div class="orb" style="width:350px;height:350px;background:rgba(185,197,242,0.07);bottom:50px;left:-80px;animation-delay:3s;"></div>
-<!-- Grid -->
-<div class="absolute inset-0 opacity-20 hero-gradient-pulse" style="background-image: radial-gradient(#b9c5f2 1px, transparent 1px); background-size: 32px 32px;"></div>
-<div class="absolute inset-0 bg-gradient-to-b from-primary-container/20 to-surface-container-lowest pointer-events-none"></div>
-<div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center flex flex-col items-center gap-8">
+<section id="hero-vanta" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+<!-- Vanta.NET canvas injected as background by JS -->
+<!-- Subtle gradient overlay so text stays readable -->
+<div class="absolute inset-0 pointer-events-none" style="z-index:1;background:linear-gradient(to bottom,rgba(9,13,24,0.15) 0%,rgba(9,13,24,0.05) 40%,rgba(9,13,24,0.45) 100%);"></div>
+<div class="relative px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center flex flex-col items-center gap-8" style="z-index:10;">
 <div id="hero-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-primary/30" style="opacity:0;">
 <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
 <span class="font-label-caps text-label-caps text-primary tracking-widest">INNOVACIÓN AI DE ALTO RENDIMIENTO</span>
@@ -449,22 +446,6 @@
 </div>
 </div>
 </section>
-<!-- 3D Interactive Banner (Vanta.NET) -->
-<div id="vanta-banner" class="relative overflow-hidden" style="height:420px;background:#090d18;">
-  <!-- Vanta 3D canvas injected by JS -->
-  <div class="absolute inset-0 pointer-events-none" style="z-index:5;background:linear-gradient(to bottom,rgba(9,13,24,0.25) 0%,transparent 25%,transparent 75%,rgba(9,13,24,0.25) 100%);"></div>
-  <!-- HUD corner brackets -->
-  <div style="position:absolute;top:18px;left:18px;width:24px;height:24px;border-top:1.5px solid rgba(185,197,242,0.3);border-left:1.5px solid rgba(185,197,242,0.3);z-index:8;pointer-events:none;"></div>
-  <div style="position:absolute;top:18px;right:18px;width:24px;height:24px;border-top:1.5px solid rgba(185,197,242,0.3);border-right:1.5px solid rgba(185,197,242,0.3);z-index:8;pointer-events:none;"></div>
-  <div style="position:absolute;bottom:18px;left:18px;width:24px;height:24px;border-bottom:1.5px solid rgba(185,197,242,0.3);border-left:1.5px solid rgba(185,197,242,0.3);z-index:8;pointer-events:none;"></div>
-  <div style="position:absolute;bottom:18px;right:18px;width:24px;height:24px;border-bottom:1.5px solid rgba(185,197,242,0.3);border-right:1.5px solid rgba(185,197,242,0.3);z-index:8;pointer-events:none;"></div>
-  <div class="absolute inset-0 flex flex-col items-center justify-center z-10 px-6 text-center" style="pointer-events:none;">
-    <p id="vanta-text" class="font-h1 text-white text-glow" style="font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,5vw,58px);font-weight:700;line-height:1.15;letter-spacing:-0.02em;">
-      Donde la <span style="color:#b9c5f2;">tecnología</span><br>se convierte en resultados.
-    </p>
-  </div>
-</div>
-
 <!-- Why Blastudios -->
 <section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background">
 <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -887,13 +868,13 @@ if (heroGridEl) {
 }
 </script>
 
-<!-- Vanta.NET 3D interactive banner -->
+<!-- Vanta.NET 3D hero background -->
 <script>
 (function () {
-  var bannerEl = document.getElementById('vanta-banner');
-  if (!bannerEl || !window.VANTA) return;
+  var heroEl = document.getElementById('hero-vanta');
+  if (!heroEl || !window.VANTA) return;
   VANTA.NET({
-    el: bannerEl,
+    el: heroEl,
     mouseControls: true,
     touchControls: true,
     gyroControls: false,
@@ -907,23 +888,6 @@ if (heroGridEl) {
     maxDistance: 23,
     spacing: 17
   });
-
-  /* Subtle text depth parallax over the 3D background */
-  var bannerTxt = document.getElementById('vanta-text');
-  if (bannerTxt) {
-    bannerTxt.style.transition = 'transform 0.14s ease-out';
-    bannerEl.addEventListener('mousemove', function (e) {
-      var r = bannerEl.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - 0.5;
-      var y = (e.clientY - r.top) / r.height - 0.5;
-      bannerTxt.style.transform = 'translate3d(' + (x * -18) + 'px,' + (y * -12) + 'px,0)';
-    });
-    bannerEl.addEventListener('mouseleave', function () {
-      bannerTxt.style.transition = 'transform 0.9s ease-out';
-      bannerTxt.style.transform = '';
-      setTimeout(function () { bannerTxt.style.transition = 'transform 0.14s ease-out'; }, 900);
-    });
-  }
 })();
 </script>
 
