@@ -179,6 +179,21 @@
             50% { opacity: 0.18; }
         }
         .card-icon-bg { animation: iconGlow 4s ease-in-out infinite; }
+        /* Nav active state */
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0; right: 0;
+            height: 2px;
+            background: #2563eb;
+            border-radius: 2px;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+        }
+        .nav-link.nav-active { color: #2563eb !important; }
+        .nav-link.nav-active::after { transform: scaleX(1); }
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-primary">
@@ -212,11 +227,11 @@
 </div>
 <!-- Desktop Nav -->
 <nav class="hidden md:flex items-center gap-8">
-<a class="font-button text-button text-primary dark:text-primary hover:text-primary transition-colors duration-200" href="#">Inicio</a>
-<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#quienes">Nosotros</a>
-<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#servicios">Servicios</a>
-<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#proceso">Proceso</a>
-<a class="font-button text-button text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200" href="#contacto">Contacto</a>
+<a class="nav-link font-button text-button text-on-surface-variant hover:text-primary transition-colors duration-200" href="#" data-section="hero-vanta">Inicio</a>
+<a class="nav-link font-button text-button text-on-surface-variant hover:text-primary transition-colors duration-200" href="#quienes" data-section="quienes">Nosotros</a>
+<a class="nav-link font-button text-button text-on-surface-variant hover:text-primary transition-colors duration-200" href="#servicios" data-section="servicios">Servicios</a>
+<a class="nav-link font-button text-button text-on-surface-variant hover:text-primary transition-colors duration-200" href="#proceso" data-section="proceso">Proceso</a>
+<a class="nav-link font-button text-button text-on-surface-variant hover:text-primary transition-colors duration-200" href="#contacto" data-section="contacto">Contacto</a>
 </nav>
 <!-- Mobile Menu Toggle -->
 <button class="md:hidden text-primary dark:text-primary hover:text-primary transition-colors duration-200 Active: opacity-80 scale-95 transition-all">
@@ -948,6 +963,49 @@ if (heroGridEl) {
       });
     });
   }
+})();
+</script>
+
+<!-- Nav scroll-spy -->
+<script>
+(function () {
+  var links = document.querySelectorAll('nav .nav-link');
+  var sectionIds = ['hero-vanta', 'quienes', 'servicios', 'proceso', 'contacto'];
+
+  function setActive(id) {
+    links.forEach(function (a) {
+      var isActive = a.dataset.section === id;
+      a.classList.toggle('nav-active', isActive);
+    });
+  }
+
+  // Click: activate immediately
+  links.forEach(function (a) {
+    a.addEventListener('click', function () {
+      setActive(a.dataset.section);
+    });
+  });
+
+  // Scroll: IntersectionObserver — whichever section covers most of the viewport wins
+  var visible = {};
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      visible[e.target.id] = e.intersectionRatio;
+    });
+    var best = null, bestRatio = -1;
+    sectionIds.forEach(function (id) {
+      if ((visible[id] || 0) > bestRatio) { bestRatio = visible[id] || 0; best = id; }
+    });
+    if (best) setActive(best);
+  }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+
+  sectionIds.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Set Inicio as default
+  setActive('hero-vanta');
 })();
 </script>
 
