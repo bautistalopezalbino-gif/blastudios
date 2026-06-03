@@ -110,6 +110,7 @@ async function main() {
       document.querySelector('.page-header') && (document.querySelector('.page-header').style.display='none');
       document.querySelector('.story-counter') && (document.querySelector('.story-counter').style.display='none');
       document.querySelector('.instructions') && (document.querySelector('.instructions').style.display='none');
+      document.querySelector('.progress-bar') && (document.querySelector('.progress-bar').style.display='none');
       document.querySelectorAll('.nav-btn').forEach(b => b.style.display='none');
       document.body.style.padding = '0';
       document.body.style.gap = '0';

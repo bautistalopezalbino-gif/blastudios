@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stories Küme × blastudios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #080c12;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 48px;
+      gap: 20px;
+    }
+
+    .page-header {
+      text-align: center;
+      color: white;
+    }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #60a5fa;
+      letter-spacing: 0.05em;
+    }
+    .page-header p {
+      font-size: 13px;
+      color: #4b5563;
+      margin-top: 6px;
+    }
+
+    /* ── Viewer ── */
+    .viewer-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .viewer {
+      position: relative;
+      width: 390px;
+      height: 693px; /* exact 9:16 */
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+      background: #0d1117;
+    }
+
+    /* ── Stories ── */
+    .story {
+      display: none;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .story.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      gap: 4px;
+      z-index: 50;
+    }
+    .prog-seg {
+      flex: 1;
+      height: 2px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.25);
+    }
+    .prog-seg.done { background: rgba(255,255,255,0.9); }
+
+    /* ── Brand badge top-right ── */
+    .brand-badge {
+      position: absolute;
+      top: 36px;
+      right: 20px;
+      z-index: 40;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+    }
+    .brand-badge em { color: #2563EB; font-style: normal; }
+
+    /* ── Nav buttons ── */
+    .nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.18); }
+
+    .story-counter {
+      font-size: 12px;
+      color: #374151;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Instructions box ── */
+    .instructions {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 18px 22px;
+      max-width: 500px;
+      width: 100%;
+      color: #9ca3af;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .instructions h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      color: #60a5fa;
+      margin-bottom: 10px;
+    }
+    .instructions strong { color: #e5e7eb; }
+    .instr-step { margin-top: 8px; }
+
+    /* ══════════════════════════════════════
+       STORY 1 — HOOK
+    ══════════════════════════════════════ */
+    .s1 {
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, #142d58 0%, #0d1f3c 50%, #070d1c 100%);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 70px 36px;
+    }
+    .s1 .eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 28px;
+    }
+    .s1 .hook-pre {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
+    .s1 .hook-main {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 54px;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .s1 .hook-post {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 8px;
+    }
+    .s1 .emojis {
+      font-size: 38px;
+      margin: 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .s1 .emojis .times {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      color: rgba(255,255,255,0.15);
+    }
+    .s1 .divider {
+      width: 36px;
+      height: 2px;
+      background: #2563EB;
+      border-radius: 2px;
+      margin: 0 auto 18px;
+    }
+    .s1 .client-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+    .s1 .client-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+    .s1 .footer-label {
+      position: absolute;
+      bottom: 36px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #2563EB;
+    }
+
+    /* ══════════════════════════════════════
+       STORY 2 — PRESENTACIÓN KÜME
+    ══════════════════════════════════════ */
+    .s2 { background: #0d1f3c; }
+    .s2 .bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .s2 .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top,
+        rgba(5,10,20,0.97) 0%,
+        rgba(5,10,20,0.6) 45%,
+        rgba(5,10,20,0.15) 100%);
+    }
+    .s2 .content {
+      position: absolute;
+      bottom: 52px;
+      left: 32px; right: 32px;
+    }
+    .s2 .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 10px;
+    }
+    .s2 .name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .s2 .type {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 6px;
+      font-weight: 400;
+    }
+    .s2 .divider {
+      width: 36px; height: 2px;
+      background: #2563EB;
+      border-radius: 2px;
+      margin: 14px 0;
+    }
+    .s2 .desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.65;
+    }
+
+    /* ══════════════════════════════════════
+       STORY 3 — EL RETO
+    ══════════════════════════════════════ */
+    .s3 {
+      background: linear-gradient(160deg, #0d1f3c 0%, #080d1a 100%);
+      justify-content: center;
+      padding: 70px 36px;
+    }
+    .s3 .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 14px;
+    }
+    .s3 .heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 24px;
+    }
+    .s3 .reto-list { margin: 0; list-style: none; }
+    .s3 .reto-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .s3 .reto-item:last-child { border-bottom: none; }
+    .s3 .x { font-size: 18px; flex-shrink: 0; }
+    .s3 .reto-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      color: rgba(255,255,255,0.65);
+    }
+    .s3 .conclusion {
+      margin-top: 28px;
+    }
+    .s3 .conc-pre {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 4px;
+    }
+    .s3 .conc-main {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.15;
+    }
+    .s3 .conc-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-style: italic;
+      color: #2563EB;
+      margin-top: 14px;
+    }
+
+    /* ══════════════════════════════════════
+       STORY 4 — WEB
+    ══════════════════════════════════════ */
+    .s4 {
+      background: linear-gradient(145deg, #0d1f3c 0%, #0a1628 100%);
+      justify-content: center;
+      padding: 70px 36px;
+    }
+    .s4 .top-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 2px;
+    }
+    .s4 .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 72px;
+      font-weight: 800;
+      color: #2563EB;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .s4 .title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      margin-top: -4px;
+      margin-bottom: 20px;
+    }
+    /* Browser mockup */
+    .mockup-browser {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .mock-bar {
+      background: rgba(255,255,255,0.06);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mock-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .mock-url-bar {
+      flex: 1;
+      height: 16px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      overflow: hidden;
+    }
+    .mock-url-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    /* ── Screenshot real: kumepasteleria.com ── */
+    .mock-viewport {
+      height: 138px;
+      overflow: hidden;
+      position: relative;
+    }
+    .mock-img-scroller {
+      /* 3 chunks apilados — scroll animado más rápido */
+      animation: webScroll 9s cubic-bezier(0.4,0,0.6,1) infinite;
+      will-change: transform;
+    }
+    .mock-img-scroller img {
+      width: 100%;
+      display: block;
+    }
+    /*
+      Cada chunk: 1440×2500px → renderizado a ≈318px ancho → alto ≈ 552px
+      Total apilado: ≈1627px | Viewport: 138px | Scrollable: ≈1489px
+      Pasos:
+        0px   → nav + hero top
+        270px → hero centro (título "El rincón…")
+        552px → ¿Quiénes somos? (inicio chunk_1)
+        810px → Tartas artesanales
+        1100px → Nuestras instalaciones
+        1380px → Últimos reels + Contacto
+    */
+    @keyframes webScroll {
+      0%    { transform: translateY(0); }
+      6%    { transform: translateY(0); }
+      14%   { transform: translateY(-270px); }
+      20%   { transform: translateY(-270px); }
+      28%   { transform: translateY(-552px); }
+      34%   { transform: translateY(-552px); }
+      42%   { transform: translateY(-810px); }
+      48%   { transform: translateY(-810px); }
+      56%   { transform: translateY(-1100px); }
+      62%   { transform: translateY(-1100px); }
+      70%   { transform: translateY(-1380px); }
+      76%   { transform: translateY(-1380px); }
+      88%   { transform: translateY(-270px); }
+      100%  { transform: translateY(0); }
+    }
+
+    /* (clases ws-* eliminadas — se usa screenshot real) */
+    .s4 .tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .s4 .tag {
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.25);
+      border-radius: 20px;
+      padding: 4px 11px;
+      font-size: 11px;
+      color: #93b4ff;
+    }
+    .badge-done {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 20px;
+      padding: 5px 13px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #86efac;
+    }
+
+    /* ══════════════════════════════════════
+       STORY 5 — BANNER
+    ══════════════════════════════════════ */
+    .s5 { background: #1a2d1a; }
+    .s5 .bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .s5 .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.72) 0%,
+        rgba(0,0,0,0.05) 38%,
+        rgba(0,0,0,0.1) 55%,
+        rgba(0,0,0,0.8) 78%,
+        rgba(0,0,0,0.95) 100%);
+    }
+    .s5 .top {
+      position: absolute;
+      top: 52px; left: 32px; right: 32px;
+    }
+    .s5 .bottom {
+      position: absolute;
+      bottom: 52px; left: 32px; right: 32px;
+    }
+    .s5 .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 2px;
+    }
+    .s5 .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 62px;
+      font-weight: 800;
+      color: #2563EB;
+      line-height: 1;
+    }
+    .s5 .title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.1;
+      margin-top: -4px;
+    }
+    .s5 .desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .s5 .desc span { color: rgba(255,255,255,0.45); }
+
+    /* ══════════════════════════════════════
+       STORY 6 — MENÚ DIGITAL
+    ══════════════════════════════════════ */
+    .s6 { background: #0d1f3c; }
+    .s6 .bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .s6 .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.75) 0%,
+        rgba(0,0,0,0.1) 35%,
+        rgba(0,0,0,0.55) 65%,
+        rgba(0,0,0,0.95) 100%);
+    }
+    .s6 .top {
+      position: absolute;
+      top: 52px; left: 32px;
+    }
+    .s6 .bottom {
+      position: absolute;
+      bottom: 52px; left: 32px; right: 32px;
+    }
+    .s6 .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 2px;
+    }
+    .s6 .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 62px;
+      font-weight: 800;
+      color: #2563EB;
+      line-height: 1;
+    }
+    .s6 .title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.1;
+      margin-top: -4px;
+    }
+    .s6 .desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .s6 .desc span { color: rgba(255,255,255,0.45); }
+
+    /* ══════════════════════════════════════
+       STORY 7 — VIDEO
+    ══════════════════════════════════════ */
+    .s7 { background: #05080f; }
+    .s7 video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .s7 .fallback {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #0d1f3c, #050a14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 1;
+    }
+    .s7 .fallback .play-icon {
+      font-size: 56px;
+      opacity: 0.5;
+    }
+    .s7 .fallback .fallback-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      padding: 0 40px;
+    }
+    .s7 .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.2) 0%,
+        transparent 50%,
+        rgba(0,0,0,0.85) 100%);
+      z-index: 2;
+    }
+    .s7 .content {
+      position: absolute;
+      bottom: 52px; left: 32px; right: 32px;
+      z-index: 3;
+    }
+    .s7 .content .caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 8px;
+    }
+    .s7 .content .sub {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .s7 .top-label {
+      position: absolute;
+      top: 52px; left: 32px;
+      z-index: 3;
+    }
+
+    /* ══════════════════════════════════════
+       STORY 8 — RESULTADOS
+    ══════════════════════════════════════ */
+    .s8 {
+      background: linear-gradient(145deg, #0d1f3c 0%, #070d1a 100%);
+      justify-content: center;
+      padding: 70px 36px;
+    }
+    .s8 .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2563EB;
+      margin-bottom: 10px;
+    }
+    .s8 .headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.15;
+    }
+    .s8 .headline .accent { color: #2563EB; }
+    .s8 .divider {
+      width: 36px; height: 2px;
+      background: #2563EB;
+      border-radius: 2px;
+      margin: 20px 0;
+    }
+    .s8 .check-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .s8 .check-item:last-child { border-bottom: none; }
+    .s8 .check-icon { font-size: 20px; flex-shrink: 0; }
+    .s8 .check-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: white;
+    }
+    .s8 .footer {
+      position: absolute;
+      bottom: 36px; left: 36px; right: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .s8 .footer .by {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.05em;
+    }
+    .s8 .footer .tags {
+      display: flex;
+      gap: 6px;
+    }
+    .s8 .footer .tag {
+      background: rgba(37,99,235,0.12);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #6b8dd6;
+    }
+
+    /* ══════════════════════════════════════
+       STORY 9 — CTA
+    ══════════════════════════════════════ */
+    .s9 {
+      background: linear-gradient(145deg, #1d4fd8 0%, #2563EB 55%, #1e40af 100%);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 70px 40px;
+    }
+    .s9 .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 24px;
+    }
+    .s9 .logo em { color: white; font-style: normal; }
+    .s9 .divider {
+      width: 32px; height: 2px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 2px;
+      margin: 0 auto 24px;
+    }
+    .s9 .question {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .s9 .divider2 {
+      width: 32px; height: 2px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+      margin: 22px auto;
+    }
+    .s9 .services {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.72);
+      line-height: 2;
+    }
+    .s9 .arrow {
+      font-size: 30px;
+      margin: 20px 0;
+    }
+    .s9 .cta-btn {
+      display: inline-block;
+      background: white;
+      color: #1d4fd8;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 14px 40px;
+      border-radius: 50px;
+      letter-spacing: 0.02em;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .s9 .footer-dm {
+      position: absolute;
+      bottom: 36px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-header">
+    <h1>Stories Küme × blastudios</h1>
+    <p>Navega con ‹ › o las teclas ← →  ·  Screenshot cada story para publicar</p>
+  </div>
+
+  <!-- Viewer -->
+  <div class="viewer-wrap">
+    <button class="nav-btn" onclick="move(-1)">‹</button>
+
+    <div class="viewer" id="viewer">
+
+      <!-- Progress bar -->
+      <div class="progress-bar" id="pb"></div>
+
+      <!-- ══ STORY 1 — HOOK ══ -->
+      <div class="story s1 active" id="s1">
+        <div class="brand-badge">bla<em>studios</em></div>
+        <p class="eyebrow">Caso de estudio · blastudios</p>
+        <p class="hook-pre">cuando una</p>
+        <h1 class="hook-main">PASTELERÍA</h1>
+        <p class="hook-post">decide darlo todo</p>
+        <div class="emojis">
+          <span>🍰</span>
+          <span class="times">×</span>
+          <span>💻</span>
+        </div>
+        <div class="divider"></div>
+        <p class="client-name">Küme Pastelería</p>
+        <p class="client-sub">Transformación digital completa</p>
+        <p class="footer-label">by blastudios · Valencia</p>
+      </div>
+
+      <!-- ══ STORY 2 — PRESENTACIÓN KÜME ══ -->
+      <div class="story s2" id="s2">
+        <img class="bg" src="WhatsApp Image 2026-06-03 at 01.15.42 (1).jpeg" alt="">
+        <div class="overlay"></div>
+        <div class="brand-badge" style="z-index:41;">bla<em>studios</em></div>
+        <div class="content">
+          <p class="label">El cliente</p>
+          <h2 class="name">KÜME</h2>
+          <p class="type">Pastelería &amp; Brunch &nbsp;·&nbsp; 📍 Valencia</p>
+          <div class="divider"></div>
+          <p class="desc">
+            Un local con identidad única que necesitaba brillar también en el mundo digital.
+          </p>
+        </div>
+      </div>
+
+      <!-- ══ STORY 3 — EL RETO ══ -->
+      <div class="story s3" id="s3">
+        <div class="brand-badge">bla<em>studios</em></div>
+        <p class="label">El punto de partida</p>
+        <h2 class="heading">¿El reto?</h2>
+        <ul class="reto-list">
+          <li class="reto-item">
+            <span class="x">❌</span>
+            <span class="reto-text">Sin página web</span>
+          </li>
+          <li class="reto-item">
+            <span class="x">❌</span>
+            <span class="reto-text">Sin menú digital</span>
+          </li>
+          <li class="reto-item">
+            <span class="x">❌</span>
+            <span class="reto-text">Sin identidad exterior</span>
+          </li>
+        </ul>
+        <div class="conclusion">
+          <p class="conc-pre">Un negocio increíble...</p>
+          <h3 class="conc-main">INVISIBLE<br>EN INTERNET.</h3>
+          <p class="conc-cta">Eso lo íbamos a cambiar &rarr;</p>
+        </div>
+      </div>
+
+      <!-- ══ STORY 4 — WEB ══ -->
+      <div class="story s4" id="s4">
+        <div class="brand-badge">bla<em>studios</em></div>
+        <p class="top-label">Entrega</p>
+        <p class="num">01</p>
+        <h2 class="title">Página web</h2>
+        <!-- Browser mockup animado -->
+        <div class="mockup-browser">
+          <!-- URL bar con kumepasteleria.com -->
+          <div class="mock-bar">
+            <div class="mock-dot" style="background:#ef4444"></div>
+            <div class="mock-dot" style="background:#f59e0b"></div>
+            <div class="mock-dot" style="background:#22c55e"></div>
+            <div class="mock-url-bar">
+              <span class="mock-url-text">🔒&nbsp;kumepasteleria.com</span>
+            </div>
+          </div>
+          <!-- Screenshots reales de kumepasteleria.com — toda la página -->
+          <div class="mock-viewport">
+            <div class="mock-img-scroller">
+              <img src="kume_chunk_0.png" alt="Küme hero">
+              <img src="kume_chunk_1.png" alt="Küme quiénes somos y tartas">
+              <img src="kume_chunk_2.png" alt="Küme instalaciones y contacto">
+            </div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag">Moderna</span>
+          <span class="tag">Rápida</span>
+          <span class="tag">Funcional</span>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:14px;">
+          Diseñada para convertir visitantes en clientes.
+        </p>
+        <span class="badge-done">✓ Entregado</span>
+      </div>
+
+      <!-- ══ STORY 5 — BANNER ══ -->
+      <div class="story s5" id="s5">
+        <img class="bg" src="WhatsApp Image 2026-06-03 at 01.15.42.jpeg" alt="">
+        <div class="overlay"></div>
+        <div class="top">
+          <p class="label">Entrega</p>
+          <p class="num">02</p>
+          <h2 class="title">Identidad<br>exterior</h2>
+        </div>
+        <div class="bottom">
+          <p class="desc">
+            El primer contacto de un cliente es lo que ve desde la calle.
+            <span>Diseñamos un banner que detiene los pasos en la acera.</span>
+          </p>
+          <span class="badge-done">✓ Entregado</span>
+        </div>
+        <div class="brand-badge" style="z-index:41;">bla<em>studios</em></div>
+      </div>
+
+      <!-- ══ STORY 6 — MENÚ DIGITAL ══ -->
+      <div class="story s6" id="s6">
+        <img class="bg" src="WhatsApp Image 2026-06-03 at 01.15.41.jpeg" alt="">
+        <div class="overlay"></div>
+        <div class="top">
+          <p class="label">Entrega</p>
+          <p class="num">03</p>
+          <h2 class="title">Menú<br>digital</h2>
+        </div>
+        <div class="bottom">
+          <p class="desc">
+            Transmitido en tiempo real dentro del local.
+            <span>Sin impresiones. Sin papel. Siempre actualizado.</span>
+          </p>
+          <span class="badge-done">✓ Entregado</span>
+        </div>
+        <div class="brand-badge" style="z-index:41;">bla<em>studios</em></div>
+      </div>
+
+      <!-- ══ STORY 7 — VIDEO ══ -->
+      <div class="story s7" id="s7">
+        <!-- Fallback shown until video loads -->
+        <div class="fallback" id="videoFallback">
+          <span class="play-icon">▶</span>
+          <p class="fallback-text">Sube este video directamente<br>a Instagram Stories:<br><br><em style="color:rgba(255,255,255,0.5);">WhatsApp Video 01.15.37.mp4</em></p>
+        </div>
+        <video autoplay muted loop playsinline
+          oncanplay="document.getElementById('videoFallback').style.display='none'"
+          onerror="this.style.display='none'">
+          <source src="WhatsApp Video 2026-06-03 at 01.15.37.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+        <div class="top-label">
+          <span class="brand-badge" style="position:static;">bla<em>studios</em></span>
+        </div>
+        <div class="content">
+          <p class="caption">Así quedó todo en funcionamiento. 🍰</p>
+          <p class="sub">blastudios · diseño + tecnología</p>
+        </div>
+      </div>
+
+      <!-- ══ STORY 8 — RESULTADOS ══ -->
+      <div class="story s8" id="s8">
+        <div class="brand-badge">bla<em>studios</em></div>
+        <p class="label">El resultado</p>
+        <h2 class="headline">
+          Küme pasó de<br>invisible a<br><span class="accent">omnipresente.</span>
+        </h2>
+        <div class="divider"></div>
+        <div class="check-item">
+          <span class="check-icon">✅</span>
+          <span class="check-text">Web moderna y funcional</span>
+        </div>
+        <div class="check-item">
+          <span class="check-icon">✅</span>
+          <span class="check-text">Banner e identidad exterior</span>
+        </div>
+        <div class="check-item">
+          <span class="check-icon">✅</span>
+          <span class="check-text">Menú digital en el local</span>
+        </div>
+        <div class="footer">
+          <span class="by">by blastudios</span>
+          <div class="tags">
+            <span class="tag">Valencia</span>
+            <span class="tag">2025</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ STORY 9 — CTA ══ -->
+      <div class="story s9" id="s9">
+        <p class="logo">bla<em>studios</em></p>
+        <div class="divider"></div>
+        <h2 class="question">
+          ¿Tu negocio<br>necesita este<br>salto digital?
+        </h2>
+        <div class="divider2"></div>
+        <p class="services">
+          Web · Identidad · Menú digital<br>
+          Branding · Redes Sociales
+        </p>
+        <p class="arrow">👇</p>
+        <span class="cta-btn">Hablemos</span>
+        <p class="footer-dm">@blastudios · DM abierto 💬</p>
+      </div>
+
+    </div><!-- end viewer -->
+
+    <button class="nav-btn" onclick="move(1)">›</button>
+  </div>
+
+  <p class="story-counter" id="counter">Story 1 de 9</p>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <h3>📸 Cómo exportar las stories</h3>
+    <p class="instr-step">
+      <strong>Captura rápida:</strong> Navega a cada story y usa
+      <strong>Snipping Tool</strong> (Windows) para capturar el visor.
+    </p>
+    <p class="instr-step">
+      <strong>Alta calidad (recomendado):</strong><br>
+      1. Abre Chrome → F12 → ícono de móvil (Toggle device toolbar)<br>
+      2. Pon dimensiones <strong>390 × 693</strong> (o 1080 × 1920 para máxima calidad)<br>
+      3. Navega a cada story → botón derecho → "Capturar screenshot"
+    </p>
+    <p class="instr-step">
+      <strong>Story 7 (video):</strong> Sube el archivo
+      <strong>WhatsApp Video 2026-06-03 at 01.15.37.mp4</strong> directamente a Instagram.
+    </p>
+  </div>
+
+  <script>
+    let cur = 1;
+    const total = 9;
+
+    function updateUI() {
+      for (let i = 1; i <= total; i++) {
+        document.getElementById('s'+i).classList.toggle('active', i === cur);
+      }
+      document.getElementById('counter').textContent = `Story ${cur} de ${total}`;
+      const pb = document.getElementById('pb');
+      pb.innerHTML = '';
+      for (let i = 1; i <= total; i++) {
+        const d = document.createElement('div');
+        d.className = 'prog-seg' + (i <= cur ? ' done' : '');
+        pb.appendChild(d);
+      }
+    }
+
+    function move(dir) {
+      cur = Math.min(total, Math.max(1, cur + dir));
+      updateUI();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
+    });
+
+    updateUI();
+  </script>
+
+</body>
+</html>
