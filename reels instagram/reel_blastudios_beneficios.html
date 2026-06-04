@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reel Blastudios – 30s</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  font-family:'Space Grotesk',sans-serif;
+}
+
+/* ── STAGE 9:16 ── */
+#stage {
+  position:relative;
+  width:390px; height:692px;
+  background:#131316;
+  overflow:hidden;
+  border-radius:28px;
+  box-shadow:0 0 80px rgba(37,99,235,.25),0 0 200px rgba(0,0,0,.8);
+}
+
+/* ── PROGRESS ── */
+#bar {
+  position:absolute;
+  top:0; left:0;
+  height:3px;
+  background:linear-gradient(90deg,#1d4ed8,#2563EB,#60a5fa);
+  width:0%;
+  z-index:100;
+  box-shadow:0 0 10px rgba(37,99,235,.9);
+  will-change:width;
+}
+
+/* ── RESTART ── */
+#restart {
+  position:absolute;
+  bottom:20px; left:50%;
+  transform:translateX(-50%);
+  z-index:200;
+  background:rgba(37,99,235,.15);
+  border:1px solid rgba(37,99,235,.4);
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  padding:8px 22px;
+  border-radius:20px;
+  cursor:pointer;
+  display:none;
+  backdrop-filter:blur(8px);
+  transition:background .2s;
+}
+#restart:hover { background:rgba(37,99,235,.35); }
+
+/* ── ORBS – siempre presentes, flotan suavemente ── */
+.orb {
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  will-change:transform;
+}
+#o1 {
+  width:300px; height:300px;
+  background:radial-gradient(circle,rgba(37,99,235,.48) 0%,transparent 70%);
+  filter:blur(70px);
+  top:-80px; left:-60px;
+  animation:fo1 9s ease-in-out infinite;
+}
+#o2 {
+  width:240px; height:240px;
+  background:radial-gradient(circle,rgba(37,99,235,.38) 0%,transparent 70%);
+  filter:blur(65px);
+  bottom:30px; right:-50px;
+  animation:fo2 11s ease-in-out infinite;
+}
+#o3 {
+  width:210px; height:210px;
+  background:radial-gradient(circle,rgba(13,31,60,.75) 0%,transparent 70%);
+  filter:blur(55px);
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  animation:fo3 13s ease-in-out infinite;
+}
+@keyframes fo1 { 0%,100%{transform:translate(0,0)}  40%{transform:translate(28px,22px)}  70%{transform:translate(-12px,38px)} }
+@keyframes fo2 { 0%,100%{transform:translate(0,0)}  50%{transform:translate(-24px,-28px)} }
+@keyframes fo3 { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-42%,-60%)} }
+
+/* ── ESCENAS ── */
+.sc {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  padding:32px 26px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .52s ease;
+  will-change:opacity;
+  z-index:0;
+}
+.sc.in  { opacity:1; pointer-events:auto; z-index:1; }
+.sc.out { opacity:0; z-index:0; }
+
+/* ── GLASS ── */
+.glass {
+  background:rgba(13,31,60,.42);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(37,99,235,.2);
+  border-radius:20px;
+  padding:20px 22px;
+  width:100%;
+}
+
+/* ── ANIMABLES GENÉRICOS ── */
+.tag {
+  font-family:'Inter',sans-serif;
+  font-size:11px; font-weight:600;
+  letter-spacing:.12em;
+  color:#2563EB;
+  text-transform:uppercase;
+  margin-bottom:9px;
+  opacity:0; transform:translateY(7px);
+  transition:opacity .28s ease, transform .28s ease;
+  will-change:opacity,transform;
+}
+.tag.s { opacity:1; transform:translateY(0); }
+
+.hl {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; color:#F8FAFC;
+  line-height:1.1; letter-spacing:-.02em;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .32s ease, transform .32s ease;
+  will-change:opacity,transform;
+}
+.hl.s { opacity:1; transform:translateY(0); }
+
+.sb {
+  font-family:'Inter',sans-serif;
+  font-size:13.5px; color:rgba(248,250,252,.62);
+  line-height:1.5; margin-top:8px;
+  opacity:0; transform:translateY(9px);
+  transition:opacity .3s ease, transform .3s ease;
+  will-change:opacity,transform;
+}
+.sb.s { opacity:1; transform:translateY(0); }
+
+.accent { color:#2563EB; }
+
+/* ────────────────────────────────
+   ESCENA 1 — HOOK
+──────────────────────────────── */
+#s1 { text-align:center; }
+
+.hook-box {
+  opacity:0; transform:translateY(18px) scale(.94);
+  transition:opacity .48s ease, transform .48s cubic-bezier(.34,1.15,.64,1);
+  will-change:opacity,transform;
+}
+.hook-box.s { opacity:1; transform:translateY(0) scale(1); }
+
+.hook-q {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:27px; font-weight:800;
+  color:#F8FAFC;
+  line-height:1.2; letter-spacing:-.02em;
+  text-shadow:0 0 38px rgba(37,99,235,.35);
+}
+.hook-a {
+  display:block;
+  font-size:22px; font-weight:700;
+  color:#2563EB;
+  margin-top:10px; min-height:28px;
+  text-shadow:0 0 18px rgba(37,99,235,.55);
+}
+.caret {
+  display:inline-block;
+  width:2px; height:.9em;
+  background:#2563EB;
+  vertical-align:middle;
+  margin-left:2px;
+  animation:blink .55s steps(1) infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ────────────────────────────────
+   ESCENA 2 — WEB
+──────────────────────────────── */
+.brow {
+  background:rgba(13,31,60,.55);
+  border:1px solid rgba(37,99,235,.22);
+  border-radius:14px; overflow:hidden;
+  width:100%; margin-bottom:16px;
+  opacity:0; transform:translateY(22px);
+  transition:opacity .38s ease, transform .38s cubic-bezier(.34,1.15,.64,1);
+  will-change:opacity,transform;
+}
+.brow.s { opacity:1; transform:translateY(0); }
+
+.brow-bar {
+  background:rgba(37,99,235,.1);
+  padding:7px 12px;
+  display:flex; align-items:center; gap:5px;
+  border-bottom:1px solid rgba(37,99,235,.16);
+}
+.dot { width:8px; height:8px; border-radius:50%; }
+.dr{background:#ff5f57} .dy{background:#febc2e} .dg{background:#28c840}
+.brow-url {
+  flex:1; margin-left:8px;
+  background:rgba(255,255,255,.06);
+  border-radius:5px; padding:3px 10px;
+  font-family:'Inter',sans-serif;
+  font-size:10px; color:rgba(255,255,255,.42);
+}
+.brow-body { padding:14px; }
+.brow-hero {
+  width:100%; height:48px;
+  background:linear-gradient(135deg,rgba(37,99,235,.26),rgba(13,31,60,.55));
+  border-radius:8px; margin-bottom:9px;
+  display:flex; align-items:center; justify-content:center;
+}
+.brow-hero span {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px; font-weight:700;
+  color:rgba(255,255,255,.68); letter-spacing:.07em;
+}
+.brow-rows { display:flex; flex-direction:column; gap:5px; }
+.br { height:7px; background:rgba(255,255,255,.08); border-radius:4px; position:relative; overflow:hidden; }
+.br::after {
+  content:''; position:absolute; top:0; left:-100%;
+  width:55%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(37,99,235,.28),transparent);
+  animation:shim 2.8s ease-in-out infinite;
+}
+@keyframes shim { 0%{left:-100%} 100%{left:200%} }
+.w80{width:80%} .w60{width:60%} .w45{width:45%}
+
+/* ────────────────────────────────
+   ESCENA 3 — MÉTRICAS
+──────────────────────────────── */
+.metric-row {
+  display:flex; align-items:flex-end; gap:6px;
+  margin-bottom:10px;
+}
+.big-num {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:68px; font-weight:800;
+  color:#2563EB; line-height:1;
+  text-shadow:0 0 30px rgba(37,99,235,.42);
+  opacity:0; transform:translateY(14px);
+  transition:opacity .38s ease, transform .38s ease;
+  will-change:opacity,transform;
+}
+.big-num.s { opacity:1; transform:translateY(0); }
+.big-suf {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:30px; font-weight:700;
+  color:#F8FAFC; padding-bottom:8px;
+}
+.chart {
+  width:100%; display:flex; align-items:flex-end; gap:7px;
+  height:66px; margin-bottom:12px;
+  opacity:0; transition:opacity .35s ease;
+  will-change:opacity;
+}
+.chart.s { opacity:1; }
+.bcol {
+  flex:1; border-radius:5px 5px 0 0;
+  background:rgba(37,99,235,.17);
+  transform-origin:bottom; transform:scaleY(0);
+  transition:transform .48s cubic-bezier(.34,1.35,.64,1);
+  will-change:transform;
+}
+.bcol.g { transform:scaleY(1); }
+.bcol.hi {
+  background:linear-gradient(180deg,#3b82f6,#1d4ed8);
+  box-shadow:0 0 14px rgba(37,99,235,.5);
+}
+
+/* ────────────────────────────────
+   ESCENA 4 — IA 24/7
+──────────────────────────────── */
+.chat {
+  width:100%; display:flex; flex-direction:column;
+  gap:9px; margin-bottom:14px;
+}
+.bbl {
+  max-width:78%; padding:9px 13px;
+  border-radius:15px;
+  font-family:'Inter',sans-serif;
+  font-size:12px; line-height:1.44;
+  opacity:0; transform:translateY(7px) scale(.96);
+  transition:opacity .32s ease, transform .32s cubic-bezier(.34,1.25,.64,1);
+  will-change:opacity,transform;
+}
+.bbl.s { opacity:1; transform:translateY(0) scale(1); }
+.bbl-u {
+  background:rgba(37,99,235,.17);
+  border:1px solid rgba(37,99,235,.26);
+  color:rgba(255,255,255,.85);
+  align-self:flex-end;
+  border-bottom-right-radius:4px;
+}
+.bbl-b {
+  background:rgba(13,31,60,.62);
+  border:1px solid rgba(37,99,235,.16);
+  color:rgba(255,255,255,.85);
+  align-self:flex-start;
+  border-bottom-left-radius:4px;
+}
+.bbl-st {
+  align-self:flex-start;
+  display:flex; align-items:center; gap:6px;
+  font-family:'Inter',sans-serif;
+  font-size:11px; color:#22C55E;
+  opacity:0; transition:opacity .3s ease;
+}
+.bbl-st.s { opacity:1; }
+.sdot {
+  width:7px; height:7px; border-radius:50%;
+  background:#22C55E;
+  animation:pg 1.6s ease-in-out infinite;
+}
+@keyframes pg {
+  0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}
+  50%    {box-shadow:0 0 0 5px rgba(34,197,94,0)}
+}
+.badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(37,99,235,.13);
+  border:1px solid rgba(37,99,235,.3);
+  border-radius:40px; padding:7px 18px;
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:15px; color:#F8FAFC;
+  margin-bottom:14px;
+  opacity:0; transform:translateY(-6px) scale(.92);
+  transition:opacity .38s ease, transform .38s cubic-bezier(.34,1.3,.64,1);
+  will-change:opacity,transform;
+}
+.badge.s { opacity:1; transform:translateY(0) scale(1); }
+
+/* ────────────────────────────────
+   ESCENA 5 — LOGO
+──────────────────────────────── */
+.logo-wrap {
+  display:flex; flex-direction:column;
+  align-items:center; gap:14px;
+  opacity:0; transform:scale(.86) translateY(16px);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.34,1.15,.64,1);
+  will-change:opacity,transform;
+}
+.logo-wrap.s { opacity:1; transform:scale(1) translateY(0); }
+.logo-icon {
+  width:76px; height:76px;
+  background:#2563EB; border-radius:18px;
+  position:relative;
+  animation:lpulse 3s ease-in-out infinite;
+}
+@keyframes lpulse {
+  0%,100%{box-shadow:0 0 48px rgba(37,99,235,.6),0 0 88px rgba(37,99,235,.18)}
+  50%    {box-shadow:0 0 68px rgba(37,99,235,.85),0 0 120px rgba(37,99,235,.28)}
+}
+.lrect {
+  width:8px; height:26px; background:#fff;
+  border-radius:3px; position:absolute;
+  left:20px; top:50%; transform:translateY(-50%);
+}
+.lcircle {
+  width:22px; height:22px; background:#fff;
+  border-radius:50%; position:absolute;
+  right:18px; top:50%; transform:translateY(-50%);
+  display:flex; align-items:center; justify-content:center;
+}
+.ldot { width:8px; height:8px; background:#2563EB; border-radius:50%; }
+.logo-name {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:30px; color:#F8FAFC; letter-spacing:-.02em;
+}
+.logo-name .bla { font-weight:800; }
+.logo-name .stu { font-weight:300; }
+.logo-ag {
+  font-family:'Inter',sans-serif;
+  font-size:11px; font-weight:600;
+  letter-spacing:.16em; color:#2563EB;
+  text-transform:uppercase;
+}
+.logo-tl {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:21px; font-weight:700;
+  color:#F8FAFC; text-align:center;
+  margin-top:8px;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .42s ease, transform .42s ease;
+  text-shadow:0 0 22px rgba(37,99,235,.35);
+  will-change:opacity,transform;
+}
+.logo-tl.s { opacity:1; transform:translateY(0); }
+
+/* ────────────────────────────────
+   ESCENA 6 — CTA
+──────────────────────────────── */
+#s6 { text-align:center; }
+.cta-ttl {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:23px; font-weight:700;
+  color:#F8FAFC; line-height:1.2;
+  margin-bottom:22px;
+  opacity:0; transform:translateY(13px);
+  transition:opacity .36s ease, transform .36s ease;
+  will-change:opacity,transform;
+}
+.cta-ttl.s { opacity:1; transform:translateY(0); }
+.cta-btn {
+  display:inline-flex; align-items:center; gap:10px;
+  background:#2563EB; color:#fff;
+  font-family:'Inter',sans-serif;
+  font-weight:600; font-size:15px;
+  padding:14px 30px; border-radius:40px;
+  text-decoration:none;
+  opacity:0; transform:scale(.88);
+  transition:opacity .38s ease, transform .38s cubic-bezier(.34,1.25,.64,1);
+  will-change:opacity,transform;
+}
+.cta-btn.s {
+  opacity:1; transform:scale(1);
+  animation:pbtn 2.2s ease-in-out infinite .5s;
+}
+@keyframes pbtn {
+  0%,100%{box-shadow:0 0 20px rgba(37,99,235,.4),0 4px 18px rgba(0,0,0,.3)}
+  50%    {box-shadow:0 0 38px rgba(37,99,235,.75),0 4px 26px rgba(37,99,235,.22)}
+}
+.cta-hdl {
+  font-family:'Inter',sans-serif;
+  font-size:12px; color:rgba(255,255,255,.38);
+  margin-top:14px;
+  opacity:0; transition:opacity .35s ease;
+}
+.cta-hdl.s { opacity:1; }
+
+/* ── GLITCH ── */
+@keyframes gfx {
+  0%,100%{clip-path:inset(0 0 92% 0);transform:translateX(-5px)}
+  25%    {clip-path:inset(28% 0 48% 0);transform:translateX(5px)}
+  50%    {clip-path:inset(58% 0 18% 0);transform:translateX(-3px)}
+  75%    {clip-path:inset(78% 0 6% 0); transform:translateX(3px)}
+}
+.gwrap { position:relative; }
+.gcopy {
+  position:absolute; inset:0;
+  color:#2563EB; opacity:0; pointer-events:none;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:27px; font-weight:800;
+  line-height:1.2; text-align:center;
+}
+.gon .gcopy { opacity:.5; animation:gfx .13s steps(1) 4; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bar"></div>
+
+  <!-- Orbs ambientales -->
+  <div class="orb" id="o1"></div>
+  <div class="orb" id="o2"></div>
+  <div class="orb" id="o3"></div>
+
+  <!-- ── ESCENA 1: HOOK ── -->
+  <div class="sc" id="s1">
+    <div class="gwrap" id="gw">
+      <div class="hook-box" id="hbox">
+        <div class="hook-q">¿Tu negocio<br>trabaja para ti...</div>
+        <span class="hook-a" id="ha"></span>
+      </div>
+      <div class="gcopy" aria-hidden="true">¿Tu negocio<br>trabaja para ti...</div>
+    </div>
+  </div>
+
+  <!-- ── ESCENA 2: WEB ── -->
+  <div class="sc" id="s2">
+    <div class="brow" id="brow">
+      <div class="brow-bar">
+        <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+        <div class="brow-url">blastudios.com.ar</div>
+      </div>
+      <div class="brow-body">
+        <div class="brow-hero"><span>TU MARCA · ONLINE · AHORA</span></div>
+        <div class="brow-rows">
+          <div class="br w80"></div>
+          <div class="br w60"></div>
+          <div class="br w45"></div>
+        </div>
+      </div>
+    </div>
+    <div class="glass">
+      <div class="tag" id="s2t">Diseño Web</div>
+      <div class="hl" id="s2h" style="font-size:24px">WEB QUE <span class="accent">CONVIERTE</span></div>
+      <div class="sb" id="s2s">Diseñamos experiencias que transforman visitas en clientes reales.</div>
+    </div>
+  </div>
+
+  <!-- ── ESCENA 3: MÉTRICAS ── -->
+  <div class="sc" id="s3">
+    <div class="glass" style="margin-bottom:14px">
+      <div class="tag" id="s3t">Campañas Digitales</div>
+      <div class="metric-row">
+        <div class="big-num" id="cnt">0</div>
+        <div class="big-suf">%</div>
+      </div>
+      <div class="hl" id="s3h" style="font-size:22px">RESULTADOS <span class="accent">MEDIBLES</span></div>
+      <div class="sb" id="s3s">Campañas basadas en datos reales — sin malgastar tu presupuesto.</div>
+    </div>
+    <div class="chart" id="cht">
+      <div class="bcol" id="b1" style="height:28%"></div>
+      <div class="bcol" id="b2" style="height:44%"></div>
+      <div class="bcol" id="b3" style="height:60%"></div>
+      <div class="bcol" id="b4" style="height:76%"></div>
+      <div class="bcol hi" id="b5" style="height:100%"></div>
+    </div>
+  </div>
+
+  <!-- ── ESCENA 4: IA 24/7 ── -->
+  <div class="sc" id="s4">
+    <div class="badge" id="bdg">🕐 &nbsp;24/7 ACTIVO</div>
+    <div class="chat">
+      <div class="bbl bbl-u" id="cb1">Hola, quiero información sobre vuestros servicios</div>
+      <div class="bbl bbl-b" id="cb2">¡Hola! Soy el asistente de <strong>Blastudios</strong>. Te cuento todo 🤖</div>
+      <div class="bbl-st" id="cb3"><div class="sdot"></div> IA respondiendo en segundos</div>
+    </div>
+    <div class="glass">
+      <div class="tag" id="s4t">Automatización con IA</div>
+      <div class="hl" id="s4h" style="font-size:20px">TU NEGOCIO <span class="accent">NUNCA PARA</span></div>
+      <div class="sb" id="s4s">Sistemas autónomos que atienden, venden y fidelizan mientras tú descansas.</div>
+    </div>
+  </div>
+
+  <!-- ── ESCENA 5: LOGO ── -->
+  <div class="sc" id="s5">
+    <div class="logo-wrap" id="lwrap">
+      <div class="logo-icon">
+        <div class="lrect"></div>
+        <div class="lcircle"><div class="ldot"></div></div>
+      </div>
+      <div class="logo-name"><span class="bla">bla</span><span class="stu">studios</span></div>
+      <div class="logo-ag">Digital Marketing Agency</div>
+    </div>
+    <div class="logo-tl" id="ltl">"No es suerte.<br>Es sistema."</div>
+  </div>
+
+  <!-- ── ESCENA 6: CTA ── -->
+  <div class="sc" id="s6">
+    <div style="width:100%;text-align:center">
+      <div class="tag s" style="display:block;text-align:center;margin-bottom:14px">Empieza hoy</div>
+      <div class="cta-ttl" id="ctttl">¿Listo para que tu negocio crezca con IA?</div>
+      <a class="cta-btn" id="ctbtn" href="#">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Escríbenos ahora
+      </a>
+      <div class="cta-hdl" id="cthdl">@blastudios · linktr.ee/blastudios</div>
+    </div>
+  </div>
+
+  <button id="restart" onclick="init()">↺ Reproducir de nuevo</button>
+</div>
+
+<script>
+const TOTAL = 30000;
+const SCENES = [
+  { id:'s1', from:0,     to:3000  },
+  { id:'s2', from:3000,  to:9000  },
+  { id:'s3', from:9000,  to:15000 },
+  { id:'s4', from:15000, to:21000 },
+  { id:'s5', from:21000, to:26000 },
+  { id:'s6', from:26000, to:30000 },
+];
+
+let curIdx = -1;
+let timers = [];
+let cntInt = null;
+let typInt = null;
+let rafId  = null;
+let t0     = null;
+
+const el = id => document.getElementById(id);
+const show = id => { const e = el(id); if(e) e.classList.add('s'); };
+const showEl = e => { if(e) e.classList.add('s'); };
+
+function sched(ms, fn) { timers.push(setTimeout(fn, ms)); }
+
+function killTimers() {
+  timers.forEach(clearTimeout); timers = [];
+  if(cntInt) { clearInterval(cntInt); cntInt = null; }
+  if(typInt)  { clearInterval(typInt);  typInt = null; }
+}
+
+/* Reset individual escena (después del crossfade) */
+function resetSc(idx) {
+  if(idx < 0) return;
+  const sc = el(SCENES[idx].id);
+  sc.querySelectorAll('.s').forEach(x => { if(!x.matches('.tag.s[style]')) x.classList.remove('s'); });
+  sc.querySelectorAll('.g').forEach(x => x.classList.remove('g'));
+  if(idx === 0) { el('hbox').classList.remove('s'); el('ha').innerHTML = ''; }
+  if(idx === 2) { const c = el('cnt'); c.classList.remove('s'); c.textContent = '0'; }
+  if(idx === 0) { el('gw').classList.remove('gon'); }
+}
+
+/* ── Reproductores por escena ── */
+function p0() {
+  sched(70,  () => el('hbox').classList.add('s'));
+  sched(380, () => {
+    el('gw').classList.add('gon');
+    sched(230, () => el('gw').classList.remove('gon'));
+  });
+  const txt = '...¿o tú para él?';
+  let i = 0;
+  sched(700, () => {
+    const ha = el('ha');
+    const cur = document.createElement('span');
+    cur.className = 'caret'; ha.appendChild(cur);
+    typInt = setInterval(() => {
+      if(i < txt.length) { cur.before(document.createTextNode(txt[i++])); }
+      else { clearInterval(typInt); typInt = null; cur.remove(); }
+    }, 52);
+  });
+}
+
+function p1() {
+  sched(50,  () => el('brow').classList.add('s'));
+  sched(170, () => show('s2t'));
+  sched(270, () => show('s2h'));
+  sched(390, () => show('s2s'));
+}
+
+function p2() {
+  sched(50,  () => show('s3t'));
+  sched(90,  () => {
+    const c = el('cnt'); c.classList.add('s');
+    let v = 0;
+    cntInt = setInterval(() => {
+      v = Math.min(v + 6, 247);
+      c.textContent = v;
+      if(v >= 247) { clearInterval(cntInt); cntInt = null; }
+    }, 20);
+  });
+  sched(180, () => show('s3h'));
+  sched(290, () => show('s3s'));
+  sched(140, () => {
+    el('cht').classList.add('s');
+    ['b1','b2','b3','b4','b5'].forEach((id,i) =>
+      sched(i * 90, () => el(id).classList.add('g')));
+  });
+}
+
+function p3() {
+  sched(55,  () => el('bdg').classList.add('s'));
+  sched(180, () => el('cb1').classList.add('s'));
+  sched(560, () => el('cb2').classList.add('s'));
+  sched(980, () => el('cb3').classList.add('s'));
+  sched(260, () => show('s4t'));
+  sched(370, () => show('s4h'));
+  sched(490, () => show('s4s'));
+}
+
+function p4() {
+  sched(70,  () => el('lwrap').classList.add('s'));
+  sched(620, () => el('ltl').classList.add('s'));
+}
+
+function p5() {
+  sched(70,  () => show('ctttl'));
+  sched(250, () => show('ctbtn'));
+  sched(440, () => show('cthdl'));
+}
+
+const PLAY = [p0, p1, p2, p3, p4, p5];
+
+/* ── Crossfade entre escenas ── */
+function crossfade(oldI, newI) {
+  const newSc = el(SCENES[newI].id);
+  newSc.classList.remove('out');
+  newSc.classList.add('in');
+  PLAY[newI]();
+
+  if(oldI >= 0) {
+    const oldSc = el(SCENES[oldI].id);
+    oldSc.classList.remove('in');
+    oldSc.classList.add('out');
+    setTimeout(() => { oldSc.classList.remove('out'); resetSc(oldI); }, 600);
+  }
+}
+
+/* ── Barra de progreso ── */
+function updateBar(elapsed) {
+  el('bar').style.width = Math.min(elapsed / TOTAL * 100, 100) + '%';
+}
+
+/* ── Tick principal ── */
+function tick(ts) {
+  if(!t0) t0 = ts;
+  const elapsed = ts - t0;
+  updateBar(elapsed);
+
+  const idx = SCENES.findIndex(s => elapsed >= s.from && elapsed < s.to);
+  if(idx !== -1 && idx !== curIdx) {
+    killTimers();
+    const old = curIdx;
+    curIdx = idx;
+    crossfade(old, idx);
+  }
+
+  if(elapsed < TOTAL) {
+    rafId = requestAnimationFrame(tick);
+  } else {
+    el('restart').style.display = 'block';
+  }
+}
+
+/* ── Reset completo ── */
+function resetAll() {
+  killTimers();
+  if(rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  document.querySelectorAll('.sc').forEach(sc => {
+    sc.classList.remove('in','out');
+    sc.querySelectorAll('.s').forEach(x => x.classList.remove('s'));
+    sc.querySelectorAll('.g').forEach(x => x.classList.remove('g'));
+  });
+  el('cnt').textContent = '0';
+  el('ha').innerHTML = '';
+  el('hbox').classList.remove('s');
+  el('gw').classList.remove('gon');
+  el('bar').style.width = '0%';
+  el('restart').style.display = 'none';
+  curIdx = -1; t0 = null;
+}
+
+function init() { resetAll(); rafId = requestAnimationFrame(tick); }
+
+window.addEventListener('load', () => setTimeout(init, 180));
+</script>
+</body>
+</html>
