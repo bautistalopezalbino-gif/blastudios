@@ -1286,7 +1286,8 @@ function handleBlastudiosContact(e) {
       from_email:   email,
       phone:        tel || '—',
       message:      mensaje,
-      reply_to:     email
+      reply_to:     email,
+      to_email:     'blastudios.contact@gmail.com'
     }).then(function () {
       showSuccess();
     }, function (err) {
