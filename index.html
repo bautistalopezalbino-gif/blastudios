@@ -804,6 +804,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  /* ── EmailJS config ─────────────────────────────────────────────────
+     Rellena estos 3 valores con los de tu cuenta en emailjs.com:
+     1. PUBLIC_KEY  → Account → General → Public Key
+     2. SERVICE_ID  → Email Services → tu servicio Gmail → Service ID
+     3. TEMPLATE_ID → Email Templates → tu plantilla → Template ID
+  ─────────────────────────────────────────────────────────────────── */
+  var EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+  var EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+  var EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+  if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
+</script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1228,34 +1244,72 @@ if (heroGridEl) {
 /* ── Contact form submit ── */
 function handleBlastudiosContact(e) {
   e.preventDefault();
-  var form   = document.getElementById('contact-form-main');
-  var btn    = document.getElementById('bla-contact-submit');
+  var form    = document.getElementById('contact-form-main');
+  var btn     = document.getElementById('bla-contact-submit');
   var success = document.getElementById('bla-contact-success');
   if (!form || !btn) return;
+
+  var nombre  = (form.nombre   ? form.nombre.value.trim()   : '');
+  var email   = (form.email    ? form.email.value.trim()    : '');
+  var tel     = (form.telefono ? form.telefono.value.trim() : '');
+  var mensaje = (form.mensaje  ? form.mensaje.value.trim()  : '');
 
   /* Loading state */
   btn.disabled = true;
   btn.textContent = 'Enviando…';
   btn.style.opacity = '0.7';
+  btn.style.cursor = 'not-allowed';
 
-  /* Build WhatsApp message with form data */
-  var nombre  = form.nombre  ? form.nombre.value.trim()  : '';
-  var email   = form.email   ? form.email.value.trim()   : '';
-  var tel     = form.telefono ? form.telefono.value.trim() : '';
-  var mensaje = form.mensaje  ? form.mensaje.value.trim()  : '';
-
-  var waText = encodeURIComponent(
-    'Hola, soy ' + nombre + '.\n' +
-    'Email: ' + email + (tel ? '\nTeléfono: ' + tel : '') + '\n\n' +
-    mensaje
-  );
-
-  /* Simulate brief delay then show success + open WhatsApp */
-  setTimeout(function () {
+  function showSuccess() {
     form.style.display = 'none';
-    if (success) success.style.display = 'block';
-    window.open('https://wa.me/34648021435?text=' + waText, '_blank');
-  }, 700);
+    if (success) {
+      success.style.display = 'block';
+      gsap && gsap.fromTo(success, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+    }
+  }
+
+  function resetBtn(label) {
+    btn.disabled = false;
+    btn.textContent = label || 'Enviar mensaje';
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }
+
+  /* Try EmailJS first — fallback to WhatsApp if not configured */
+  var ejsReady = window.emailjs
+    && typeof EMAILJS_PUBLIC_KEY !== 'undefined'
+    && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY';
+
+  if (ejsReady) {
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      from_name:    nombre,
+      from_email:   email,
+      phone:        tel || '—',
+      message:      mensaje,
+      reply_to:     email
+    }).then(function () {
+      showSuccess();
+    }, function (err) {
+      console.error('EmailJS error:', err);
+      resetBtn('Error — intenta de nuevo');
+      btn.style.background = '#ef4444';
+      setTimeout(function () {
+        btn.style.background = '#2563eb';
+        resetBtn();
+      }, 3000);
+    });
+  } else {
+    /* EmailJS not configured yet → send via WhatsApp */
+    var waText = encodeURIComponent(
+      'Hola, soy ' + nombre + '.\n' +
+      'Email: ' + email + (tel ? '\nTeléfono: ' + tel : '') + '\n\n' +
+      mensaje
+    );
+    setTimeout(function () {
+      showSuccess();
+      window.open('https://wa.me/34648021435?text=' + waText, '_blank');
+    }, 600);
+  }
 }
 </script>
 
