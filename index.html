@@ -194,6 +194,22 @@
         }
         .nav-link.nav-active { color: #f5f5f7 !important; }
         .nav-link.nav-active::after { transform: scaleX(1); }
+
+        /* ── Hero spotlight reveal · entrada premium + máscara de cursor ── */
+        @keyframes heroReveal { 0% { opacity: 0; transform: translateY(28px); filter: blur(12px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        @keyframes heroFadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes heroZoom   { 0% { transform: scale(1.12); } 100% { transform: scale(1); } }
+        .hero-anim { opacity: 0; }
+        .hero-zoom { transform: scale(1.12); }
+        .hero-ready .hero-anim   { animation-fill-mode: forwards; animation-timing-function: cubic-bezier(0.16,1,0.3,1); }
+        .hero-ready .hero-reveal { animation-name: heroReveal; animation-duration: 1.1s; }
+        .hero-ready .hero-fade   { animation-name: heroFadeUp; animation-duration: 1s; }
+        .hero-ready .hero-zoom   { animation: heroZoom 1.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-anim { opacity: 1 !important; }
+            .hero-zoom, .hero-ready .hero-zoom { animation: none !important; transform: none !important; }
+            .hero-ready .hero-anim { animation: none !important; }
+        }
     </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-primary">
@@ -270,29 +286,32 @@
 </div>
 </aside>
 <main>
-<!-- Hero Section -->
-<section id="hero-vanta" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-<!-- Vanta.NET canvas injected as background by JS -->
-<!-- Subtle gradient overlay so text stays readable -->
-<div class="absolute inset-0 pointer-events-none" style="z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.0) 40%,rgba(0,0,0,0.55) 100%);"></div>
-<div class="relative px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center flex flex-col items-center gap-8" style="z-index:10;">
-<div id="hero-badge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.06] backdrop-blur-sm" style="opacity:0;">
-<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-<span class="font-label-caps text-label-caps tracking-widest" style="color:rgba(245,245,247,0.6);">INNOVACIÓN AI DE ALTO RENDIMIENTO</span>
-</div>
-<h1 id="hero-title" class="font-h1 text-h1 md:text-[88px] text-on-surface text-glow max-w-4xl mx-auto" style="opacity:0;letter-spacing:-0.04em;line-height:1.02;">
-  Haz crecer tu negocio<br>con el poder de la <span class="text-primary">IA</span>
+<!-- Hero Section · Spotlight reveal (el cursor revela la imagen en color) -->
+<section id="hero-vanta" class="relative w-full overflow-hidden h-screen bg-black" style="height:100dvh;">
+<!-- Imagen base (oscura / desaturada). Para cambiar la imagen, sustituye la URL en ESTE div y en el de la capa revelada. -->
+<div class="hero-zoom absolute inset-0 bg-center bg-cover bg-no-repeat z-10" style="background-color:#06080f;background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=1920&amp;q=80');filter:grayscale(1) brightness(0.45) contrast(1.05);"></div>
+<!-- Capa revelada (color vibrante) — recortada por la máscara circular del spotlight -->
+<div id="hero-reveal-layer" class="absolute inset-0 bg-center bg-cover bg-no-repeat z-20 pointer-events-none" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=1920&amp;q=80');filter:saturate(1.3) brightness(1.05) contrast(1.05);"></div>
+<canvas id="hero-mask-canvas" class="absolute inset-0 pointer-events-none" style="display:none;"></canvas>
+<!-- Degradado para legibilidad: oscurece arriba/abajo y deja vibrar el centro -->
+<div class="absolute inset-0 z-30 pointer-events-none" style="background:linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.12) 32%,rgba(0,0,0,0.32) 62%,rgba(0,0,0,0.74) 100%);"></div>
+<!-- Titular -->
+<div class="absolute top-[15%] left-0 right-0 flex flex-col items-center text-center px-5 pointer-events-none z-40">
+<h1 class="text-on-surface text-glow leading-[0.95]">
+<span class="hero-anim hero-reveal block font-h1 font-medium text-5xl sm:text-7xl md:text-8xl" style="letter-spacing:-0.05em;animation-delay:0.25s;">Revela el potencial</span>
+<span class="hero-anim hero-reveal block font-h1 font-bold text-5xl sm:text-7xl md:text-8xl -mt-1 text-primary" style="letter-spacing:-0.06em;animation-delay:0.42s;">de tu negocio</span>
 </h1>
-<p id="hero-sub" class="font-body-lg text-body-lg max-w-xl mx-auto" style="opacity:0;color:rgba(245,245,247,0.55);">
-  Somos Blastudios. Diseño web, campañas digitales y automatizaciones con Inteligencia Artificial para empresas que quieren liderar el futuro.
-</p>
-<div id="hero-btns" class="flex flex-col sm:flex-row items-center gap-3 mt-6 w-full sm:w-auto" style="opacity:0;">
-<a class="w-full sm:w-auto px-8 py-3.5 bg-primary text-white font-button text-button rounded-full hover:bg-blue-500 hover:shadow-[0_0_30px_rgba(37,99,235,0.45)] transition-all duration-300 text-center" href="#contacto">
-  Empieza hoy
-</a>
-<a class="w-full sm:w-auto px-8 py-3.5 font-button text-button rounded-full border border-white/15 hover:bg-white/[0.06] transition-all duration-300 text-center" style="color:rgba(245,245,247,0.85);" href="#servicios">
-  Ver servicios
-</a>
+</div>
+<!-- Párrafo inferior izquierda -->
+<div class="hero-anim hero-fade hidden sm:block absolute bottom-14 left-10 md:left-14 max-w-[280px] z-40" style="animation-delay:0.7s;">
+<p class="text-sm text-white/80 leading-relaxed">Diseño web, campañas digitales y automatizaciones con Inteligencia Artificial para empresas que quieren liderar el futuro.</p>
+</div>
+<!-- Bloque inferior derecha + CTAs -->
+<div class="hero-anim hero-fade absolute bottom-10 sm:bottom-24 left-5 right-5 sm:left-auto sm:right-10 md:right-14 max-w-full sm:max-w-[300px] flex flex-col items-start gap-4 sm:gap-5 z-40" style="animation-delay:0.85s;">
+<p class="text-xs sm:text-sm text-white/80 leading-relaxed">Mueve el cursor sobre la imagen y descubre cómo la IA puede transformar tu presencia digital y multiplicar tus resultados.</p>
+<div class="flex flex-wrap items-center gap-3">
+<a href="#contacto" class="bg-primary hover:bg-blue-500 text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)]">Empieza hoy</a>
+<a href="#servicios" class="border border-white/25 text-white/90 hover:bg-white/10 text-sm font-medium px-6 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95">Ver servicios</a>
 </div>
 </div>
 </section>
@@ -686,8 +705,6 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
@@ -724,15 +741,9 @@ function exitLoader() {
 
 /* ── Hero ── */
 function animateHero() {
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.to('#hero-badge',  { opacity: 1, duration: 0.6 }, 0)
-    .from('#hero-badge', { y: -24, duration: 0.6 }, 0)
-    .to('#hero-title',  { opacity: 1, duration: 0.85 }, 0.25)
-    .from('#hero-title', { y: 56, duration: 0.85 }, 0.25)
-    .to('#hero-sub',    { opacity: 1, duration: 0.7 }, 0.55)
-    .from('#hero-sub',  { y: 36, duration: 0.7 }, 0.55)
-    .to('#hero-btns',   { opacity: 1, duration: 0.6 }, 0.8)
-    .from('#hero-btns', { y: 28, duration: 0.6 }, 0.8);
+  // El nuevo hero usa animaciones CSS; se activan al añadir .hero-ready (al cerrarse el loader)
+  var hero = document.getElementById('hero-vanta');
+  if (hero) hero.classList.add('hero-ready');
 }
 
 /* ── Scroll reveals ── */
@@ -893,26 +904,78 @@ if (heroGridEl) {
 }
 </script>
 
-<!-- Vanta.NET 3D hero background -->
+<!-- Hero spotlight reveal · el cursor revela la imagen en color a través de una máscara circular suave -->
 <script>
 (function () {
-  var heroEl = document.getElementById('hero-vanta');
-  if (!heroEl || !window.VANTA) return;
-  VANTA.NET({
-    el: heroEl,
-    mouseControls: true,
-    touchControls: true,
-    gyroControls: false,
-    minHeight: 200,
-    minWidth: 200,
-    scale: 1.00,
-    scaleMobile: 1.00,
-    color: 0x2563eb,
-    backgroundColor: 0x000000,
-    points: 13,
-    maxDistance: 23,
-    spacing: 17
+  var section   = document.getElementById('hero-vanta');
+  var revealDiv = document.getElementById('hero-reveal-layer');
+  var canvas    = document.getElementById('hero-mask-canvas');
+  if (!section || !revealDiv || !canvas) return;
+
+  var ctx = canvas.getContext('2d');
+  var SPOTLIGHT_R = 260;
+
+  var mouse  = { x: -999, y: -999 };   // posición cruda del cursor
+  var smooth = { x: -999, y: -999 };   // posición suavizada (lerp)
+  var last   = { x: -9999, y: -9999 }; // último punto dibujado
+  var raf = null;
+
+  function sizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    last.x = -9999; // fuerza un redibujado tras el resize
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  window.addEventListener('mousemove', function (e) {
+    mouse.x = e.clientX; mouse.y = e.clientY;
   });
+  window.addEventListener('touchmove', function (e) {
+    if (e.touches && e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; }
+  }, { passive: true });
+
+  function applyMask(url) {
+    revealDiv.style.webkitMaskImage  = 'url(' + url + ')';
+    revealDiv.style.maskImage        = 'url(' + url + ')';
+    revealDiv.style.webkitMaskSize   = '100% 100%';
+    revealDiv.style.maskSize         = '100% 100%';
+    revealDiv.style.webkitMaskRepeat = 'no-repeat';
+    revealDiv.style.maskRepeat       = 'no-repeat';
+  }
+
+  function drawMask(x, y) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var g = ctx.createRadialGradient(x, y, 0, x, y, SPOTLIGHT_R);
+    g.addColorStop(0,    'rgba(255,255,255,1)');
+    g.addColorStop(0.4,  'rgba(255,255,255,1)');
+    g.addColorStop(0.6,  'rgba(255,255,255,0.75)');
+    g.addColorStop(0.75, 'rgba(255,255,255,0.4)');
+    g.addColorStop(0.88, 'rgba(255,255,255,0.12)');
+    g.addColorStop(1,    'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, SPOTLIGHT_R, 0, Math.PI * 2);
+    ctx.fill();
+    applyMask(canvas.toDataURL());
+  }
+
+  function loop() {
+    smooth.x += (mouse.x - smooth.x) * 0.1;
+    smooth.y += (mouse.y - smooth.y) * 0.1;
+    // toDataURL es costoso: solo redibuja si el cursor (suavizado) se movió
+    if (Math.abs(smooth.x - last.x) > 0.4 || Math.abs(smooth.y - last.y) > 0.4) {
+      drawMask(smooth.x, smooth.y);
+      last.x = smooth.x; last.y = smooth.y;
+    }
+    raf = requestAnimationFrame(loop);
+  }
+  raf = requestAnimationFrame(loop);
+
+  // Seguro: si el loader no llegara a disparar animateHero(), muestra el hero igualmente
+  setTimeout(function () {
+    if (section && !section.classList.contains('hero-ready')) section.classList.add('hero-ready');
+  }, 4500);
 })();
 </script>
 

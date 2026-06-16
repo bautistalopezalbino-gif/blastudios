@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 Skills para Diseñar con Claude – Blastudios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+  }
+
+  /* SLIDE BASE — 1080×1350 at 0.5 scale preview */
+  .slide {
+    width: 540px;
+    height: 675px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 4px;
+  }
+
+  /* ─── PORTADA ─────────────────────────────────────── */
+  .slide-cover {
+    background: #000;
+  }
+  .slide-cover .bg-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.35) 0%, rgba(37,99,235,0.05) 60%, transparent 80%);
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .slide-cover .tag {
+    position: absolute;
+    top: 44px; left: 44px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563EB;
+    background: rgba(37,99,235,0.12);
+    border: 1px solid rgba(37,99,235,0.3);
+    border-radius: 100px;
+    padding: 6px 14px;
+  }
+  .slide-cover .logo {
+    position: absolute;
+    top: 36px; right: 44px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(245,245,247,0.5);
+    letter-spacing: 0.08em;
+  }
+  .slide-cover .main-number {
+    position: absolute;
+    bottom: 160px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 180px;
+    font-weight: 800;
+    color: rgba(37,99,235,0.08);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .slide-cover .cover-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0 44px 56px;
+  }
+  .slide-cover .cover-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563EB;
+    margin-bottom: 14px;
+  }
+  .slide-cover h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: #f5f5f7;
+  }
+  .slide-cover h1 span {
+    color: #2563EB;
+  }
+  .slide-cover .cover-sub {
+    margin-top: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(245,245,247,0.5);
+    line-height: 1.5;
+  }
+  .slide-cover .divider {
+    width: 40px; height: 2px;
+    background: #2563EB;
+    margin-bottom: 16px;
+  }
+
+  /* ─── SLIDE SKILL ─────────────────────────────────── */
+  .slide-skill {
+    background: #000;
+  }
+  .slide-skill .corner-deco {
+    position: absolute;
+    width: 200px; height: 200px;
+    top: -60px; right: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%);
+  }
+  .slide-skill .bottom-deco {
+    position: absolute;
+    width: 300px; height: 300px;
+    bottom: -100px; left: -80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%);
+  }
+  .slide-skill .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1d4ed8, #2563EB, #60a5fa);
+  }
+  .slide-skill .header {
+    position: absolute;
+    top: 32px; left: 44px; right: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .slide-skill .skill-index {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245,245,247,0.35);
+  }
+  .slide-skill .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(245,245,247,0.3);
+    letter-spacing: 0.08em;
+  }
+  .slide-skill .big-num {
+    position: absolute;
+    top: 80px; left: 36px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 200px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: rgba(37,99,235,0.07);
+    user-select: none;
+  }
+  .slide-skill .content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0 44px 56px;
+  }
+  .slide-skill .skill-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563EB;
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(37,99,235,0.25);
+    border-radius: 100px;
+    padding: 5px 12px;
+    margin-bottom: 18px;
+  }
+  .slide-skill h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #f5f5f7;
+    margin-bottom: 18px;
+  }
+  .slide-skill h2 em {
+    font-style: normal;
+    color: #2563EB;
+  }
+  .slide-skill .desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: rgba(245,245,247,0.55);
+    margin-bottom: 24px;
+  }
+  .slide-skill .example-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left: 2px solid #2563EB;
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+  .slide-skill .example-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #2563EB;
+    margin-bottom: 6px;
+  }
+  .slide-skill .example-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(245,245,247,0.7);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ─── CIERRE ──────────────────────────────────────── */
+  .slide-close {
+    background: #000;
+  }
+  .slide-close .glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(37,99,235,0.05) 50%, transparent 70%);
+  }
+  .slide-close .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1d4ed8, #2563EB, #60a5fa);
+  }
+  .slide-close .center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 88%;
+  }
+  .slide-close .close-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563EB;
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(37,99,235,0.25);
+    border-radius: 100px;
+    padding: 6px 16px;
+    margin-bottom: 28px;
+  }
+  .slide-close h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #f5f5f7;
+    margin-bottom: 18px;
+  }
+  .slide-close h2 span {
+    color: #2563EB;
+  }
+  .slide-close .close-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(245,245,247,0.5);
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+  .slide-close .cta {
+    display: inline-block;
+    background: #2563EB;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+  }
+  .slide-close .logo-bottom {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(245,245,247,0.3);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  /* slide label */
+  .slide-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(245,245,247,0.35);
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — PORTADA
+══════════════════════════════════════════════ -->
+<div class="slide slide-cover">
+  <div class="bg-glow"></div>
+  <div class="tag">Skills · Claude AI</div>
+  <div class="logo">BLASTUDIOS</div>
+  <div class="main-number">10</div>
+  <div class="cover-content">
+    <div class="divider"></div>
+    <div class="cover-label">Guía de diseño</div>
+    <h1>Las <span>10 skills</span> para<br>diseñar con<br>Claude</h1>
+    <p class="cover-sub">Lo que los diseñadores top<br>ya están usando en 2025.</p>
+  </div>
+</div>
+<div class="slide-label">Slide 1 / 12 — Portada</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — SKILL 1
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 01 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">01</div>
+  <div class="content">
+    <div class="skill-tag">Contexto visual</div>
+    <h2>Describe el <em>escenario</em><br>completo</h2>
+    <p class="desc">No digas "hazme un logo". Di qué empresa es,<br>a quién va dirigida, qué emoción debe transmitir<br>y en qué contexto se va a usar.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Diseña un banner para una cafetería artesanal bonaerense, público 25-40, estilo cálido y vintage, para Instagram Stories."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 2 / 12 — Skill 01</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — SKILL 2
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 02 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">02</div>
+  <div class="content">
+    <div class="skill-tag">Referencias</div>
+    <h2>Cita marcas<br>y <em>estilos</em> reales</h2>
+    <p class="desc">Claude entiende referencias visuales culturales.<br>Nombrar marcas o movimientos de diseño<br>ancla el resultado al estilo que buscás.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Estilo Notion meets Apple: limpio, mucho blanco, tipografía sans-serif moderna, sin ornamentos."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 3 / 12 — Skill 02</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — SKILL 3
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 03 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">03</div>
+  <div class="content">
+    <div class="skill-tag">Color</div>
+    <h2>Incluye los <em>hex</em><br>en el prompt</h2>
+    <p class="desc">No digas "azul". Di exactamente qué azul.<br>Los hex codes eliminan la ambigüedad<br>y Claude los respeta en el código generado.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Paleta: fondo #000000, acento #2563EB, texto #f5f5f7. No uses otros colores fuera de estos tres."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 4 / 12 — Skill 03</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5 — SKILL 4
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 04 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">04</div>
+  <div class="content">
+    <div class="skill-tag">Tipografía</div>
+    <h2>Nombra las<br><em>fuentes</em> exactas</h2>
+    <p class="desc">Claude conoce miles de tipografías de Google Fonts<br>y Adobe. Nombrarlas es más eficiente que describir<br>"una tipografía moderna con personalidad".</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Títulos en Space Grotesk 800, body en Inter 400. Tamaño de título: 64px, line-height 1.05."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 5 / 12 — Skill 04</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 6 — SKILL 5
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 05 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">05</div>
+  <div class="content">
+    <div class="skill-tag">Formato</div>
+    <h2>Especifica <em>dimensiones</em><br>y proporciones</h2>
+    <p class="desc">Claude genera código y layouts con dimensiones<br>precisas. Decirle el formato objetivo evita<br>resultados genéricos que no sirven en producción.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Slide para carrusel de Instagram: 1080×1350px (4:5). El contenido debe entrar en zona segura de 960×1200."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 6 / 12 — Skill 05</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 7 — SKILL 6
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 06 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">06</div>
+  <div class="content">
+    <div class="skill-tag">Iteración</div>
+    <h2>Refina por <em>capas</em>,<br>no de una</h2>
+    <p class="desc">No pidas todo junto en el primer prompt.<br>Construí el resultado en pasos: estructura primero,<br>luego colores, luego tipografía, luego efectos.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Bien. Ahora solo ajustá el espaciado entre secciones. No cambies nada más del layout."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 7 / 12 — Skill 06</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 8 — SKILL 7
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 07 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">07</div>
+  <div class="content">
+    <div class="skill-tag">Roleplay</div>
+    <h2>Pedile que <em>actúe</em><br>como diseñador</h2>
+    <p class="desc">Darle un rol profesional cambia el nivel<br>de las respuestas. Claude piensa diferente cuando<br>asume la perspectiva de un experto.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Actuá como director de arte de una agencia top de Buenos Aires. Criticá este diseño y reescribilo."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 8 / 12 — Skill 07</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 9 — SKILL 8
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 08 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">08</div>
+  <div class="content">
+    <div class="skill-tag">Feedback</div>
+    <h2>Señalá <em>exactamente</em><br>qué cambiar</h2>
+    <p class="desc">El feedback vago genera cambios aleatorios.<br>"No me gusta" no ayuda. Identificá el elemento<br>específico y decí qué querés en su lugar.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"El título está demasiado centrado. Alinealo a la izquierda y aumentá el font-size a 56px."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 9 / 12 — Skill 08</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 10 — SKILL 9
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 09 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">09</div>
+  <div class="content">
+    <div class="skill-tag">Variaciones</div>
+    <h2>Pedí <em>3 opciones</em><br>para elegir</h2>
+    <p class="desc">Claude puede generar múltiples variaciones<br>en un solo prompt. Esto acelera el proceso<br>de elección y sirve para presentar al cliente.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Generá 3 versiones del headline: una minimalista, una agresiva y una aspiracional. Una por bloque."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 10 / 12 — Skill 09</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 11 — SKILL 10
+══════════════════════════════════════════════ -->
+<div class="slide slide-skill">
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header">
+    <span class="skill-index">Skill 10 / 10</span>
+    <span class="logo">BLASTUDIOS</span>
+  </div>
+  <div class="big-num">10</div>
+  <div class="content">
+    <div class="skill-tag">Producción</div>
+    <h2>Exportá directo<br>en <em>código</em></h2>
+    <p class="desc">Claude genera HTML/CSS listo para producción.<br>Skip Figma, skip Canva. El output es código real<br>que podés deployar en minutos.</p>
+    <div class="example-box">
+      <div class="example-label">Prompt ejemplo</div>
+      <div class="example-text">"Dame el HTML completo con estilos inline. Que funcione solo con un navegador, sin dependencias externas."</div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 11 / 12 — Skill 10</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 12 — CIERRE / CTA
+══════════════════════════════════════════════ -->
+<div class="slide slide-close">
+  <div class="top-bar"></div>
+  <div class="glow"></div>
+  <div class="center">
+    <div class="close-tag">Blastudios · 2025</div>
+    <h2>¿Usás<br><span>Claude</span><br>al máximo?</h2>
+    <p class="close-sub">Seguime para más guías prácticas<br>de diseño con inteligencia artificial.</p>
+    <a class="cta" href="#">@blastudios</a>
+  </div>
+  <div class="logo-bottom">BLASTUDIOS · DISEÑO CON IA</div>
+</div>
+<div class="slide-label">Slide 12 / 12 — CTA</div>
+
+</body>
+</html>
