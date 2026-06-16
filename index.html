@@ -547,60 +547,156 @@
 </div>
 </section>
 
-<!-- Contact Section -->
-<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container-lowest border-t border-outline-variant/10" id="contacto">
-<div class="max-w-container-max mx-auto">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-<div>
-<span class="font-label-caps text-label-caps tracking-widest block mb-4" style="color:rgba(245,245,247,0.4);">CONTACTO</span>
-<h2 class="font-h2 text-h2 text-on-surface mb-6">¿Listo para transformar tu negocio?</h2>
-<p class="font-body-lg text-body-lg mb-12" style="color:rgba(245,245,247,0.5);">Hablemos sobre cómo la IA puede optimizar tus procesos y acelerar tu crecimiento. Nuestro equipo se pondrá en contacto en menos de 24h.</p>
-<div class="space-y-6">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.68 3.45a2 2 0 0 1 1.84-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-</div>
-<span class="font-body-md text-body-md text-on-surface">648 021 435</span>
-</div>
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-</div>
-<span class="font-body-md text-body-md text-on-surface">blastudios.contact@gmail.com</span>
-</div>
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
-</div>
-<span class="font-body-md text-body-md text-on-surface">@blastudios._</span>
-</div>
-</div>
-</div>
-<div class="rounded-3xl flex flex-col items-center justify-center gap-6 text-center min-h-[320px] p-10" style="background:rgba(255,255,255,0.04);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,0.08);">
-  <div>
-    <p class="font-h3 text-h3 text-on-surface mb-2">Contáctanos ahora</p>
-    <p class="font-body-md text-body-md text-on-surface-variant">Elige cómo prefieres escribirnos.</p>
+<!-- Contact Section — Two Column -->
+<style>
+  .bla-input::placeholder { color: rgba(245,245,247,0.25); }
+  .bla-input:focus { box-shadow: 0 0 0 2px rgba(37,99,235,0.5); }
+  .bla-input { background:#111111; border:none; border-radius:12px; padding:0 16px; color:#f5f5f7; font-size:14px; font-family:'Inter',sans-serif; outline:none; transition:box-shadow 0.2s; width:100%; box-sizing:border-box; }
+  .bla-textarea::placeholder { color: rgba(245,245,247,0.25); }
+  .bla-textarea:focus { box-shadow: 0 0 0 2px rgba(37,99,235,0.5); }
+  .bla-textarea { background:#111111; border:none; border-radius:12px; padding:14px 16px; color:#f5f5f7; font-size:14px; font-family:'Inter',sans-serif; outline:none; transition:box-shadow 0.2s; width:100%; box-sizing:border-box; resize:vertical; min-height:110px; }
+  .bla-social-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:#000; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:13px 12px; color:#f5f5f7; text-decoration:none; font-size:14px; font-weight:500; font-family:'Inter',sans-serif; transition:background 0.2s,border-color 0.2s; cursor:pointer; }
+  .bla-social-btn:hover { background:rgba(37,99,235,0.08); border-color:rgba(37,99,235,0.35); }
+  .bla-step { display:flex; align-items:center; gap:12px; border-radius:14px; padding:13px 16px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:transform 0.2s; }
+  .bla-step-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; font-weight:600; }
+  @keyframes contactFadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .contact-anim { opacity:0; animation: contactFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
+</style>
+
+<section id="contacto" style="background:#000000;min-height:100vh;display:flex;align-items:stretch;">
+  <div style="display:flex;width:100%;min-height:100vh;">
+
+    <!-- LEFT COLUMN: Video + Hero (desktop only) -->
+    <div style="display:none;width:52%;position:relative;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 48px 120px;border-radius:24px;overflow:hidden;margin:16px 0 16px 16px;flex-shrink:0;" id="contact-left-col">
+      <!-- Background video -->
+      <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260506_081238_406ed0e3-5d83-436e-a512-0bbff7ec5b95.mp4" type="video/mp4">
+      </video>
+      <!-- Subtle bottom fade for readability -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,rgba(0,0,0,0.72) 0%,transparent 100%);pointer-events:none;z-index:1;"></div>
+
+      <!-- Hero content -->
+      <div style="position:relative;z-index:2;width:100%;max-width:300px;display:flex;flex-direction:column;gap:28px;" id="contact-hero-inner">
+        <!-- Brand -->
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 110" width="28" height="28">
+            <circle cx="55" cy="55" r="55" fill="#0D1F3C"/>
+            <rect x="33" y="18" width="13" height="62" rx="6.5" fill="white"/>
+            <circle cx="64" cy="74" r="20" fill="white"/>
+            <circle cx="64" cy="74" r="11" fill="#0D1F3C"/>
+          </svg>
+          <span style="font-size:18px;font-weight:600;letter-spacing:-0.03em;color:#fff;">blastudios</span>
+        </div>
+        <!-- Heading -->
+        <div>
+          <h2 style="font-size:38px;font-weight:500;letter-spacing:-0.04em;color:#fff;line-height:1.08;margin:0 0 12px;">Hablemos de<br>tu proyecto</h2>
+          <p style="color:rgba(255,255,255,0.6);font-size:14px;line-height:1.65;margin:0;padding:0 4px;">Cuéntanos lo que necesitas y te ayudamos a construir tu estrategia digital con IA.</p>
+        </div>
+        <!-- Steps -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="bla-step" style="background:rgba(37,99,235,0.88);border:1px solid rgba(37,99,235,0.7);">
+            <div class="bla-step-num" style="background:rgba(0,0,0,0.3);color:#fff;">1</div>
+            <span style="font-size:14px;font-weight:500;color:#fff;">Cuéntanos tu idea</span>
+          </div>
+          <div class="bla-step" style="background:rgba(17,17,17,0.75);">
+            <div class="bla-step-num" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);">2</div>
+            <span style="font-size:14px;font-weight:500;color:rgba(255,255,255,0.7);">Analizamos tu caso</span>
+          </div>
+          <div class="bla-step" style="background:rgba(17,17,17,0.75);">
+            <div class="bla-step-num" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);">3</div>
+            <span style="font-size:14px;font-weight:500;color:rgba(255,255,255,0.7);">Arrancamos juntos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Form -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;overflow-y:auto;" id="contact-form-col">
+      <div style="width:100%;max-width:480px;display:flex;flex-direction:column;gap:28px;" id="contact-form-wrapper">
+
+        <!-- Header -->
+        <div class="contact-anim" style="animation-delay:0.05s;">
+          <h2 style="font-size:28px;font-weight:500;letter-spacing:-0.03em;color:#f5f5f7;margin:0 0 6px;">Envíanos un mensaje</h2>
+          <p style="color:rgba(245,245,247,0.4);font-size:14px;margin:0;">Respondemos en menos de 24 horas.</p>
+        </div>
+
+        <!-- Quick contact buttons -->
+        <div class="contact-anim" style="animation-delay:0.12s;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <a href="https://wa.me/34648021435?text=Hola%2C%20me%20interesa%20saber%20m%C3%A1s%20sobre%20Blastudios" target="_blank" rel="noopener" class="bla-social-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <a href="mailto:blastudios.contact@gmail.com?subject=Consulta%20desde%20blastudios.com" class="bla-social-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Correo
+          </a>
+        </div>
+
+        <!-- Divider -->
+        <div class="contact-anim" style="animation-delay:0.18s;display:flex;align-items:center;gap:16px;">
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.1);"></div>
+          <span style="font-size:11px;font-weight:600;color:rgba(245,245,247,0.35);letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;">O escríbenos aquí</span>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.1);"></div>
+        </div>
+
+        <!-- Form -->
+        <form id="contact-form-main" style="display:flex;flex-direction:column;gap:14px;" onsubmit="handleBlastudiosContact(event)">
+
+          <!-- Name + Phone -->
+          <div class="contact-anim" style="animation-delay:0.22s;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:13px;font-weight:500;color:#f5f5f7;">Nombre</label>
+              <input type="text" name="nombre" class="bla-input" style="height:44px;" placeholder="Tu nombre" required>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:13px;font-weight:500;color:#f5f5f7;">Teléfono</label>
+              <input type="tel" name="telefono" class="bla-input" style="height:44px;" placeholder="+34 600 000 000">
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="contact-anim" style="animation-delay:0.27s;display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:13px;font-weight:500;color:#f5f5f7;">Email</label>
+            <input type="email" name="email" class="bla-input" style="height:44px;" placeholder="tu@empresa.com" required>
+          </div>
+
+          <!-- Message -->
+          <div class="contact-anim" style="animation-delay:0.32s;display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:13px;font-weight:500;color:#f5f5f7;">Mensaje</label>
+            <textarea name="mensaje" class="bla-textarea" placeholder="Cuéntanos sobre tu proyecto, tus objetivos o lo que necesitas..." required></textarea>
+          </div>
+
+          <!-- Submit -->
+          <div class="contact-anim" style="animation-delay:0.37s;">
+            <button type="submit" id="bla-contact-submit"
+              style="width:100%;height:54px;background:#2563eb;color:#fff;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;border:none;border-radius:12px;cursor:pointer;transition:background 0.2s,box-shadow 0.2s,transform 0.1s;margin-top:4px;letter-spacing:-0.01em;"
+              onmouseover="this.style.background='#1d4ed8';this.style.boxShadow='0 0 32px rgba(37,99,235,0.45)'"
+              onmouseout="this.style.background='#2563eb';this.style.boxShadow='none'"
+              onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+              Enviar mensaje
+            </button>
+          </div>
+        </form>
+
+        <!-- Footer link -->
+        <p class="contact-anim" style="animation-delay:0.42s;text-align:center;font-size:13px;color:rgba(245,245,247,0.4);margin:0;">
+          ¿Prefieres hablar directo?
+          <a href="https://wa.me/34648021435?text=Hola%2C%20me%20interesa%20saber%20m%C3%A1s%20sobre%20Blastudios" target="_blank" rel="noopener" style="color:#2563eb;font-weight:500;text-decoration:none;margin-left:4px;">WhatsApp →</a>
+        </p>
+
+        <!-- Success state (hidden) -->
+        <div id="bla-contact-success" style="display:none;text-align:center;padding:32px 24px;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.25);border-radius:16px;">
+          <div style="width:48px;height:48px;background:rgba(37,99,235,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p style="font-size:17px;font-weight:600;color:#f5f5f7;margin:0 0 6px;">¡Mensaje enviado!</p>
+          <p style="font-size:14px;color:rgba(245,245,247,0.5);margin:0;">Te respondemos en menos de 24 horas.</p>
+        </div>
+
+      </div>
+    </div>
+
   </div>
-  <!-- WhatsApp -->
-  <a href="https://wa.me/34648021435?text=Hola%2C%20me%20interesa%20saber%20m%C3%A1s%20sobre%20Blastudios"
-     target="_blank" rel="noopener"
-     class="inline-flex items-center gap-3 px-8 py-4 rounded-lg font-button text-button w-full justify-center transition-all duration-300 hover:scale-[1.02]"
-     style="background:#25D366;color:#fff;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-    </svg>
-    Escribir por WhatsApp
-  </a>
-  <!-- Email -->
-  <a href="mailto:blastudios.contact@gmail.com?subject=Consulta%20desde%20blastudios.com"
-     class="inline-flex items-center gap-3 px-8 py-4 border border-primary text-primary font-button text-button rounded-lg hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all duration-300 w-full justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-    Enviar un correo
-  </a>
-  <p class="font-body-sm text-body-sm text-on-surface-variant/50">Respondemos en menos de 24h</p>
-</div>
-</div>
-</div>
 </section>
 </main>
 <!-- Footer -->
@@ -1085,6 +1181,82 @@ if (heroGridEl) {
     });
   }
 })();
+</script>
+
+<!-- Contact section: responsive left column + form handler -->
+<script>
+(function () {
+  /* ── Show left column on large screens ── */
+  var leftCol = document.getElementById('contact-left-col');
+  function applyContactLayout() {
+    if (!leftCol) return;
+    if (window.innerWidth >= 1024) {
+      leftCol.style.display = 'flex';
+    } else {
+      leftCol.style.display = 'none';
+    }
+  }
+  applyContactLayout();
+  window.addEventListener('resize', applyContactLayout);
+
+  /* ── GSAP scroll reveal for hero inner ── */
+  var heroInner = document.getElementById('contact-hero-inner');
+  if (heroInner && window.ScrollTrigger) {
+    gsap.fromTo(heroInner.children,
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.14, ease: 'power3.out',
+        scrollTrigger: { trigger: '#contacto', start: 'top 80%', once: true } }
+    );
+  }
+
+  /* ── GSAP scroll reveal for form column ── */
+  var formWrapper = document.getElementById('contact-form-wrapper');
+  if (formWrapper && window.ScrollTrigger) {
+    gsap.fromTo(formWrapper,
+      { opacity: 0, y: 32 },
+      { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out',
+        scrollTrigger: { trigger: '#contacto', start: 'top 80%', once: true } }
+    );
+    /* reset CSS animation on children once GSAP takes over to avoid double animation */
+    formWrapper.querySelectorAll('.contact-anim').forEach(function(el) {
+      el.style.animation = 'none';
+      el.style.opacity = '1';
+    });
+  }
+})();
+
+/* ── Contact form submit ── */
+function handleBlastudiosContact(e) {
+  e.preventDefault();
+  var form   = document.getElementById('contact-form-main');
+  var btn    = document.getElementById('bla-contact-submit');
+  var success = document.getElementById('bla-contact-success');
+  if (!form || !btn) return;
+
+  /* Loading state */
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+  btn.style.opacity = '0.7';
+
+  /* Build WhatsApp message with form data */
+  var nombre  = form.nombre  ? form.nombre.value.trim()  : '';
+  var email   = form.email   ? form.email.value.trim()   : '';
+  var tel     = form.telefono ? form.telefono.value.trim() : '';
+  var mensaje = form.mensaje  ? form.mensaje.value.trim()  : '';
+
+  var waText = encodeURIComponent(
+    'Hola, soy ' + nombre + '.\n' +
+    'Email: ' + email + (tel ? '\nTeléfono: ' + tel : '') + '\n\n' +
+    mensaje
+  );
+
+  /* Simulate brief delay then show success + open WhatsApp */
+  setTimeout(function () {
+    form.style.display = 'none';
+    if (success) success.style.display = 'block';
+    window.open('https://wa.me/34648021435?text=' + waText, '_blank');
+  }, 700);
+}
 </script>
 
 <!-- Nav scroll-spy -->
