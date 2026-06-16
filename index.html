@@ -804,21 +804,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  /* ── EmailJS config ─────────────────────────────────────────────────
-     Rellena estos 3 valores con los de tu cuenta en emailjs.com:
-     1. PUBLIC_KEY  → Account → General → Public Key
-     2. SERVICE_ID  → Email Services → tu servicio Gmail → Service ID
-     3. TEMPLATE_ID → Email Templates → tu plantilla → Template ID
-  ─────────────────────────────────────────────────────────────────── */
-  var EMAILJS_PUBLIC_KEY  = '9DPPc2TgMRmxyqnIc';
-  var EMAILJS_SERVICE_ID  = 'service_ftji75b';
-  var EMAILJS_TEMPLATE_ID = 'template_or21pbi';
-
-  if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-  }
+  /* ── Web3Forms config — pega tu access key aquí ── */
+  var WEB3FORMS_KEY = 'YOUR_ACCESS_KEY';
 </script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
@@ -1275,25 +1263,31 @@ function handleBlastudiosContact(e) {
     btn.style.cursor = 'pointer';
   }
 
-  /* Try EmailJS first — fallback to WhatsApp if not configured */
-  var ejsReady = window.emailjs
-    && typeof EMAILJS_PUBLIC_KEY !== 'undefined'
-    && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY';
+  var w3fReady = typeof WEB3FORMS_KEY !== 'undefined' && WEB3FORMS_KEY !== 'YOUR_ACCESS_KEY';
 
-  if (ejsReady) {
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      name:         nombre,
-      from_name:    nombre,
-      email:        email,
-      from_email:   email,
-      phone:        tel || '—',
-      message:      mensaje,
-      reply_to:     email,
-      to_email:     'blastudios.contact@gmail.com'
-    }).then(function () {
-      showSuccess();
-    }, function (err) {
-      console.error('EmailJS error:', err);
+  if (w3fReady) {
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key:   WEB3FORMS_KEY,
+        name:         nombre,
+        email:        email,
+        phone:        tel || '—',
+        message:      mensaje,
+        subject:      'Nuevo mensaje de ' + nombre + ' — blastudios.com'
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        showSuccess();
+      } else {
+        throw new Error(data.message || 'Error desconocido');
+      }
+    })
+    .catch(function(err) {
+      console.error('Web3Forms error:', err);
       resetBtn('Error — intenta de nuevo');
       btn.style.background = '#ef4444';
       setTimeout(function () {
@@ -1302,7 +1296,7 @@ function handleBlastudiosContact(e) {
       }, 3000);
     });
   } else {
-    /* EmailJS not configured yet → send via WhatsApp */
+    /* Web3Forms no configurado → fallback WhatsApp */
     var waText = encodeURIComponent(
       'Hola, soy ' + nombre + '.\n' +
       'Email: ' + email + (tel ? '\nTeléfono: ' + tel : '') + '\n\n' +
