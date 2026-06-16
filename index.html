@@ -1282,7 +1282,9 @@ function handleBlastudiosContact(e) {
 
   if (ejsReady) {
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      name:         nombre,
       from_name:    nombre,
+      email:        email,
       from_email:   email,
       phone:        tel || '—',
       message:      mensaje,
