@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Aún no tienes página web? – Blastudios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0D1F3C;
+    --blue: #2563EB;
+    --blue-soft: rgba(37,99,235,0.10);
+    --blue-border: rgba(37,99,235,0.22);
+    --muted: #5b6680;
+    --bg-light: #f5f5f7;
+  }
+
+  body {
+    background: #1c1c1e;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+  }
+
+  /* SLIDE BASE — 1080×1350 at 0.5 scale preview */
+  .slide {
+    width: 540px;
+    height: 675px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: linear-gradient(165deg, #ffffff 0%, #eef2fb 52%, #f3f5fb 100%);
+  }
+
+  /* soft brand orbs (subtle, like blastudios.com) */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    pointer-events: none;
+  }
+  .orb-a { width: 320px; height: 320px; top: -120px; right: -90px; background: radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%); }
+  .orb-b { width: 280px; height: 280px; bottom: -120px; left: -100px; background: radial-gradient(circle, rgba(13,31,60,0.10) 0%, transparent 70%); }
+
+  /* leaf decoration (like reference) */
+  .leaf {
+    position: absolute;
+    top: -10px; right: -30px;
+    width: 150px; height: 230px;
+    opacity: 0.9;
+    transform: rotate(8deg);
+  }
+
+  /* ─── shared header ───────────────────────────── */
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1d4ed8, #2563EB, #60a5fa);
+    z-index: 5;
+  }
+  .head {
+    position: absolute;
+    top: 30px; left: 44px; right: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 6;
+  }
+  .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+  }
+  .brand span { font-weight: 300; }
+  .head-index {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .pill {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-border);
+    border-radius: 100px;
+    padding: 6px 14px;
+  }
+  .divider { width: 44px; height: 3px; background: var(--blue); border-radius: 2px; }
+
+  /* ─── SLIDE 1 — PORTADA ───────────────────────── */
+  .cover .content {
+    position: absolute;
+    top: 90px; left: 44px; right: 44px;
+    z-index: 4;
+  }
+  .cover h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 45px;
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--navy);
+    margin: 18px 0 0;
+  }
+  .cover h1 .hl { color: var(--blue); }
+  .cover .benefits {
+    margin-top: 26px;
+    display: flex;
+    gap: 12px;
+  }
+  .benefit-row {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid #e7eaf2;
+    border-radius: 14px;
+    padding: 14px 6px 12px;
+    box-shadow: 0 6px 18px rgba(13,31,60,0.05);
+  }
+  .benefit-row .ic {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .benefit-row .ic svg { width: 21px; height: 21px; stroke: var(--blue); fill: none; stroke-width: 2; }
+  .benefit-row .lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  /* laptop mockup */
+  .laptop {
+    position: absolute;
+    bottom: 86px; left: 50%;
+    transform: translateX(-50%);
+    width: 352px;
+    z-index: 3;
+  }
+  .laptop .screen {
+    width: 100%;
+    height: 215px;
+    background: #fff;
+    border: 8px solid #1c1c1e;
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+    box-shadow: 0 24px 50px rgba(13,31,60,0.22);
+  }
+  .laptop .base {
+    width: 116%;
+    height: 13px;
+    margin-left: -8%;
+    background: linear-gradient(#d7dbe4, #b9bfcc);
+    border-radius: 0 0 12px 12px;
+  }
+  .laptop .base::after {
+    content: ""; display: block;
+    width: 70px; height: 5px; margin: 0 auto;
+    background: #9aa1b2; border-radius: 0 0 6px 6px;
+  }
+  /* mini site inside screen */
+  .mini { font-family: 'Inter', sans-serif; height: 100%; }
+  .mini .nav {
+    height: 28px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; border-bottom: 1px solid #eceef3;
+  }
+  .mini .nav .logo { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700; color: var(--navy); }
+  .mini .nav .links { display: flex; gap: 8px; }
+  .mini .nav .links i { display: block; width: 18px; height: 3px; background: #d7dbe4; border-radius: 2px; }
+  .mini .hero { display: flex; gap: 10px; padding: 12px; }
+  .mini .hero .txt { flex: 1; }
+  .mini .hero .kicker { font-size: 6px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue); text-transform: uppercase; }
+  .mini .hero h4 { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.1; margin: 5px 0 7px; }
+  .mini .hero p { font-size: 7px; color: var(--muted); line-height: 1.5; }
+  .mini .hero .btn { margin-top: 8px; display: inline-block; background: var(--blue); color: #fff; font-size: 7px; font-weight: 600; padding: 5px 10px; border-radius: 5px; }
+  .mini .hero .pic { width: 96px; border-radius: 7px; background: linear-gradient(135deg, #2563EB, #0D1F3C); }
+  .mini .cards { display: flex; gap: 7px; padding: 0 12px 12px; }
+  .mini .cards .c { flex: 1; background: #f5f6f9; border-radius: 6px; padding: 7px; }
+  .mini .cards .c .dot { width: 13px; height: 13px; border-radius: 4px; background: var(--blue-soft); border: 1px solid var(--blue-border); margin-bottom: 5px; }
+  .mini .cards .c b { display: block; font-size: 6.5px; color: var(--navy); }
+  .mini .cards .c span { display: block; font-size: 5.5px; color: var(--muted); margin-top: 2px; }
+
+  /* cotizar tag floating over laptop */
+  .cotizar {
+    position: absolute;
+    bottom: 178px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(13,31,60,0.86);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 600;
+    padding: 11px 22px;
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(13,31,60,0.35);
+  }
+  .cotizar svg { width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 2; }
+
+  .cover .footer {
+    position: absolute;
+    bottom: 30px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    z-index: 6;
+  }
+  .cover .footer b { color: var(--blue); font-weight: 600; }
+
+  /* ─── BENEFIT SLIDES (2-4) ────────────────────── */
+  .feat .body {
+    position: absolute;
+    top: 100px; left: 44px; right: 44px;
+    z-index: 4;
+  }
+  .feat .big-ic {
+    width: 78px; height: 78px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid var(--blue-border);
+    box-shadow: 0 12px 30px rgba(37,99,235,0.16);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 26px;
+  }
+  .feat .big-ic svg { width: 38px; height: 38px; stroke: var(--blue); fill: none; stroke-width: 2; }
+  .feat .step {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .feat h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 44px; font-weight: 700;
+    line-height: 1.04; letter-spacing: -0.03em;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .feat h2 em { font-style: normal; color: var(--blue); }
+  .feat .desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 17px; font-weight: 400;
+    line-height: 1.6; color: var(--muted);
+    max-width: 90%;
+  }
+  .feat .statbox {
+    position: absolute;
+    bottom: 44px; left: 44px; right: 44px;
+    background: #fff;
+    border: 1px solid #e7eaf2;
+    border-left: 3px solid var(--blue);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 14px 40px rgba(13,31,60,0.08);
+    z-index: 4;
+  }
+  .feat .statbox .num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 38px; font-weight: 700; color: var(--navy);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .feat .statbox .num em { font-style: normal; color: var(--blue); }
+  .feat .statbox .cap {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; color: var(--muted);
+    margin-top: 6px; line-height: 1.4;
+  }
+
+  /* ─── SLIDE 5 — INCLUYE ───────────────────────── */
+  .incl .body { position: absolute; top: 96px; left: 44px; right: 44px; z-index: 4; }
+  .incl h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 40px; font-weight: 700;
+    line-height: 1.05; letter-spacing: -0.03em;
+    color: var(--navy); margin: 16px 0 28px;
+  }
+  .incl h2 em { font-style: normal; color: var(--blue); }
+  .incl .list { display: flex; flex-direction: column; gap: 14px; }
+  .incl .item {
+    display: flex; align-items: center; gap: 14px;
+    background: #fff;
+    border: 1px solid #e7eaf2;
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 24px rgba(13,31,60,0.05);
+  }
+  .incl .item .check {
+    width: 30px; height: 30px; flex-shrink: 0;
+    border-radius: 9px; background: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .incl .item .check svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; }
+  .incl .item .t b {
+    display: block; font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 600; color: var(--navy);
+  }
+  .incl .item .t span {
+    display: block; font-family: 'Inter', sans-serif;
+    font-size: 13px; color: var(--muted); margin-top: 2px;
+  }
+
+  /* ─── SLIDE 6 — CTA ───────────────────────────── */
+  .cta-slide { background: linear-gradient(160deg, #0D1F3C 0%, #14264a 60%, #0D1F3C 100%); }
+  .cta-slide .orb-a { background: radial-gradient(circle, rgba(37,99,235,0.45) 0%, transparent 70%); }
+  .cta-slide .orb-b { background: radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 70%); }
+  .cta-slide .center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 86%; text-align: center; z-index: 4;
+  }
+  .cta-slide .pill { color: #93b4ff; background: rgba(37,99,235,0.18); border-color: rgba(37,99,235,0.4); }
+  .cta-slide h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 50px; font-weight: 700;
+    line-height: 1.04; letter-spacing: -0.03em;
+    color: #fff; margin: 26px 0 18px;
+  }
+  .cta-slide h2 span { color: #60a5fa; }
+  .cta-slide .sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 17px; color: rgba(245,245,247,0.7);
+    line-height: 1.6; margin-bottom: 34px;
+  }
+  .cta-slide .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--blue); color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 600;
+    padding: 16px 34px; border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 14px 36px rgba(37,99,235,0.5);
+  }
+  .cta-slide .btn svg { width: 18px; height: 18px; fill: #fff; }
+  .cta-slide .handle {
+    position: absolute; bottom: 40px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 600;
+    color: rgba(245,245,247,0.55);
+    letter-spacing: 0.04em; z-index: 4;
+  }
+  .cta-slide .brand { color: #fff; }
+
+  .slide-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; color: rgba(245,245,247,0.4);
+    letter-spacing: 0.05em; text-align: center; margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — PORTADA
+══════════════════════════════════════════════ -->
+<div class="slide cover">
+  <div class="top-bar"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <!-- leaf -->
+  <svg class="leaf" viewBox="0 0 150 230" xmlns="http://www.w3.org/2000/svg">
+    <g>
+      <path d="M75 230 C 55 170 50 90 60 10 C 80 70 90 160 78 230 Z" fill="#2f7d4f"/>
+      <path d="M82 230 C 95 170 110 90 135 25 C 120 110 105 180 90 230 Z" fill="#3a9b62"/>
+      <path d="M70 225 C 40 175 25 110 8 55 C 35 120 55 175 66 225 Z" fill="#27693f"/>
+    </g>
+  </svg>
+
+  <div class="head">
+    <span class="brand">bla<span>studios</span></span>
+    <span class="head-index">Diseño Web</span>
+  </div>
+
+  <div class="content">
+    <span class="pill">Marketing digital con IA</span>
+    <h1>¿AÚN NO<br>TIENES<br><span class="hl">PÁGINA WEB?</span></h1>
+    <div class="benefits">
+      <div class="benefit-row">
+        <span class="ic">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 8.5a3 3 0 0 1 0 5.5M17 14c2.5.4 4 2.4 4 5"/></svg>
+        </span>
+        <span class="lbl">Más clientes</span>
+      </div>
+      <div class="benefit-row">
+        <span class="ic">
+          <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+        <span class="lbl">Más visibilidad</span>
+      </div>
+      <div class="benefit-row">
+        <span class="ic">
+          <svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M7 16l4-5 3 3 5-7"/><path d="M19 7v3.5M19 7h-3.5"/></svg>
+        </span>
+        <span class="lbl">Más ventas</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cotizar">
+    <svg viewBox="0 0 24 24"><path d="M9 11l3 3 7-7M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/></svg>
+    Cotizá gratis
+  </div>
+
+  <div class="laptop">
+    <div class="screen">
+      <div class="mini">
+        <div class="nav">
+          <span class="logo">TU NEGOCIO</span>
+          <span class="links"><i></i><i></i><i></i></span>
+        </div>
+        <div class="hero">
+          <div class="txt">
+            <div class="kicker">Bienvenido</div>
+            <h4>Soluciones que impulsan tu negocio</h4>
+            <p>Diseño profesional y a medida, hecho para vender más.</p>
+            <span class="btn">Contactar</span>
+          </div>
+          <div class="pic"></div>
+        </div>
+        <div class="cards">
+          <div class="c"><div class="dot"></div><b>Rápido</b><span>Carga veloz</span></div>
+          <div class="c"><div class="dot"></div><b>Responsive</b><span>Todo equipo</span></div>
+          <div class="c"><div class="dot"></div><b>Seguro</b><span>SSL incluido</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="base"></div>
+  </div>
+
+  <div class="footer">Tu web profesional desde <b>blastudios</b> · desliza →</div>
+</div>
+<div class="slide-label">Slide 1 / 6 — Portada</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — MÁS CLIENTES
+══════════════════════════════════════════════ -->
+<div class="slide feat">
+  <div class="top-bar"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="head">
+    <span class="brand">bla<span>studios</span></span>
+    <span class="head-index">01 · Más clientes</span>
+  </div>
+  <div class="body">
+    <div class="big-ic">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 8.5a3 3 0 0 1 0 5.5M17 14c2.5.4 4 2.4 4 5"/></svg>
+    </div>
+    <div class="step">Más clientes</div>
+    <h2>Tu negocio<br>abierto <em>24/7</em></h2>
+    <p class="desc">Una página web trabaja por vos mientras dormís. Tus clientes te encuentran, conocen tus servicios y te contactan en cualquier momento, sin depender de un horario.</p>
+  </div>
+  <div class="statbox">
+    <div class="num"><em>+75%</em> de la gente</div>
+    <div class="cap">juzga la credibilidad de un negocio por su página web.</div>
+  </div>
+</div>
+<div class="slide-label">Slide 2 / 6 — Más clientes</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — MÁS VISIBILIDAD
+══════════════════════════════════════════════ -->
+<div class="slide feat">
+  <div class="top-bar"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="head">
+    <span class="brand">bla<span>studios</span></span>
+    <span class="head-index">02 · Más visibilidad</span>
+  </div>
+  <div class="body">
+    <div class="big-ic">
+      <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <div class="step">Más visibilidad</div>
+    <h2>Que te <em>encuentren</em><br>en Google</h2>
+    <p class="desc">Optimizamos tu web para que aparezcas cuando tus clientes buscan lo que ofrecés. Dejá de perder oportunidades frente a la competencia que ya está online.</p>
+  </div>
+  <div class="statbox">
+    <div class="num"><em>93%</em> de las experiencias</div>
+    <div class="cap">online empiezan con una búsqueda en un buscador.</div>
+  </div>
+</div>
+<div class="slide-label">Slide 3 / 6 — Más visibilidad</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — MÁS VENTAS
+══════════════════════════════════════════════ -->
+<div class="slide feat">
+  <div class="top-bar"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="head">
+    <span class="brand">bla<span>studios</span></span>
+    <span class="head-index">03 · Más ventas</span>
+  </div>
+  <div class="body">
+    <div class="big-ic">
+      <svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M7 16l4-5 3 3 5-7"/><path d="M19 7v3.5M19 7h-3.5"/></svg>
+    </div>
+    <div class="step">Más ventas</div>
+    <h2>Convertí visitas<br>en <em>clientes</em></h2>
+    <p class="desc">Diseñamos cada sección para guiar al visitante hacia la acción: comprar, reservar o escribirte. Una web pensada para vender, no solo para mostrar.</p>
+  </div>
+  <div class="statbox">
+    <div class="num"><em>×2</em> más conversiones</div>
+    <div class="cap">con un diseño claro, rápido y enfocado en el cliente.</div>
+  </div>
+</div>
+<div class="slide-label">Slide 4 / 6 — Más ventas</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5 — QUÉ INCLUYE
+══════════════════════════════════════════════ -->
+<div class="slide incl">
+  <div class="top-bar"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="head">
+    <span class="brand">bla<span>studios</span></span>
+    <span class="head-index">Qué incluye</span>
+  </div>
+  <div class="body">
+    <span class="pill">Tu web, lista para vender</span>
+    <h2>Todo lo que<br>tu web <em>necesita</em></h2>
+    <div class="list">
+      <div class="item">
+        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+        <span class="t"><b>Diseño a medida con IA</b><span>Único, alineado a tu marca</span></span>
+      </div>
+      <div class="item">
+        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+        <span class="t"><b>100% responsive</b><span>Perfecta en móvil y escritorio</span></span>
+      </div>
+      <div class="item">
+        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+        <span class="t"><b>Optimizada para Google</b><span>SEO desde el primer día</span></span>
+      </div>
+      <div class="item">
+        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+        <span class="t"><b>WhatsApp y contacto directo</b><span>Que te escriban en un clic</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 5 / 6 — Qué incluye</div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 6 — CTA / CIERRE
+══════════════════════════════════════════════ -->
+<div class="slide cta-slide">
+  <div class="top-bar"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="head">
+    <span class="brand">bla<span>studios</span></span>
+    <span class="head-index" style="color:#93b4ff;">Cotizá hoy</span>
+  </div>
+  <div class="center">
+    <span class="pill">Agencia de marketing con IA</span>
+    <h2>Llevemos tu<br>negocio <span>online</span></h2>
+    <p class="sub">Escribinos y armamos tu página web profesional. Primera consulta sin costo.</p>
+    <a class="btn" href="https://wa.me/34648021435" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.6-.3h.5c.2 0 .4 0 .6.5l.7 1.7c.1.1.1.3 0 .5l-.3.5c-.1.2-.3.3-.1.6.1.2.6 1 1.3 1.6.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.6-.8c.2-.2.4-.1.6 0l1.6.8c.2.1.4.2.5.3.1.2.1.6-.1 1.1Z"/></svg>
+      Quiero mi web
+    </a>
+  </div>
+  <div class="handle">@blastudios · <span class="brand">bla<span>studios</span></span>.com</div>
+</div>
+<div class="slide-label">Slide 6 / 6 — CTA</div>
+
+</body>
+</html>
