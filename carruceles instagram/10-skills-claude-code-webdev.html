@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 Skills de Claude Code para Web Dev – Blastudios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0F;
+    --blue: #4F6BFF;
+    --blue-soft: rgba(79,107,255,0.12);
+    --blue-border: rgba(79,107,255,0.30);
+    --violet: #7C5CFF;
+    --ink: #F5F5F7;
+    --muted: rgba(245,245,247,0.55);
+    --faint: rgba(245,245,247,0.32);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #15151c;
+    font-family: 'Space Grotesk', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+  }
+
+  /* SLIDE BASE — 1080×1350 at 0.5 scale preview */
+  .slide {
+    width: 540px;
+    height: 675px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: var(--bg);
+  }
+
+  /* blueprint grid */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(79,107,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,107,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 75%);
+  }
+  .top-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--violet), var(--blue), #8FA3FF);
+    z-index: 5;
+  }
+  .corner-deco {
+    position: absolute; width: 240px; height: 240px;
+    top: -70px; right: -70px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,107,255,0.22) 0%, transparent 70%);
+  }
+  .bottom-deco {
+    position: absolute; width: 320px; height: 320px;
+    bottom: -120px; left: -90px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,92,255,0.12) 0%, transparent 70%);
+  }
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    color: var(--faint); letter-spacing: 0.08em;
+  }
+
+  /* ─── PORTADA ─────────────────────────────────────── */
+  .slide-cover .bg-glow {
+    position: absolute; width: 560px; height: 560px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,107,255,0.30) 0%, rgba(124,92,255,0.06) 55%, transparent 78%);
+    top: -120px; left: 50%; transform: translateX(-50%);
+  }
+  .slide-cover .tag {
+    position: absolute; top: 44px; left: 44px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--blue);
+    background: var(--blue-soft); border: 1px solid var(--blue-border);
+    border-radius: 6px; padding: 6px 12px;
+  }
+  .slide-cover .logo-top { position: absolute; top: 48px; right: 44px; }
+  .slide-cover .main-number {
+    position: absolute; top: 150px; left: 50%; transform: translateX(-50%);
+    font-family: 'Space Mono', monospace; font-size: 320px; font-weight: 700;
+    color: rgba(79,107,255,0.10); line-height: 1; letter-spacing: -0.04em;
+    user-select: none;
+  }
+  .slide-cover .cover-content {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 0 44px 56px;
+  }
+  .slide-cover .divider { width: 44px; height: 3px; background: var(--blue); margin-bottom: 18px; }
+  .slide-cover .cover-label {
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue);
+    margin-bottom: 14px;
+  }
+  .slide-cover h1 {
+    font-size: 50px; font-weight: 700; line-height: 1.02;
+    letter-spacing: -0.03em; color: var(--ink);
+  }
+  .slide-cover h1 span { color: var(--blue); }
+  .slide-cover .cover-sub {
+    margin-top: 18px; font-size: 16px; font-weight: 400;
+    color: var(--muted); line-height: 1.5;
+  }
+
+  /* ─── SLIDE SKILL ─────────────────────────────────── */
+  .slide-skill .header {
+    position: absolute; top: 30px; left: 44px; right: 44px;
+    display: flex; justify-content: space-between; align-items: center; z-index: 5;
+  }
+  .slide-skill .skill-index {
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; color: var(--faint);
+  }
+  .slide-skill .big-num {
+    position: absolute; top: 56px; left: 30px;
+    font-family: 'Space Mono', monospace; font-size: 230px; font-weight: 700;
+    line-height: 1; letter-spacing: -0.05em; color: rgba(79,107,255,0.08);
+    user-select: none;
+  }
+  .slide-skill .content {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 0 44px 52px;
+  }
+  .skill-tag {
+    display: inline-block; font-family: 'Space Mono', monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--blue);
+    background: var(--blue-soft); border: 1px solid var(--blue-border);
+    border-radius: 6px; padding: 5px 11px; margin-bottom: 18px;
+  }
+  .slide-skill h2 {
+    font-size: 42px; font-weight: 700; line-height: 1.02;
+    letter-spacing: -0.03em; color: var(--ink); margin-bottom: 10px;
+  }
+  .slide-skill h2.small { font-size: 34px; }
+  .skill-meta {
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 400;
+    color: var(--blue); letter-spacing: 0.02em; margin-bottom: 18px;
+  }
+  .skill-meta .star { color: #FFC861; }
+  .slide-skill .desc {
+    font-size: 15.5px; font-weight: 400; line-height: 1.55;
+    color: var(--muted); margin-bottom: 22px;
+  }
+  .ba-box {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; overflow: hidden; background: rgba(255,255,255,0.025);
+  }
+  .ba-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; }
+  .ba-row + .ba-row { border-top: 1px solid rgba(255,255,255,0.06); }
+  .ba-label {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; padding: 3px 8px; border-radius: 5px;
+    flex-shrink: 0; min-width: 76px; text-align: center;
+  }
+  .ba-before { color: rgba(245,245,247,0.5); background: rgba(255,255,255,0.06); }
+  .ba-after { color: var(--blue); background: var(--blue-soft); border: 1px solid var(--blue-border); }
+  .ba-text { font-size: 13px; line-height: 1.4; color: rgba(245,245,247,0.72); }
+
+  /* ─── CIERRE ──────────────────────────────────────── */
+  .slide-close .glow {
+    position: absolute; width: 700px; height: 700px; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,107,255,0.20) 0%, rgba(124,92,255,0.05) 50%, transparent 70%);
+  }
+  .slide-close .center {
+    position: absolute; top: 47%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; width: 86%;
+  }
+  .slide-close .close-tag {
+    display: inline-block; font-family: 'Space Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--blue);
+    background: var(--blue-soft); border: 1px solid var(--blue-border);
+    border-radius: 6px; padding: 6px 14px; margin-bottom: 26px;
+  }
+  .slide-close h2 {
+    font-size: 46px; font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.03em; color: var(--ink); margin-bottom: 20px;
+  }
+  .slide-close h2 span { color: var(--blue); }
+  .slide-close .close-sub {
+    font-size: 15.5px; font-weight: 400; color: var(--muted);
+    line-height: 1.55; margin-bottom: 32px;
+  }
+  .slide-close .cta {
+    display: inline-block; background: var(--blue); color: #fff;
+    font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700;
+    letter-spacing: 0.02em; padding: 14px 30px; border-radius: 100px;
+    text-decoration: none;
+  }
+  .slide-close .logo-bottom {
+    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+    color: var(--faint); letter-spacing: 0.08em; white-space: nowrap;
+  }
+
+  .slide-label {
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    color: rgba(245,245,247,0.4); letter-spacing: 0.05em; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1 — PORTADA -->
+<div class="slide slide-cover">
+  <div class="grid-bg"></div>
+  <div class="bg-glow"></div>
+  <div class="tag">WEB DEV</div>
+  <div class="logo logo-top">@BLASTUDIOS._</div>
+  <div class="main-number">10</div>
+  <div class="cover-content">
+    <div class="divider"></div>
+    <div class="cover-label">Claude Code · Skills</div>
+    <h1>10 skills de <span>Claude Code</span><br>que casi nadie usa</h1>
+    <p class="cover-sub">Y la mayoría son gratis o ya las tienes instaladas.</p>
+  </div>
+</div>
+<div class="slide-label">Slide 1 / 12 — Portada</div>
+
+<!-- SLIDE 2 — Superpowers -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 01 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">01</div>
+  <div class="content">
+    <div class="skill-tag">TDD</div>
+    <h2>Superpowers</h2>
+    <div class="skill-meta">obra · <span class="star">★</span> 40.9K · TDD en 7 fases</div>
+    <p class="desc">Le pides una feature y Claude suelta 200 líneas sin pensar. Superpowers planifica primero, escribe el test, después el código.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Código que parece bien hasta que lo pruebas.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Test en verde antes de tocar producción.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 2 / 12 — Superpowers</div>
+
+<!-- SLIDE 3 — Frontend Design -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 02 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">02</div>
+  <div class="content">
+    <div class="skill-tag">DISEÑO</div>
+    <h2>Frontend Design</h2>
+    <div class="skill-meta">Anthropic oficial · GRATIS</div>
+    <p class="desc">Toda UI hecha con IA huele igual: gradiente morado, bordes redondeados, cero alma. Esta skill rompe ese molde. Claude diseña con criterio, no con plantilla.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Otra landing clon.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Una interfaz que parece tuya.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 3 / 12 — Frontend Design</div>
+
+<!-- SLIDE 4 — Karpathy Behavioural -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 03 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">03</div>
+  <div class="content">
+    <div class="skill-tag">SAFETY</div>
+    <h2>Karpathy Behavioural</h2>
+    <div class="skill-meta"><span class="star">★</span> 172K+ · 4 reglas duras</div>
+    <p class="desc">Claude inventa funciones, borra tu código, dice "listo" sin probar nada. 4 reglas de comportamiento que cortan eso de raíz.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">"Ya lo arreglé" (no lo arregló).</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">No toca nada que no entienda.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 4 / 12 — Karpathy Behavioural</div>
+
+<!-- SLIDE 5 — UI/UX Pro Max -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 04 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">04</div>
+  <div class="content">
+    <div class="skill-tag">DESIGN SYSTEM</div>
+    <h2>UI/UX Pro Max</h2>
+    <div class="skill-meta">161 paletas · 57 tipografías · a11y</div>
+    <p class="desc">161 paletas de color. 57 combinaciones de tipografía. Sistemas de diseño con accesibilidad por defecto, no como añadido. Eliges, no improvisas.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Elegir colores a ojo a las 2am.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Sistema coherente y accesible en minutos.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 5 / 12 — UI/UX Pro Max</div>
+
+<!-- SLIDE 6 — Firecrawl -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 05 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">05</div>
+  <div class="content">
+    <div class="skill-tag">AUTOMATION</div>
+    <h2>Firecrawl</h2>
+    <div class="skill-meta">acceso web en vivo</div>
+    <p class="desc">Claude no ve internet. Vive en su burbuja de datos congelados. Firecrawl le da acceso real: scraping, formularios, contenido dinámico.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">"No tengo acceso a esa web".</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Te trae el dato en vivo.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 6 / 12 — Firecrawl</div>
+
+<!-- SLIDE 7 — Vercel Web Design Guidelines -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 06 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">06</div>
+  <div class="content">
+    <div class="skill-tag">STANDARDS</div>
+    <h2 class="small">Vercel Web Design<br>Guidelines</h2>
+    <div class="skill-meta">fetch en vivo · siempre actual</div>
+    <p class="desc">Los estándares web cambian cada mes. La memoria de Claude no. Esta skill consulta las guías de Vercel en vivo, cada vez.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Patrones de hace dos años.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Estándar actual, siempre.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 7 / 12 — Vercel Guidelines</div>
+
+<!-- SLIDE 8 — Spartan AI Toolkit -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 07 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">07</div>
+  <div class="content">
+    <div class="skill-tag">QA</div>
+    <h2>Spartan AI Toolkit</h2>
+    <div class="skill-meta">typecheck → lint → test → review</div>
+    <p class="desc">"Compila en mi máquina" no es control de calidad. Spartan mete puertas de calidad. Ninguna se salta: pasa todo o no pasa.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Bugs que descubre el cliente.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Los caza el pipeline antes del merge.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 8 / 12 — Spartan AI Toolkit</div>
+
+<!-- SLIDE 9 — Artifacts Builder -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 08 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">08</div>
+  <div class="content">
+    <div class="skill-tag">PROTOTYPING</div>
+    <h2>Artifacts Builder</h2>
+    <div class="skill-meta">React + Tailwind + shadcn/ui</div>
+    <p class="desc">¿Idea a las 11pm? No abras Figma. Prototipa al vuelo con React, Tailwind y shadcn/ui. De concepto a componente sin salir del chat.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Mockup estático que hay que reconstruir.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Prototipo que ya es código real.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 9 / 12 — Artifacts Builder</div>
+
+<!-- SLIDE 10 — CLAUDE.md -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 09 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">09</div>
+  <div class="content">
+    <div class="skill-tag">CONTEXT</div>
+    <h2>CLAUDE.md</h2>
+    <div class="skill-meta">INTEGRADO · archivo de contexto</div>
+    <p class="desc">Cada sesión nueva, Claude empieza de cero. CLAUDE.md guarda stack, reglas y convenciones. Lo lee al arrancar. Adiós al arranque en frío.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Explicar tu proyecto otra vez. Y otra.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Lo sabe desde el primer mensaje.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 10 / 12 — CLAUDE.md</div>
+
+<!-- SLIDE 11 — Code Simplifier -->
+<div class="slide slide-skill">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="corner-deco"></div>
+  <div class="bottom-deco"></div>
+  <div class="header"><span class="skill-index">SKILL 10 / 10</span><span class="logo">@BLASTUDIOS._</span></div>
+  <div class="big-num">10</div>
+  <div class="content">
+    <div class="skill-tag">REVIEW</div>
+    <h2>Code Simplifier</h2>
+    <div class="skill-meta">INTEGRADO · GRATIS · 3 agentes</div>
+    <p class="desc">Funciona ≠ está bien hecho. 3 agentes revisan tu código en paralelo después de cada tarea. Detectan duplicación, complejidad y código muerto.</p>
+    <div class="ba-box">
+      <div class="ba-row"><span class="ba-label ba-before">ANTES</span><span class="ba-text">Deuda técnica acumulándose en silencio.</span></div>
+      <div class="ba-row"><span class="ba-label ba-after">DESPUÉS</span><span class="ba-text">Revisión automática en cada commit.</span></div>
+    </div>
+  </div>
+</div>
+<div class="slide-label">Slide 11 / 12 — Code Simplifier</div>
+
+<!-- SLIDE 12 — CIERRE / CTA -->
+<div class="slide slide-close">
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+  <div class="glow"></div>
+  <div class="center">
+    <div class="close-tag">Blastudios · Valencia</div>
+    <h2>¿Cuál vas a<br><span>instalar primero?</span></h2>
+    <p class="close-sub">Guarda este carrusel antes de que se te olvide.<br>Compártelo con el dev que sigue peleándose con la IA.</p>
+    <a class="cta" href="#">@blastudios._</a>
+  </div>
+  <div class="logo-bottom">SETUPS DE CLAUDE CODE QUE SÍ MUEVEN LA AGUJA</div>
+</div>
+<div class="slide-label">Slide 12 / 12 — CTA</div>
+
+</body>
+</html>
