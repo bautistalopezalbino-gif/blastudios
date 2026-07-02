@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stories · Nuevo mes, ¿aún sin web? – Blastudios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0D1F3C;
+    --blue: #2563EB;
+    --blue-lt: #60a5fa;
+    --muted: rgba(226,232,246,0.62);
+  }
+
+  body {
+    background: #1c1c1e;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 22px;
+    padding: 40px 20px;
+  }
+
+  /* STORY BASE — 1080×1920 (9:16) at 1/3 preview */
+  .story {
+    width: 360px;
+    height: 640px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: linear-gradient(168deg, #0D1F3C 0%, #14264a 52%, #0a1730 100%);
+    color: #fff;
+  }
+
+  .orb { position: absolute; border-radius: 50%; filter: blur(46px); pointer-events: none; }
+  .orb-a { width: 240px; height: 240px; top: -70px; right: -60px; background: radial-gradient(circle, rgba(37,99,235,0.5) 0%, transparent 70%); }
+  .orb-b { width: 260px; height: 260px; bottom: -90px; left: -80px; background: radial-gradient(circle, rgba(37,99,235,0.28) 0%, transparent 70%); }
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 75%);
+  }
+
+  /* ─── Instagram story chrome ─────────────────── */
+  .progress {
+    position: absolute; top: 12px; left: 14px; right: 14px;
+    display: flex; gap: 5px; z-index: 8;
+  }
+  .progress i { flex: 1; height: 2.5px; border-radius: 2px; background: rgba(255,255,255,0.28); }
+  .progress i.on { background: #fff; }
+  .story-head {
+    position: absolute; top: 26px; left: 14px; right: 14px;
+    display: flex; align-items: center; gap: 9px; z-index: 8;
+  }
+  .story-head .av {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, #2563EB, #0D1F3C);
+    border: 1.5px solid rgba(255,255,255,0.9);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: #fff;
+  }
+  .story-head .u { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #fff; }
+  .story-head .tag { font-size: 11px; color: rgba(255,255,255,0.55); }
+  .story-head .x { margin-left: auto; font-size: 18px; color: rgba(255,255,255,0.75); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--blue-lt);
+    background: rgba(37,99,235,0.16);
+    border: 1px solid rgba(37,99,235,0.4);
+    border-radius: 100px; padding: 8px 16px;
+  }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue-lt); }
+
+  /* ─── FRAME 1 — HOOK ─────────────────────────── */
+  .hook .wrap {
+    position: absolute; top: 50%; left: 34px; right: 34px;
+    transform: translateY(-52%);
+  }
+  .hook .month {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 120px; font-weight: 700; line-height: 0.86;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(96,165,250,0.4);
+    margin-bottom: -6px;
+  }
+  .hook h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 40px; font-weight: 700; line-height: 1.02;
+    letter-spacing: -0.03em; color: #fff; margin: 22px 0 0;
+  }
+  .hook h1 span { color: var(--blue-lt); }
+  .hook .sub {
+    margin-top: 18px; font-size: 15px; line-height: 1.55;
+    color: var(--muted); max-width: 92%;
+  }
+  .hook .divider { width: 46px; height: 3px; background: var(--blue); border-radius: 2px; margin-top: 26px; }
+
+  /* swipe up hint (frames 1 & 5) */
+  .swipe {
+    position: absolute; bottom: 30px; left: 0; right: 0;
+    text-align: center; z-index: 7;
+  }
+  .swipe .chev {
+    width: 26px; height: 26px; margin: 0 auto 6px;
+    display: block;
+    animation: none;
+  }
+  .swipe .chev svg { width: 26px; height: 26px; stroke: var(--blue-lt); fill: none; stroke-width: 2.5; }
+  .swipe span {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em; color: rgba(255,255,255,0.85);
+  }
+
+  /* ─── FRAME 2 — COSTO DE ESPERAR ─────────────── */
+  .why .wrap { position: absolute; top: 96px; left: 34px; right: 34px; }
+  .why h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 34px; font-weight: 700; line-height: 1.08;
+    letter-spacing: -0.03em; color: #fff; margin: 20px 0 26px;
+  }
+  .why h2 em { font-style: normal; color: var(--blue-lt); }
+  .why .points { display: flex; flex-direction: column; gap: 14px; }
+  .why .pt {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 16px; padding: 16px 18px;
+  }
+  .why .pt .ic {
+    width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px;
+    background: rgba(37,99,235,0.18); border: 1px solid rgba(37,99,235,0.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .why .pt .ic svg { width: 22px; height: 22px; stroke: var(--blue-lt); fill: none; stroke-width: 2; }
+  .why .pt b { display: block; font-size: 16px; font-weight: 600; color: #fff; }
+  .why .pt span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* ─── FRAME 3 — SERVICIOS (grid 2x2) ─────────── */
+  .serv .wrap { position: absolute; top: 84px; left: 28px; right: 28px; }
+  .serv h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 30px; font-weight: 700; line-height: 1.08;
+    letter-spacing: -0.03em; color: #fff; margin: 16px 0 18px;
+  }
+  .serv h2 em { font-style: normal; color: var(--blue-lt); }
+  .serv .grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 12px; }
+  .serv .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 16px; padding: 15px 14px;
+    display: flex; flex-direction: column; gap: 9px;
+  }
+  .serv .card .ic {
+    width: 40px; height: 40px; border-radius: 11px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(37,99,235,0.5));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px rgba(37,99,235,0.3);
+  }
+  .serv .card .ic svg { width: 21px; height: 21px; stroke: #fff; fill: none; stroke-width: 2; }
+  .serv .card b { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: #fff; line-height: 1.15; }
+  .serv .card span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+  /* ─── FRAME 4 — POR QUÉ BLASTUDIOS ───────────── */
+  .edge .wrap { position: absolute; top: 90px; left: 34px; right: 34px; }
+  .edge h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px; font-weight: 700; line-height: 1.06;
+    letter-spacing: -0.03em; color: #fff; margin: 18px 0 22px;
+  }
+  .edge h2 em { font-style: normal; color: var(--blue-lt); }
+  .edge .stats { display: flex; flex-direction: column; gap: 13px; }
+  .edge .st {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-left: 3px solid var(--blue);
+    border-radius: 14px; padding: 17px 20px;
+  }
+  .edge .st .n { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--blue-lt); letter-spacing: -0.02em; line-height: 1.1; }
+  .edge .st .c { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+
+  /* ─── FRAME 5 — CTA ──────────────────────────── */
+  .cta .wrap {
+    position: absolute; top: 50%; left: 34px; right: 34px;
+    transform: translateY(-54%); text-align: center;
+  }
+  .cta h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 40px; font-weight: 700; line-height: 1.03;
+    letter-spacing: -0.03em; color: #fff; margin: 24px 0 16px;
+  }
+  .cta h2 span { color: var(--blue-lt); }
+  .cta .sub { font-size: 15px; color: var(--muted); line-height: 1.55; margin-bottom: 30px; }
+  .cta .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--blue); color: #fff;
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600;
+    padding: 16px 32px; border-radius: 100px; text-decoration: none;
+    box-shadow: 0 14px 36px rgba(37,99,235,0.5);
+  }
+  .cta .btn svg { width: 19px; height: 19px; fill: #fff; }
+  .cta .wa { margin-top: 18px; font-size: 14px; color: rgba(255,255,255,0.6); }
+  .cta .wa b { color: #fff; font-weight: 600; }
+
+  .footer-brand {
+    position: absolute; bottom: 26px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5); z-index: 7;
+  }
+  .footer-brand span { font-weight: 300; }
+
+  .story-label {
+    width: 360px; text-align: center; margin-top: -8px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    color: rgba(245,245,247,0.4); letter-spacing: 0.05em;
+  }
+  .brandline { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+  .brandline span { font-weight: 300; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ FRAME 1 — HOOK ══════════ -->
+<div>
+<div class="story hook">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="grid-lines"></div>
+  <div class="progress"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+  <div class="story-head">
+    <span class="av">b</span>
+    <div><div class="u">blastudios</div></div>
+    <span class="tag">· Publicidad</span>
+    <span class="x">✕</span>
+  </div>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span>Nuevo mes</span>
+    <div class="month" style="margin-top:20px;">NUEVO<br>MES</div>
+    <h1>¿Y aún no tienes<br><span>página web?</span></h1>
+    <p class="sub">Empieza el mes con tu negocio online. Hoy es el mejor momento para dar el salto.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="swipe">
+    <span class="chev"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></span>
+    <span>Desliza para ver más</span>
+  </div>
+</div>
+<div class="story-label">Story 1 / 5 — Gancho</div>
+</div>
+
+<!-- ══════════ FRAME 2 — COSTO DE ESPERAR ══════════ -->
+<div>
+<div class="story why">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="grid-lines"></div>
+  <div class="progress"><i></i><i class="on"></i><i></i><i></i><i></i></div>
+  <div class="story-head">
+    <span class="av">b</span><div><div class="u">blastudios</div></div>
+    <span class="tag">· Publicidad</span><span class="x">✕</span>
+  </div>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span>Cada mes cuenta</span>
+    <h2>Sin web, tu<br>negocio es <em>invisible</em></h2>
+    <div class="points">
+      <div class="pt">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <div><b>Clientes que no te ven</b><span>Te buscan en Google y no apareces</span></div>
+      </div>
+      <div class="pt">
+        <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div><b>Ventas que se enfrían</b><span>Sin un lugar 24/7 para convertir</span></div>
+      </div>
+      <div class="pt">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2v6M12 22v-2M4 6l3 3M20 6l-3 3"/><circle cx="12" cy="15" r="4"/></svg></span>
+        <div><b>Menos confianza</b><span>El 75% juzga tu marca por tu web</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-brand"><span class="brandline">bla<span>studios</span></span> · Marketing con IA</div>
+</div>
+<div class="story-label">Story 2 / 5 — El problema</div>
+</div>
+
+<!-- ══════════ FRAME 3 — SERVICIOS ══════════ -->
+<div>
+<div class="story serv">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="grid-lines"></div>
+  <div class="progress"><i></i><i></i><i class="on"></i><i></i><i></i></div>
+  <div class="story-head">
+    <span class="av">b</span><div><div class="u">blastudios</div></div>
+    <span class="tag">· Publicidad</span><span class="x">✕</span>
+  </div>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span>Nuestros servicios</span>
+    <h2>Esto hace<br><em>blastudios</em> por ti</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg></span>
+        <b>Diseño Web</b>
+        <span>Webs premium que convierten.</span>
+      </div>
+      <div class="card">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 11l18-7-7 18-2.5-7.5L3 11Z"/></svg></span>
+        <b>Campañas Digitales</b>
+        <span>Publicidad que maximiza tu ROI.</span>
+      </div>
+      <div class="card">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="4"/><path d="M12 8v4l2 2"/></svg></span>
+        <b>Crecimiento con IA</b>
+        <span>IA para escalar tu operación.</span>
+      </div>
+      <div class="card">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M5 7h9M5 12h6M5 17h9"/><circle cx="18" cy="9" r="2.5"/><path d="M18 14v3"/></svg></span>
+        <b>Automatización IA</b>
+        <span>Atención y ventas automáticas.</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="story-label">Story 3 / 5 — Servicios</div>
+</div>
+
+<!-- ══════════ FRAME 4 — POR QUÉ ══════════ -->
+<div>
+<div class="story edge">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="grid-lines"></div>
+  <div class="progress"><i></i><i></i><i></i><i class="on"></i><i></i></div>
+  <div class="story-head">
+    <span class="av">b</span><div><div class="u">blastudios</div></div>
+    <span class="tag">· Publicidad</span><span class="x">✕</span>
+  </div>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span>Por qué blastudios</span>
+    <h2>Resultados,<br>no solo <em>diseño</em></h2>
+    <div class="stats">
+      <div class="st"><div class="n">IA + estrategia</div><div class="c">Combinamos inteligencia artificial y marketing para vender más.</div></div>
+      <div class="st"><div class="n">Web en días</div><div class="c">Tu página lista y online rápido, sin vueltas ni excusas.</div></div>
+      <div class="st"><div class="n">100% a medida</div><div class="c">Diseño único alineado a tu marca y a tus objetivos.</div></div>
+    </div>
+  </div>
+</div>
+<div class="story-label">Story 4 / 5 — Diferenciador</div>
+</div>
+
+<!-- ══════════ FRAME 5 — CTA ══════════ -->
+<div>
+<div class="story cta">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="grid-lines"></div>
+  <div class="progress"><i></i><i></i><i></i><i></i><i class="on"></i></div>
+  <div class="story-head">
+    <span class="av">b</span><div><div class="u">blastudios</div></div>
+    <span class="tag">· Publicidad</span><span class="x">✕</span>
+  </div>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span>Empieza este mes</span>
+    <h2>Estrena tu web<br>este <span>mes</span></h2>
+    <p class="sub">Escríbenos y armamos tu página web profesional. Primera consulta sin costo.</p>
+    <a class="btn" href="https://wa.me/34648021435" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.6-.3h.5c.2 0 .4 0 .6.5l.7 1.7c.1.1.1.3 0 .5l-.3.5c-.1.2-.3.3-.1.6.1.2.6 1 1.3 1.6.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.6-.8c.2-.2.4-.1.6 0l1.6.8c.2.1.4.2.5.3.1.2.1.6-.1 1.1Z"/></svg>
+      Quiero mi web
+    </a>
+    <p class="wa">o escríbenos a <b>@blastudios</b></p>
+  </div>
+  <div class="swipe">
+    <span class="chev"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></span>
+    <span>Desliza hacia arriba</span>
+  </div>
+</div>
+<div class="story-label">Story 5 / 5 — CTA</div>
+</div>
+
+</body>
+</html>
