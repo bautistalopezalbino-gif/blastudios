@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#0D1F3C;
+    --bg2:#0A1830;
+    --accent:#2563EB;
+    --accent2:#3B82F6;
+    --ink:#FFFFFF;
+    --muted:#9FB3D1;
+    --line:rgba(255,255,255,.12);
+    --card:rgba(255,255,255,.045);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  h1,h2,h3,.h{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em;}
+
+  .page{
+    width:210mm;min-height:297mm;padding:20mm 18mm;
+    background:radial-gradient(1200px 600px at 80% -10%, rgba(37,99,235,.22), transparent 60%),var(--bg);
+    position:relative;page-break-after:always;overflow:hidden;
+  }
+  .page:last-child{page-break-after:auto;}
+
+  /* Header / brand */
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:6mm;}
+  .brand .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7DA6FF);box-shadow:0 0 24px rgba(37,99,235,.7);}
+  .brand .name{font-family:'Space Grotesk';font-weight:700;font-size:17px;letter-spacing:.02em;}
+  .brand .tag{margin-left:auto;font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;}
+
+  .kicker{color:var(--accent2);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;}
+  h1.title{font-size:40px;font-weight:700;line-height:1.02;margin-bottom:14px;}
+  h1.title span{color:var(--accent2);}
+  .lead{color:var(--muted);font-size:13px;line-height:1.6;max-width:150mm;}
+
+  h2.sec{font-size:22px;font-weight:600;margin:0 0 4mm;display:flex;align-items:center;gap:10px;}
+  h2.sec::before{content:"";width:5px;height:22px;border-radius:4px;background:var(--accent);display:inline-block;}
+
+  /* Cover meta chips */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:11px;color:var(--muted);}
+  .chip b{color:var(--ink);font-weight:600;}
+
+  .cover-hero{margin-top:auto;}
+  .cover-foot{position:absolute;left:18mm;right:18mm;bottom:16mm;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:12px;font-size:10.5px;color:var(--muted);}
+
+  /* Reel cards */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:6mm;margin-top:5mm;}
+  .reel{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:14px 15px;position:relative;overflow:hidden;}
+  .reel::after{content:"";position:absolute;inset:0;border-radius:16px;background:linear-gradient(180deg,rgba(37,99,235,.10),transparent 40%);pointer-events:none;}
+  .reel .num{font-family:'Space Grotesk';font-weight:700;font-size:12px;color:var(--bg);background:var(--accent2);border-radius:7px;padding:3px 8px;display:inline-block;}
+  .reel .pilar{float:right;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px;}
+  .reel h3{font-size:14.5px;font-weight:600;margin:10px 0 8px;line-height:1.2;}
+  .reel .row{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:5px;}
+  .reel .row b{color:var(--ink);font-weight:600;}
+  .reel .gancho{color:#CFE0FF;font-style:italic;}
+  .reel .cta{margin-top:9px;font-size:10.5px;color:var(--accent2);font-weight:600;border-top:1px dashed var(--line);padding-top:8px;}
+
+  .note{margin-top:5mm;font-size:11px;color:var(--muted);background:rgba(37,99,235,.08);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:12px 14px;line-height:1.6;}
+  .note b{color:var(--ink);}
+
+  /* Structure strip */
+  .flow{display:flex;gap:8px;margin-top:5mm;}
+  .flow .step{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 10px;text-align:center;}
+  .flow .step .t{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:5px;font-weight:600;}
+  .flow .step .d{font-size:10.5px;color:var(--muted);line-height:1.4;}
+  .flow .arrow{align-self:center;color:var(--accent2);font-size:14px;}
+
+  /* Prompt block */
+  .prompt{margin-top:5mm;border:1px solid var(--line);background:var(--bg2);border-radius:14px;overflow:hidden;}
+  .prompt .bar{background:rgba(255,255,255,.05);padding:9px 14px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);}
+  .prompt .bar .g{width:9px;height:9px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px var(--accent2);}
+  .prompt pre{padding:14px 16px;font-family:'Space Grotesk',monospace;font-size:11px;line-height:1.65;color:#DCE7FA;white-space:pre-wrap;word-break:break-word;}
+  .prompt pre .var{color:#8FE3B0;font-weight:600;}
+  .prompt pre .h{color:var(--accent2);font-weight:700;}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:6mm;margin-top:5mm;}
+  .box{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:13px 15px;}
+  .box h4{font-family:'Space Grotesk';font-size:12.5px;font-weight:600;margin-bottom:8px;color:var(--accent2);}
+  .box ul{list-style:none;}
+  .box li{font-size:11px;color:var(--muted);line-height:1.5;padding-left:16px;position:relative;margin-bottom:6px;}
+  .box li::before{content:"▸";position:absolute;left:0;color:var(--accent2);}
+  .box li b{color:var(--ink);font-weight:600;}
+
+  .pagenum{position:absolute;right:18mm;bottom:10mm;font-size:9px;color:var(--muted);letter-spacing:.1em;}
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 · COVER ============ -->
+<section class="page" style="display:flex;flex-direction:column;">
+  <div class="brand">
+    <div class="dot"></div><div class="name">blastudios</div>
+    <div class="tag">Marketing Digital · IA</div>
+  </div>
+
+  <div class="cover-hero">
+    <div class="kicker">Plan de contenido · Instagram</div>
+    <h1 class="title">Ideas de <span>Reels</span><br>+ prompt para<br>generar sus guiones</h1>
+    <p class="lead">8 ideas de Reels listas para grabar, pensadas para atraer negocios locales y convertirlos en conversaciones por DM. Incluye la estructura ganadora de cada Reel y un prompt reutilizable para que una IA te escriba el guion completo de cualquiera de ellos.</p>
+
+    <div class="chips">
+      <div class="chip"><b>8</b> ideas de Reels</div>
+      <div class="chip"><b>4</b> pilares de contenido</div>
+      <div class="chip">1 <b>prompt maestro</b> de guiones</div>
+      <div class="chip">Objetivo: <b>+ clientes</b></div>
+    </div>
+  </div>
+
+  <div class="cover-foot">
+    <span>@blastudios · Valencia, España</span>
+    <span>Documento de trabajo interno</span>
+  </div>
+</section>
+
+<!-- ============ PAGE 2 · REEL IDEAS 1-4 ============ -->
+<section class="page">
+  <div class="brand"><div class="dot"></div><div class="name">blastudios</div><div class="tag">Ideas de Reels 1–4</div></div>
+  <h2 class="sec">Las 8 ideas de Reels</h2>
+  <p class="lead" style="margin-bottom:2mm;">Cada Reel: gancho en los 2 primeros segundos, 15–30 seg, texto grande en pantalla (se ven sin sonido) y un solo CTA claro.</p>
+
+  <div class="grid">
+    <div class="reel">
+      <span class="num">R1</span><span class="pilar">Autoridad</span>
+      <h3>3 errores que hacen que tu web NO venda</h3>
+      <div class="row gancho">"Tu web te está costando clientes y no lo sabes."</div>
+      <div class="row"><b>Idea:</b> muestras 3 errores típicos (lenta, sin CTA, no móvil) con ejemplos en pantalla.</div>
+      <div class="row"><b>Base en repo:</b> reel_blastudios_errores.mp4</div>
+      <div class="cta">CTA → "Comenta WEB y te digo cómo arreglarlo"</div>
+    </div>
+
+    <div class="reel">
+      <span class="num">R2</span><span class="pilar">Autoridad</span>
+      <h3>Cómo la IA cambió el marketing en 2 años</h3>
+      <div class="row gancho">"Esto era imposible hace 2 años…"</div>
+      <div class="row"><b>Idea:</b> antes vs. ahora, ritmo rápido, demuestras que estás a la última.</div>
+      <div class="row"><b>Base en repo:</b> reel_evolucion_ia.mp4</div>
+      <div class="cta">CTA → "Sígueme para no quedarte atrás"</div>
+    </div>
+
+    <div class="reel">
+      <span class="num">R3</span><span class="pilar">Caso real</span>
+      <h3>Le hicimos toda la presencia digital a una pastelería</h3>
+      <div class="row gancho">"De cero a web + menú digital + banner."</div>
+      <div class="row"><b>Idea:</b> caso Küme como prueba social — recorrido del antes/después.</div>
+      <div class="row"><b>Material:</b> carpeta /campañas instagram/kume</div>
+      <div class="cta">CTA → "Escríbeme KÜME y te muestro el proceso"</div>
+    </div>
+
+    <div class="reel">
+      <span class="num">R4</span><span class="pilar">Autoridad</span>
+      <h3>Tu negocio trabajando mientras duermes</h3>
+      <div class="row gancho">"Son las 3am y tu negocio sigue vendiendo."</div>
+      <div class="row"><b>Idea:</b> automatización con IA que responde y agenda sola 24/7.</div>
+      <div class="row"><b>Base en repo:</b> reel_blastudios_automatizacion.mp4</div>
+      <div class="cta">CTA → "Te lo monto — escríbeme AUTOMATIZA"</div>
+    </div>
+  </div>
+
+  <div class="note"><b>Prioridad #1:</b> los Reels son tu mayor palanca de <b>alcance nuevo</b> (gente que aún no te sigue). Publica 2 por semana de forma constante; la constancia gana a la perfección.</div>
+  <div class="pagenum">02</div>
+</section>
+
+<!-- ============ PAGE 3 · REEL IDEAS 5-8 + estructura ============ -->
+<section class="page">
+  <div class="brand"><div class="dot"></div><div class="name">blastudios</div><div class="tag">Ideas de Reels 5–8</div></div>
+  <h2 class="sec">Ideas 5–8</h2>
+
+  <div class="grid">
+    <div class="reel">
+      <span class="num">R5</span><span class="pilar">Beneficios</span>
+      <h3>3 razones para tener web propia (y no solo Instagram)</h3>
+      <div class="row gancho">"Si Instagram cierra mañana… ¿te quedas sin negocio?"</div>
+      <div class="row"><b>Idea:</b> propiedad del canal, aparecer en Google, verte profesional.</div>
+      <div class="row"><b>Base en repo:</b> reel_blastudios_beneficios.mp4</div>
+      <div class="cta">CTA → "DM WEB para la tuya"</div>
+    </div>
+
+    <div class="reel">
+      <span class="num">R6</span><span class="pilar">Caso real</span>
+      <h3>Antes / Después de una web</h3>
+      <div class="row gancho">"Mira esta transformación en 5 segundos."</div>
+      <div class="row"><b>Idea:</b> transición visual limpia entre una web vieja y la nueva.</div>
+      <div class="row"><b>Material:</b> capturas antes/después de proyectos</div>
+      <div class="cta">CTA → "¿Quieres la tuya? Escríbeme"</div>
+    </div>
+
+    <div class="reel">
+      <span class="num">R7</span><span class="pilar">Marca</span>
+      <h3>Un día trabajando con IA en Blastudios</h3>
+      <div class="row gancho">"Así trabajo yo con IA cada día."</div>
+      <div class="row"><b>Idea:</b> detrás de cámara real, humaniza la marca y genera confianza.</div>
+      <div class="row"><b>Material:</b> grabación propia de tu proceso</div>
+      <div class="cta">CTA → "Conóceme — sígueme"</div>
+    </div>
+
+    <div class="reel">
+      <span class="num">R8</span><span class="pilar">Oferta</span>
+      <h3>Auditoría gratis de tu Instagram o web</h3>
+      <div class="row gancho">"Te reviso gratis tu Instagram/web en 5 min."</div>
+      <div class="row"><b>Idea:</b> imán de leads — ofreces valor a cambio del contacto.</div>
+      <div class="row"><b>Material:</b> pantalla + tu cara explicando</div>
+      <div class="cta">CTA → "Comenta AUDIT y te la hago"</div>
+    </div>
+  </div>
+
+  <h2 class="sec" style="margin-top:7mm;">La estructura que hace que un Reel convierta</h2>
+  <div class="flow">
+    <div class="step"><div class="t">0–2 seg</div><div class="d">Gancho: frase o imagen que frena el scroll</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">Problema</div><div class="d">El dolor del negocio local</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">Solución</div><div class="d">Tu propuesta (con IA)</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">Prueba</div><div class="d">Mini-demo o caso real</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="t">CTA</div><div class="d">Una sola acción por DM</div></div>
+  </div>
+  <div class="pagenum">03</div>
+</section>
+
+<!-- ============ PAGE 4 · PROMPT ============ -->
+<section class="page">
+  <div class="brand"><div class="dot"></div><div class="name">blastudios</div><div class="tag">Prompt de guiones</div></div>
+  <h2 class="sec">Prompt maestro para generar guiones de Reels</h2>
+  <p class="lead">Copia este prompt en Claude / ChatGPT y rellena solo las variables en <span style="color:#8FE3B0;font-weight:600;">verde</span>. Sirve para cualquiera de las 8 ideas: te devuelve el guion completo listo para grabar.</p>
+
+  <div class="prompt">
+    <div class="bar"><span class="g"></span>PROMPT · pégalo y completa las variables</div>
+    <pre><span class="h">## ROL</span>
+Actúa como guionista experto en Reels de Instagram para
+captación de clientes de una agencia de marketing digital
+con IA llamada Blastudios (Valencia, España).
+
+<span class="h">## CONTEXTO</span>
+- Marca: Blastudios. Tono: cercano, seguro, sin tecnicismos.
+- Servicios: webs, campañas, crecimiento e IA, automatizaciones.
+- Público: dueños de negocios locales (cafeterías, tiendas,
+  clínicas, restaurantes) con poca presencia digital.
+- Objetivo del Reel: generar conversaciones por DM.
+
+<span class="h">## REEL A ESCRIBIR</span>
+- Idea / título: <span class="var">[PEGA AQUÍ EL TÍTULO DEL REEL, ej. R1]</span>
+- Pilar: <span class="var">[Autoridad / Caso / Marca / Oferta]</span>
+- CTA deseado: <span class="var">[ej. "Comenta WEB"]</span>
+- Duración objetivo: <span class="var">[15 / 20 / 30] segundos</span>
+
+<span class="h">## QUÉ QUIERO QUE DEVUELVAS</span>
+1. GANCHO (0–2 seg): 3 opciones de frase que frenen el scroll.
+2. GUION escena por escena en tabla con columnas:
+   [Tiempo] · [Texto en pantalla] · [Voz en off / audio]
+   · [Qué se ve en la imagen].
+3. TEXTO EN PANTALLA: frases cortas, grandes, sin faltas.
+4. CTA final claro y una sola acción.
+5. COPY del pie de publicación (2–3 líneas + gancho).
+6. 5 HASHTAGS mezclando locales (#Valencia) y de nicho.
+7. IDEA DE AUDIO/tendencia y consejo de edición.
+
+<span class="h">## REGLAS</span>
+- Todo en español de España, frases cortas.
+- Nada de promesas falsas ni palabras técnicas raras.
+- El gancho debe entenderse SIN sonido.
+- Cierra siempre empujando al DM, no a "visita la web".</pre>
+  </div>
+
+  <div class="two">
+    <div class="box">
+      <h4>Cómo usarlo en 30 segundos</h4>
+      <ul>
+        <li>Elige una idea (R1–R8) de las páginas anteriores.</li>
+        <li>Pega su <b>título, pilar y CTA</b> en las variables verdes.</li>
+        <li>Ejecuta el prompt y revisa el guion.</li>
+        <li>Graba con el <b>texto en pantalla</b> que te dé.</li>
+        <li>Publica y responde <b>todos</b> los DM en &lt; 1 hora.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Ejemplo de variables (R1)</h4>
+      <ul>
+        <li><b>Título:</b> 3 errores que hacen que tu web no venda</li>
+        <li><b>Pilar:</b> Autoridad</li>
+        <li><b>CTA:</b> "Comenta WEB"</li>
+        <li><b>Duración:</b> 20 segundos</li>
+        <li>→ Obtienes gancho + guion + copy + hashtags.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note"><b>Consejo:</b> guarda los guiones que te gusten y reutiliza los ganchos que mejor funcionen. En redes, lo que convierte se repite (cambiando el ejemplo o el sector).</div>
+  <div class="pagenum">04</div>
+</section>
+
+</body>
+</html>
