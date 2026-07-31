@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lanzador de DMs · Kit Blastudios 10 €</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#000;--surface:#0d0d0f;--surface2:#141418;--line:rgba(255,255,255,.09);
+        --fg:#f5f5f7;--muted:#98989f;--primary:#2563eb;--ok:#22c55e}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;line-height:1.6;padding:32px 20px 80px}
+  .wrap{max-width:880px;margin:0 auto}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:32px;letter-spacing:-.03em;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:15px;margin-bottom:8px}
+  .warn{background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.28);border-radius:12px;
+        padding:14px 18px;font-size:14px;color:#b9cbf5;margin:20px 0 30px}
+  h2{font-family:'Space Grotesk',sans-serif;font-size:16px;letter-spacing:-.01em;margin:0 0 12px;
+     display:flex;align-items:center;gap:10px}
+  h2 .n{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;
+        font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:20px}
+  textarea,input,select{width:100%;background:#0a0a0c;border:1px solid var(--line);border-radius:10px;
+        color:var(--fg);font-family:inherit;font-size:14px;padding:12px 14px;outline:none;resize:vertical}
+  textarea:focus,input:focus,select:focus{border-color:rgba(37,99,235,.5)}
+  textarea{min-height:120px;line-height:1.55}
+  label{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .hint{font-size:13px;color:var(--muted);margin-top:8px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--primary);
+       color:#fff;border:none;border-radius:999px;padding:12px 24px;font-size:14px;font-weight:600;
+       font-family:inherit;cursor:pointer;transition:background .2s,transform .12s;text-decoration:none}
+  .btn:hover{background:#3b7bf5}
+  .btn:active{transform:scale(.98)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.2)}
+  .btn.ghost:hover{background:rgba(255,255,255,.06)}
+  .btn.sm{padding:9px 18px;font-size:13px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .bar{height:8px;background:#1a1a1f;border-radius:99px;overflow:hidden;margin:14px 0 8px}
+  .bar i{display:block;height:100%;background:var(--primary);width:0;transition:width .3s}
+  .count{font-size:13px;color:var(--muted)}
+  ul{list-style:none}
+  li{display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--surface2);
+     border:1px solid var(--line);border-radius:12px;margin-bottom:9px;transition:opacity .2s}
+  li.done{opacity:.45}
+  li.done .name{text-decoration:line-through}
+  .name{flex:1;font-size:14.5px;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tel{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .chk{width:20px;height:20px;flex:0 0 auto;accent-color:var(--ok);cursor:pointer}
+  .empty{color:var(--muted);font-size:14px;padding:8px 0}
+  .tpl-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .tpl-tabs button{background:transparent;border:1px solid var(--line);color:var(--muted);
+        border-radius:999px;padding:8px 16px;font-size:13px;font-family:inherit;cursor:pointer}
+  .tpl-tabs button.on{border-color:var(--primary);color:#fff;background:rgba(37,99,235,.14)}
+  code{background:#1a1a1f;padding:2px 6px;border-radius:5px;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Lanzador de DMs</h1>
+  <p class="sub">Kit Blastudios · 10 € — <a href="https://blastudios.vercel.app/kit/" style="color:#2563eb">blastudios.vercel.app/kit</a></p>
+
+  <div class="warn">
+    Esta herramienta abre WhatsApp con el mensaje ya escrito y personalizado con el nombre.
+    Tú solo pulsas enviar. Es un archivo local: los contactos se guardan solo en este navegador
+    y no se suben a ningún sitio.
+  </div>
+
+  <section>
+    <h2><span class="n">1</span>Tus contactos</h2>
+    <label for="raw">Un contacto por línea · <code>Nombre, teléfono</code></label>
+    <textarea id="raw" placeholder="María, 600111222
+Jose Luis, 611222333
+Küme Pastelería, 622333444"></textarea>
+    <p class="hint">El prefijo se añade solo si no lo pones. Sin espacios ni guiones no pasa nada, se limpian.</p>
+    <div class="row" style="margin-top:14px">
+      <input id="prefijo" value="34" style="width:90px" aria-label="Prefijo">
+      <button class="btn" id="cargar">Cargar contactos</button>
+      <button class="btn ghost sm" id="reset">Empezar de cero</button>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>El mensaje</h2>
+    <div class="tpl-tabs" id="tabs"></div>
+    <textarea id="msg"></textarea>
+    <p class="hint">Usa <code>{nombre}</code> donde quieras que aparezca el nombre del contacto.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Enviar</h2>
+    <div class="bar"><i id="prog"></i></div>
+    <p class="count" id="count">0 de 0 enviados · objetivo: 15</p>
+    <ul id="lista"><li class="empty" style="background:none;border:none">Carga contactos arriba para empezar.</li></ul>
+  </section>
+</div>
+
+<script>
+const PLANTILLAS = [
+  { id:'frio', t:'Pedir opinión', m:
+`Hola {nombre}! Oye, he montado una cosa y me sirve mucho tu opinión.
+
+He hecho un PDF con un calendario de 30 días de contenido para negocios
+como el tuyo: qué publicar cada día, 12 prompts de IA listos y la estructura
+de reel que usamos nosotros. Lo he puesto a 10 € para que no sea una barrera.
+
+¿Te lo paso y me dices qué te parece?` },
+  { id:'directo', t:'Directo con enlace', m:
+`Hola {nombre}! Hemos sacado un kit práctico para negocios que llevan ellos
+mismos las redes: calendario de 30 días con qué publicar cada día, 12 prompts
+de IA listos para copiar y la estructura de reel que usamos con clientes.
+
+12 páginas por 10 €: blastudios.vercel.app/kit
+
+Y si lo ves y no te sirve, te devuelvo los 10 € sin preguntar nada.` },
+  { id:'cliente', t:'Para clientes tuyos', m:
+`Hola {nombre}! Como ya has trabajado con nosotros, te lo cuento a ti primero.
+
+He recopilado en un PDF el sistema que usamos para el contenido: 30 días
+planificados, los 12 prompts de IA que usamos a diario y la estructura de
+reel que mejor nos funciona. Son 10 €.
+
+Aquí lo tienes: blastudios.vercel.app/kit` }
+];
+
+const $ = id => document.getElementById(id);
+const KEY = 'bls_dms_v1';
+let estado = JSON.parse(localStorage.getItem(KEY) || '{"contactos":[],"tpl":"frio","msg":null}');
+
+function guardar(){ localStorage.setItem(KEY, JSON.stringify(estado)); }
+
+function limpiarTel(t, prefijo){
+  let n = String(t).replace(/[^\d+]/g, '');
+  if (n.startsWith('+')) return n.slice(1);
+  if (n.startsWith(prefijo) && n.length > 9) return n;
+  return prefijo + n;
+}
+
+function pintarTabs(){
+  $('tabs').innerHTML = PLANTILLAS.map(p =>
+    `<button data-tpl="${p.id}" class="${p.id === estado.tpl ? 'on' : ''}">${p.t}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(b => b.onclick = () => {
+    estado.tpl = b.dataset.tpl;
+    estado.msg = null;
+    $('msg').value = PLANTILLAS.find(p => p.id === estado.tpl).m;
+    guardar(); pintarTabs(); pintarLista();
+  });
+}
+
+function textoActual(){
+  return estado.msg ?? PLANTILLAS.find(p => p.id === estado.tpl).m;
+}
+
+function pintarLista(){
+  const l = $('lista');
+  if (!estado.contactos.length){
+    l.innerHTML = '<li class="empty" style="background:none;border:none">Carga contactos arriba para empezar.</li>';
+  } else {
+    l.innerHTML = estado.contactos.map((c, i) => {
+      const texto = encodeURIComponent(textoActual().replaceAll('{nombre}', c.nombre));
+      return `<li class="${c.enviado ? 'done' : ''}">
+        <input type="checkbox" class="chk" data-i="${i}" ${c.enviado ? 'checked' : ''} title="Marcar como enviado">
+        <span class="name">${c.nombre}</span>
+        <span class="tel">+${c.tel}</span>
+        <a class="btn sm" target="_blank" rel="noopener" data-send="${i}"
+           href="https://wa.me/${c.tel}?text=${texto}">Abrir WhatsApp</a>
+      </li>`;
+    }).join('');
+    l.querySelectorAll('.chk').forEach(ch => ch.onchange = () => {
+      estado.contactos[ch.dataset.i].enviado = ch.checked; guardar(); pintarLista();
+    });
+    l.querySelectorAll('[data-send]').forEach(a => a.onclick = () => {
+      estado.contactos[a.dataset.send].enviado = true;
+      guardar(); setTimeout(pintarLista, 400);
+    });
+  }
+  const hechos = estado.contactos.filter(c => c.enviado).length;
+  const meta = Math.max(15, estado.contactos.length);
+  $('count').textContent = `${hechos} de ${estado.contactos.length} enviados · objetivo: 15`;
+  $('prog').style.width = Math.min(100, (hechos / meta) * 100) + '%';
+}
+
+$('cargar').onclick = () => {
+  const prefijo = $('prefijo').value.replace(/\D/g, '') || '34';
+  const nuevos = $('raw').value.split('\n').map(l => l.trim()).filter(Boolean).map(linea => {
+    const partes = linea.split(/[,;\t]/);
+    const tel = partes.pop() || '';
+    const nombre = partes.join(',').trim() || 'Hola';
+    return { nombre, tel: limpiarTel(tel, prefijo), enviado: false };
+  }).filter(c => c.tel.length >= 9);
+  const vistos = new Set(estado.contactos.map(c => c.tel));
+  estado.contactos.push(...nuevos.filter(c => !vistos.has(c.tel)));
+  guardar(); pintarLista();
+  $('raw').value = '';
+};
+
+$('reset').onclick = () => {
+  if (!confirm('¿Borrar la lista de contactos y el progreso?')) return;
+  estado = { contactos: [], tpl: 'frio', msg: null };
+  guardar(); pintarTabs(); pintarLista(); $('msg').value = textoActual();
+};
+
+$('msg').oninput = () => { estado.msg = $('msg').value; guardar(); pintarLista(); };
+
+pintarTabs();
+$('msg').value = textoActual();
+pintarLista();
+</script>
+</body>
+</html>
