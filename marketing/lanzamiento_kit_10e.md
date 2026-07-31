@@ -3,7 +3,7 @@
 > **Objetivo:** cerrar la primera venta de 10 € lo antes posible y dejar montado un producto
 > que siga vendiendo solo.
 > **Activo:** `kit/index.html` (página de venta) + `producto/kit-blastudios-30dias.pdf` (12 págs.)
-> **URL una vez desplegado:** `blastudios.com/kit/`
+> **URL una vez desplegado:** `blastudios.vercel.app/kit/`
 
 ---
 
@@ -16,7 +16,7 @@ Para cobrar en automático con tarjeta:
 
 1. Entra en `dashboard.stripe.com` → **Payment links** → **New**.
 2. Producto: `Kit Blastudios · 30 días de contenido con IA`. Precio: `10,00 EUR`, pago único.
-3. En *After payment* → **Redirect customers to a URL** → pega `https://blastudios.com/kit/gracias.html`.
+3. En *After payment* → **Redirect customers to a URL** → pega `https://blastudios.vercel.app/kit/gracias.html`.
 4. Copia el enlace `https://buy.stripe.com/...`.
 5. Ábrelo en `kit/index.html` y pégalo en la línea `stripe: ""` del bloque `const PAGO`.
 
@@ -62,7 +62,7 @@ de reel que usamos nosotros. Lo he puesto a 10 € para que no sea una barrera.
 
 **Mensaje 2 (si dice que sí)**
 ```
-Genial. Aquí lo tienes: blastudios.com/kit
+Genial. Aquí lo tienes: blastudios.vercel.app/kit
 
 Son 10 € por Bizum al 648 021 435 o con tarjeta desde la web, como te venga mejor.
 En cuanto lo veas, dime sin filtros qué te sobra y qué te falta.
@@ -84,7 +84,7 @@ Y si lo ves y no te sirve, te devuelvo los 10 € sin preguntar nada.
 | 2 | Mockup de la portada del kit | «Por eso he hecho esto: 30 días ya decididos. No eliges qué publicar, solo lo publicas.» | — |
 | 3 | Captura de la página del calendario | «Día 1: el error nº1 de tu sector. Día 2: stories del día normal. Día 3: antes y después… así hasta 30.» | — |
 | 4 | Captura de la página de prompts | «Y 12 prompts listos para copiar. Los mismos que usamos nosotros.» | — |
-| 5 | Fondo azul #2563EB, precio grande | «10 €. Pago único. Descarga inmediata.» | Sticker enlace → blastudios.com/kit |
+| 5 | Fondo azul #2563EB, precio grande | «10 €. Pago único. Descarga inmediata.» | Sticker enlace → blastudios.vercel.app/kit |
 
 Publícalas seguidas, no repartidas. La secuencia funciona junta.
 
@@ -126,7 +126,7 @@ un calendario de 30 días con qué publicar cada día, 12 prompts de IA listos
 y la estructura de reel que usamos con nuestros clientes.
 
 Son 12 páginas en PDF por 10 €. Lo dejamos aquí por si a alguien le viene bien:
-blastudios.com/kit
+blastudios.vercel.app/kit
 
 (Y si alguien lo compra y no le sirve, le devolvemos los 10 € sin preguntar.)
 ```
