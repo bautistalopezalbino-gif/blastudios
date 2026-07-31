@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Kit Blastudios · 30 Días de Contenido con IA</title>
+<link href="fonts.css" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; color: #14161c; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page {
+    width: 210mm; height: 297mm; padding: 20mm 18mm 16mm;
+    position: relative; overflow: hidden; page-break-after: always;
+    display: flex; flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ---------- Portada ---------- */
+  .cover { background: #000; color: #fff; justify-content: space-between; padding: 26mm 18mm 18mm; }
+  .cover .brand { font-size: 30px; font-weight: 800; letter-spacing: -1.4px; }
+  .cover .brand span { font-weight: 300; }
+  .cover .tag { font-size: 8.5px; font-weight: 600; letter-spacing: 4px; color: #2563eb; margin-top: 3px; }
+  .cover h1 { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 52px; line-height: 1.02; letter-spacing: -2.4px; font-weight: 700; }
+  .cover h1 em { font-style: normal; color: #2563eb; }
+  .cover .sub { font-size: 15px; font-weight: 300; color: rgba(255,255,255,.62); line-height: 1.6; margin-top: 18px; max-width: 118mm; }
+  .cover .rule { height: 1px; background: rgba(255,255,255,.14); margin: 26px 0; }
+  .cover .meta { display: flex; gap: 34px; font-size: 10px; color: rgba(255,255,255,.45); letter-spacing: .1em; text-transform: uppercase; }
+  .cover .meta b { display: block; color: #fff; font-size: 15px; letter-spacing: -.02em; text-transform: none; margin-bottom: 3px; font-weight: 600; }
+  .glow { position: absolute; width: 300mm; height: 300mm; border-radius: 50%; background: radial-gradient(circle, rgba(37,99,235,.30) 0%, rgba(37,99,235,0) 62%); top: -150mm; right: -140mm; }
+
+  /* ---------- Interior ---------- */
+  .kicker { font-size: 9px; font-weight: 700; letter-spacing: .18em; color: #2563eb; text-transform: uppercase; margin-bottom: 7px; }
+  h2 { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 27px; line-height: 1.14; letter-spacing: -1px; font-weight: 700; margin-bottom: 5mm; }
+  h3 { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 14px; letter-spacing: -.2px; font-weight: 600; margin-bottom: 3.5mm; }
+  p { font-size: 10.5px; line-height: 1.62; color: #3d434f; margin-bottom: 3mm; }
+  strong { color: #14161c; font-weight: 600; }
+  .lead { font-size: 12px; line-height: 1.6; color: #2b313c; margin-bottom: 6mm; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 4mm; }
+  .card { border: 1px solid #e4e7ee; border-radius: 9px; padding: 4.5mm 5mm; background: #fbfcfe; }
+  .card.dark { background: #0b0d12; border-color: #0b0d12; color: #fff; }
+  .card.dark p { color: rgba(255,255,255,.66); }
+  .card.dark h3 { color: #fff; }
+  .card .num { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: #2563eb; line-height: 1; margin-bottom: 2.5mm; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  th { text-align: left; font-size: 8px; letter-spacing: .1em; text-transform: uppercase; color: #7c8496; font-weight: 600; padding: 0 2mm 2.4mm; border-bottom: 1px solid #d9dee8; }
+  td { padding: 2.35mm 2mm; border-bottom: 1px solid #eef1f6; vertical-align: top; line-height: 1.4; color: #3d434f; }
+  td.d { font-weight: 700; color: #14161c; width: 9mm; font-family: 'Space Grotesk', 'Inter', sans-serif; }
+  .pill { display: inline-block; font-size: 7.2px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 1.1mm 2mm; border-radius: 20px; white-space: nowrap; }
+  .p-reel { background: #e8efff; color: #1d4ed8; }
+  .p-post { background: #eaf7ee; color: #167a3c; }
+  .p-story { background: #fdeee6; color: #b1541c; }
+  .p-carr { background: #f1eafe; color: #6d31c9; }
+
+  .prompt { border-left: 2.5px solid #2563eb; background: #f7f9fd; border-radius: 0 8px 8px 0; padding: 3.6mm 4.5mm; margin-bottom: 3.6mm; }
+  .prompt .t { font-size: 9.5px; font-weight: 700; color: #14161c; margin-bottom: 1.8mm; }
+  .prompt .c { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 8.4px; line-height: 1.52; color: #333a47; white-space: pre-wrap; }
+
+  .step { display: flex; gap: 4mm; align-items: flex-start; margin-bottom: 4mm; }
+  .step .idx { flex: 0 0 8mm; height: 8mm; border-radius: 50%; background: #2563eb; color: #fff; font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+  .step .bd { flex: 1; }
+  .step .bd p { margin-bottom: 0; }
+
+  ul.chk { list-style: none; }
+  ul.chk li { font-size: 10px; line-height: 1.5; color: #3d434f; padding-left: 6.5mm; margin-bottom: 2.4mm; position: relative; }
+  ul.chk li:before { content: ''; position: absolute; left: 0; top: 1.1mm; width: 3.6mm; height: 3.6mm; border: 1.2px solid #b9c1d1; border-radius: 3px; }
+
+  .foot { position: absolute; bottom: 9mm; left: 18mm; right: 18mm; display: flex; justify-content: space-between; font-size: 7.5px; letter-spacing: .12em; text-transform: uppercase; color: #a6adbc; border-top: 1px solid #edf0f5; padding-top: 2.6mm; }
+  .spacer { flex: 1; }
+
+  .quote { border-radius: 10px; background: #0b0d12; color: #fff; padding: 6mm; }
+  .quote p { color: rgba(255,255,255,.72); font-size: 11px; margin: 0; }
+  .quote .who { font-size: 8.5px; letter-spacing: .14em; text-transform: uppercase; color: #2563eb; margin-top: 3.5mm; font-weight: 600; }
+
+  .kpi { display: flex; gap: 4mm; }
+  .kpi > div { flex: 1; border: 1px solid #e4e7ee; border-radius: 9px; padding: 4mm; text-align: center; }
+  .kpi b { display: block; font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 22px; color: #2563eb; letter-spacing: -1px; }
+  .kpi span { font-size: 8.2px; letter-spacing: .1em; text-transform: uppercase; color: #7c8496; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. PORTADA ============ -->
+<div class="page cover">
+  <div class="glow"></div>
+  <div style="position:relative;">
+    <div class="brand">bla<span>studios</span></div>
+    <div class="tag">DIGITAL MARKETING AGENCY</div>
+  </div>
+  <div style="position:relative;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.22em;color:#2563eb;margin-bottom:6mm;">KIT PRÁCTICO Nº 01</div>
+    <h1>30 días de<br>contenido con <em>IA</em><br>para tu negocio</h1>
+    <p class="sub">El sistema que usamos en Blastudios para que un negocio local publique cada día sin quedarse sin ideas, sin contratar a nadie y sin pasar horas delante de la pantalla.</p>
+    <div class="rule"></div>
+    <div class="meta">
+      <div><b>30</b>días planificados</div>
+      <div><b>12</b>prompts listos</div>
+      <div><b>20</b>ganchos y CTAs</div>
+      <div><b>1</b>caso real</div>
+    </div>
+  </div>
+  <div style="position:relative;font-size:8.5px;letter-spacing:.14em;color:rgba(255,255,255,.32);text-transform:uppercase;">blastudios.com · Valencia, España</div>
+</div>
+
+<!-- ============ 2. CÓMO USAR ============ -->
+<div class="page">
+  <div class="kicker">Empieza aquí</div>
+  <h2>Cómo usar este kit en los<br>próximos 40 minutos</h2>
+  <p class="lead">No hace falta que lo leas entero hoy. Este kit está hecho para ejecutarse, no para guardarse en la carpeta de descargas. Haz estos cuatro pasos seguidos y sales con dos semanas de contenido hechas.</p>
+
+  <div class="step"><div class="idx">1</div><div class="bd"><h3>Abre el calendario de 30 días (pág. 4 y 5)</h3><p>Cada día tiene formato, tema y ángulo definidos. No decides qué publicar: ya está decidido. Copia los 30 a tu calendario o a una nota del móvil.</p></div></div>
+  <div class="step"><div class="idx">2</div><div class="bd"><h3>Coge los prompts (pág. 6 y 7) y pégalos en tu IA</h3><p>Funcionan en Claude, ChatGPT o Gemini. Sustituye lo que está entre corchetes por los datos de tu negocio. Un prompt bien puesto tarda 30 segundos y te ahorra 40 minutos de folio en blanco.</p></div></div>
+  <div class="step"><div class="idx">3</div><div class="bd"><h3>Graba en bloque, no día a día</h3><p>Publicar cada día no significa grabar cada día. Un domingo de 90 minutos da para 8 vídeos. La página 8 tiene la estructura exacta de un reel que retiene.</p></div></div>
+  <div class="step"><div class="idx">4</div><div class="bd"><h3>Revisa cada domingo con el checklist (pág. 11)</h3><p>Cinco minutos mirando qué funcionó. Duplicas lo que funcionó, eliminas lo que no. Eso es el 80% de la mejora.</p></div></div>
+
+  <div class="spacer"></div>
+  <div class="quote">
+    <p><strong style="color:#fff;">La regla que lo sostiene todo:</strong> es mejor publicar algo correcto cinco veces por semana que algo perfecto una vez al mes. El algoritmo premia la constancia mucho antes que la producción. Este kit existe para quitarte la excusa de "no sé qué publicar".</p>
+    <div class="who">Método Blastudios</div>
+  </div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>02</span></div>
+</div>
+
+<!-- ============ 3. EL MÉTODO ============ -->
+<div class="page">
+  <div class="kicker">El método</div>
+  <h2>Tres pilares. Nada más.</h2>
+  <p class="lead">Todo el calendario que viene después se apoya en estos tres tipos de contenido. Si algún día no sabes qué hacer, elige uno de los tres y ya tienes la idea.</p>
+
+  <div class="grid3" style="margin-bottom:6mm;">
+    <div class="card"><div class="num">01</div><h3>Atrae</h3><p>Contenido pensado para que lo vea gente que aún no te conoce. Trucos, errores comunes del sector, "esto no lo sabías". Sin logo gigante, sin venta.</p></div>
+    <div class="card"><div class="num">02</div><h3>Conecta</h3><p>Contenido para que quien ya te sigue se fíe de ti. Tu cara, el detrás de cámaras, por qué haces las cosas como las haces, el error que cometiste.</p></div>
+    <div class="card"><div class="num">03</div><h3>Convierte</h3><p>Contenido que pide algo concreto. Producto, oferta, reserva, caso de cliente con resultado. Uno de cada cinco publicaciones, no más.</p></div>
+  </div>
+
+  <h3>El reparto semanal que funciona</h3>
+  <p>Cinco publicaciones por semana repartidas así: <strong>3 de Atrae, 1 de Conecta, 1 de Convierte.</strong> Si inviertes la proporción y publicas venta todos los días, el alcance se hunde en dos semanas. Si solo publicas Atrae, creces pero no vendes. La proporción importa más que la calidad de cada pieza suelta.</p>
+
+  <div class="kpi" style="margin:5mm 0 6mm;">
+    <div><b>3×</b><span>Atrae</span></div>
+    <div><b>1×</b><span>Conecta</span></div>
+    <div><b>1×</b><span>Convierte</span></div>
+    <div><b>5</b><span>por semana</span></div>
+  </div>
+
+  <h3>Qué formato para qué pilar</h3>
+  <table>
+    <tr><th>Pilar</th><th>Formato principal</th><th>Por qué</th></tr>
+    <tr><td><span class="pill p-reel">Atrae</span></td><td>Reel de 8–20 s</td><td>Es el único formato que Instagram sigue enseñando a gente que no te sigue.</td></tr>
+    <tr><td><span class="pill p-story">Conecta</span></td><td>Stories + carrusel</td><td>Baja producción, alta confianza. Aquí se responde en DM, que es donde se vende.</td></tr>
+    <tr><td><span class="pill p-post">Convierte</span></td><td>Carrusel o post fijo</td><td>Se queda en el perfil. Quien llega frío lo encuentra semanas después.</td></tr>
+  </table>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>03</span></div>
+</div>
+
+<!-- ============ 4. CALENDARIO 1-15 ============ -->
+<div class="page">
+  <div class="kicker">Calendario</div>
+  <h2>Días 1 a 15</h2>
+  <p class="lead">Sustituye <strong>[tu sector]</strong> por el tuyo: pastelería, peluquería, taller, clínica, tienda. El ángulo funciona igual.</p>
+  <table>
+    <tr><th>Día</th><th>Pilar</th><th>Qué publicas</th></tr>
+    <tr><td class="d">1</td><td><span class="pill p-reel">Atrae</span></td><td><strong>El error nº1 que comete la gente al elegir [tu sector].</strong> Empieza el vídeo por el error, no por tu nombre.</td></tr>
+    <tr><td class="d">2</td><td><span class="pill p-story">Conecta</span></td><td><strong>Stories: un día normal en 5 stories.</strong> Abrir, preparar, momento feo, momento bonito, cierre.</td></tr>
+    <tr><td class="d">3</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Antes y después</strong> de algo que hayas hecho. Corte seco en el segundo 2.</td></tr>
+    <tr><td class="d">4</td><td><span class="pill p-carr">Atrae</span></td><td><strong>Carrusel: 5 cosas que deberías saber antes de contratar/comprar [X].</strong></td></tr>
+    <tr><td class="d">5</td><td><span class="pill p-post">Convierte</span></td><td><strong>Tu producto o servicio estrella</strong> con el precio visible. Sí, con el precio.</td></tr>
+    <tr><td class="d">6</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Responde la pregunta que te hacen 10 veces al día.</strong> Literal, la que ya te sabes de memoria.</td></tr>
+    <tr><td class="d">7</td><td><span class="pill p-story">Conecta</span></td><td><strong>Encuesta en stories:</strong> "¿A o B?" sobre algo real de tu negocio. Luego enseña el resultado.</td></tr>
+    <tr><td class="d">8</td><td><span class="pill p-reel">Atrae</span></td><td><strong>El proceso acelerado.</strong> 15 segundos de cómo se hace algo que tu cliente nunca ve.</td></tr>
+    <tr><td class="d">9</td><td><span class="pill p-carr">Conecta</span></td><td><strong>Quién está detrás.</strong> Tu foto, tu historia en 3 slides, por qué empezaste.</td></tr>
+    <tr><td class="d">10</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Mito vs realidad</strong> de tu sector. "Te han dicho que… en realidad…".</td></tr>
+    <tr><td class="d">11</td><td><span class="pill p-post">Convierte</span></td><td><strong>Testimonio de cliente</strong> con una frase suya textual y una foto del resultado.</td></tr>
+    <tr><td class="d">12</td><td><span class="pill p-story">Conecta</span></td><td><strong>Caja de preguntas:</strong> "Pregúntame lo que quieras sobre [tu sector]". Responde en vídeo.</td></tr>
+    <tr><td class="d">13</td><td><span class="pill p-reel">Atrae</span></td><td><strong>3 trucos en 15 segundos.</strong> Uno cada 5 s, texto grande en pantalla.</td></tr>
+    <tr><td class="d">14</td><td><span class="pill p-carr">Atrae</span></td><td><strong>Comparativa honesta:</strong> cuándo SÍ necesitas esto y cuándo NO. La honestidad convierte.</td></tr>
+    <tr><td class="d">15</td><td><span class="pill p-post">Convierte</span></td><td><strong>Oferta con fecha límite real.</strong> Sin fecha no es oferta, es un precio.</td></tr>
+  </table>
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>04</span></div>
+</div>
+
+<!-- ============ 5. CALENDARIO 16-30 ============ -->
+<div class="page">
+  <div class="kicker">Calendario</div>
+  <h2>Días 16 a 30</h2>
+  <p class="lead">A partir del día 16 ya tienes datos. Antes de seguir, mira qué publicación de la primera quincena fue mejor y repite ese formato dos veces más.</p>
+  <table>
+    <tr><th>Día</th><th>Pilar</th><th>Qué publicas</th></tr>
+    <tr><td class="d">16</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Repite el formato ganador</strong> de los días 1–15 con otro tema.</td></tr>
+    <tr><td class="d">17</td><td><span class="pill p-story">Conecta</span></td><td><strong>Enseña un fallo</strong> y cómo lo arreglaste. Es el contenido que más DMs genera.</td></tr>
+    <tr><td class="d">18</td><td><span class="pill p-reel">Atrae</span></td><td><strong>"Cosas que no sabías que hacemos".</strong> Casi siempre vendes algo que la gente no sabe que ofreces.</td></tr>
+    <tr><td class="d">19</td><td><span class="pill p-carr">Atrae</span></td><td><strong>Guía rápida:</strong> cómo elegir bien en tu sector, 6 slides, uno por criterio.</td></tr>
+    <tr><td class="d">20</td><td><span class="pill p-post">Convierte</span></td><td><strong>Caso completo:</strong> problema del cliente → lo que hiciste → resultado con número.</td></tr>
+    <tr><td class="d">21</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Reacciona a algo de tu sector</strong> que se esté hablando esta semana.</td></tr>
+    <tr><td class="d">22</td><td><span class="pill p-story">Conecta</span></td><td><strong>Encuesta + resultado + tu opinión.</strong> Tres stories seguidas.</td></tr>
+    <tr><td class="d">23</td><td><span class="pill p-reel">Atrae</span></td><td><strong>El "no lo hagas".</strong> Un consejo en negativo retiene más que uno en positivo.</td></tr>
+    <tr><td class="d">24</td><td><span class="pill p-carr">Conecta</span></td><td><strong>Los valores del negocio</strong> contados con ejemplos concretos, no con adjetivos.</td></tr>
+    <tr><td class="d">25</td><td><span class="pill p-post">Convierte</span></td><td><strong>Producto/servicio secundario</strong> que casi nadie conoce. Sube ticket medio.</td></tr>
+    <tr><td class="d">26</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Preguntas frecuentes rápidas:</strong> 4 preguntas, 4 respuestas de 3 segundos.</td></tr>
+    <tr><td class="d">27</td><td><span class="pill p-story">Conecta</span></td><td><strong>Detrás de cámaras del contenido:</strong> enséñales cómo grabas. Genera cercanía.</td></tr>
+    <tr><td class="d">28</td><td><span class="pill p-carr">Atrae</span></td><td><strong>Recopilatorio del mes:</strong> lo mejor de lo que has publicado, reempaquetado.</td></tr>
+    <tr><td class="d">29</td><td><span class="pill p-reel">Atrae</span></td><td><strong>Un tutorial de 20 segundos</strong> que la gente pueda guardar. Los guardados valen doble.</td></tr>
+    <tr><td class="d">30</td><td><span class="pill p-post">Convierte</span></td><td><strong>Cierre del mes + llamada clara:</strong> "Escríbeme por DM la palabra [X] y te cuento".</td></tr>
+  </table>
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>05</span></div>
+</div>
+
+<!-- ============ 6. PROMPTS 1 ============ -->
+<div class="page">
+  <div class="kicker">Prompts listos</div>
+  <h2>12 prompts que hacen<br>el trabajo pesado (1/2)</h2>
+  <p class="lead">Cambia lo que está entre corchetes. Nada más. Estos prompts están escritos para que la IA no te devuelva texto genérico de agencia.</p>
+
+  <div class="prompt"><div class="t">01 · Contexto maestro (pégalo siempre primero)</div><div class="c">Eres el responsable de contenido de [nombre del negocio], un/a [tipo de negocio] en [ciudad].
+Nuestro cliente típico es [descripción en una frase].
+Nuestro tono es [cercano / técnico / divertido / elegante].
+Lo que nos diferencia de la competencia es [diferencia real].
+Nunca uses emojis en exceso, ni frases como "en el mundo actual" o "no es solo X, es Y".
+Confirma que lo has entendido en una línea y espera mi siguiente instrucción.</div></div>
+
+  <div class="prompt"><div class="t">02 · 30 ideas con ángulo propio</div><div class="c">Dame 30 ideas de contenido para Instagram para [negocio].
+Para cada una: formato (reel / carrusel / story), gancho de la primera línea y en qué pilar cae (atraer, conectar o convertir).
+Prohibido: ideas genéricas tipo "muestra tu producto". Cada idea tiene que poder empezar con una frase que pare el scroll.</div></div>
+
+  <div class="prompt"><div class="t">03 · Guion de reel de 15 segundos</div><div class="c">Escribe un guion de reel de 15 segundos sobre [tema].
+Estructura: segundo 0-2 gancho, 3-11 desarrollo en 3 golpes cortos, 12-15 cierre con una acción concreta.
+Devuélvelo como tabla: segundo | qué se ve | qué se dice | texto en pantalla.
+El texto en pantalla nunca pasa de 6 palabras.</div></div>
+
+  <div class="prompt"><div class="t">04 · 10 ganchos para el mismo tema</div><div class="c">Escribe 10 primeras frases distintas para un vídeo sobre [tema].
+Usa estos mecanismos, dos de cada: pregunta incómoda, número concreto, error común, contradicción, promesa de tiempo.
+Máximo 9 palabras cada una. Sin signos de exclamación.</div></div>
+
+  <div class="prompt"><div class="t">05 · Carrusel de 7 slides</div><div class="c">Crea un carrusel de 7 slides sobre [tema] para [negocio].
+Slide 1: promesa clara. Slides 2-6: un punto por slide, máximo 25 palabras.
+Slide 7: llamada a la acción hacia DM.
+Devuelve además el pie de foto: 3 líneas y luego 5 hashtags de nicho, ninguno con más de 500k publicaciones.</div></div>
+
+  <div class="prompt"><div class="t">06 · Reescribir sin que suene a IA</div><div class="c">Reescribe este texto para que suene a una persona real de [ciudad] hablando de su negocio:
+[pega tu texto]
+Frases cortas. Cero adjetivos vacíos. Cero estructuras "no es X, es Y".
+Si una frase no aporta información, elimínala en vez de adornarla.</div></div>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>06</span></div>
+</div>
+
+<!-- ============ 7. PROMPTS 2 ============ -->
+<div class="page">
+  <div class="kicker">Prompts listos</div>
+  <h2>12 prompts que hacen<br>el trabajo pesado (2/2)</h2>
+
+  <div class="prompt"><div class="t">07 · Convertir un cliente contento en contenido</div><div class="c">Este es lo que me ha dicho un cliente: [pega el mensaje o el audio transcrito].
+Conviértelo en: (a) un post con su frase textual destacada, (b) un guion de story de 10 segundos, (c) una respuesta corta y humana para agradecérselo por privado.
+No inventes datos que no estén en su mensaje.</div></div>
+
+  <div class="prompt"><div class="t">08 · Responder objeciones de precio</div><div class="c">Mi cliente potencial dice: "es caro".
+Dame 5 respuestas distintas, honestas, sin presionar, que reencuadren el precio en valor.
+Una de ellas debe servir para decirle amablemente que quizá no somos para él. Máximo 40 palabras cada una.</div></div>
+
+  <div class="prompt"><div class="t">09 · Iterar en vez de empezar de cero</div><div class="c">De las opciones anteriores, la 3 es la que más se acerca.
+Mantén su estructura y su tono, pero hazla un 30% más corta y cambia el ejemplo por uno de [sector].
+Dame 3 variaciones de esa misma línea.</div></div>
+
+  <div class="prompt"><div class="t">10 · Analiza mi competencia</div><div class="c">Te paso los textos de 5 publicaciones de un competidor: [pégalos].
+Dime: qué mecanismo de gancho usan, qué tono, qué están vendiendo realmente y qué hueco están dejando libre que yo pueda ocupar.
+Termina con 5 ideas para ocupar ese hueco.</div></div>
+
+  <div class="prompt"><div class="t">11 · Guion para hablar a cámara sin bloquearte</div><div class="c">Escribe lo que tengo que decir a cámara sobre [tema] en 40 segundos.
+Escríbelo tal y como se habla, con frases que se puedan decir de una respirada.
+Marca en MAYÚSCULAS las 4 palabras donde tengo que hacer pausa.</div></div>
+
+  <div class="prompt"><div class="t">12 · Auditoría de tu propio mes</div><div class="c">Te paso los datos de mis 20 publicaciones del mes: [formato, tema, alcance, guardados, DMs].
+Dime qué patrón hay entre las 5 mejores y entre las 5 peores.
+Dame 3 decisiones concretas para el mes que viene y una cosa que deba dejar de hacer.</div></div>
+
+  <div class="card dark" style="margin-top:2mm;">
+    <h3>La regla de oro con la IA</h3>
+    <p>La primera respuesta de una IA casi nunca es la buena, y ese no es el fallo de la herramienta: es la parte del trabajo. Pide, corrige, acota, vuelve a pedir. Tres iteraciones cortas dan mejor resultado que un prompt largísimo perfecto. Y lo último siempre lo decides tú: si no lo dirías en voz alta delante de un cliente, no lo publiques.</p>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>07</span></div>
+</div>
+
+<!-- ============ 8. ESTRUCTURA DE REEL ============ -->
+<div class="page">
+  <div class="kicker">Producción</div>
+  <h2>La estructura de reel<br>que retiene</h2>
+  <p class="lead">Esta es la plantilla que usamos en Blastudios para los reels del estudio y de nuestros clientes. Funciona porque respeta cómo se consume el vídeo vertical: nadie te da más de dos segundos de cortesía.</p>
+
+  <table style="margin-bottom:6mm;">
+    <tr><th>Tramo</th><th>Qué pasa</th><th>Error habitual</th></tr>
+    <tr><td class="d">0–2s</td><td><strong>Gancho.</strong> Una frase o una imagen que rompe el patrón. Texto en pantalla desde el fotograma 1.</td><td>Presentarte. Nadie sabe quién eres todavía, así que no le importa.</td></tr>
+    <tr><td class="d">3–5s</td><td><strong>Promesa.</strong> Qué se lleva quien se quede. "Te lo enseño en 10 segundos".</td><td>Enrollarse con contexto que no ha pedido nadie.</td></tr>
+    <tr><td class="d">6–12s</td><td><strong>Desarrollo en golpes.</strong> Máximo 3 ideas, un corte visual cada 2 segundos.</td><td>Un plano fijo de 12 segundos. El corte es lo que sostiene la atención.</td></tr>
+    <tr><td class="d">13–16s</td><td><strong>Cierre + acción.</strong> Una sola acción: guardar, comentar una palabra o escribir por DM.</td><td>Pedir tres cosas a la vez. Quien tiene que elegir, no hace ninguna.</td></tr>
+  </table>
+
+  <div class="grid2">
+    <div class="card"><h3>Lo que sí importa</h3>
+      <p><strong>Luz.</strong> Ventana de frente, siempre. Vale más que cualquier cámara.<br>
+      <strong>Sonido.</strong> Grabar en una sala pequeña con cosas blandas. El eco mata más vídeos que la imagen fea.<br>
+      <strong>Texto grande.</strong> Se ve el 70% de los reels sin sonido.<br>
+      <strong>Primer fotograma.</strong> Que ya se lea algo. Es tu titular.</p></div>
+    <div class="card"><h3>Lo que no importa tanto</h3>
+      <p><strong>La cámara.</strong> El móvil de los últimos cinco años sobra.<br>
+      <strong>Los efectos.</strong> Un corte limpio gana a cualquier transición.<br>
+      <strong>La música de moda.</strong> Ayuda poco si el gancho es malo.<br>
+      <strong>La duración exacta.</strong> Que dure lo que tenga que durar y ni un segundo más.</p></div>
+  </div>
+
+  <h3 style="margin-top:6mm;">10 ganchos que puedes usar hoy</h3>
+  <table>
+    <tr><td class="d">1</td><td>"Si tienes [problema], esto te va a doler."</td><td class="d">6</td><td>"Nadie en [sector] te va a contar esto."</td></tr>
+    <tr><td class="d">2</td><td>"Llevo [X] años haciendo esto y aún veo este error."</td><td class="d">7</td><td>"Esto me costó [cantidad] aprenderlo."</td></tr>
+    <tr><td class="d">3</td><td>"Deja de hacer [cosa común]."</td><td class="d">8</td><td>"Antes / después, sin filtros."</td></tr>
+    <tr><td class="d">4</td><td>"3 cosas que cambiaría si empezara hoy."</td><td class="d">9</td><td>"Me lo preguntan cada semana, así que va."</td></tr>
+    <tr><td class="d">5</td><td>"Esto tarda 10 segundos y te ahorra [X]."</td><td class="d">10</td><td>"No compres [X] sin mirar esto antes."</td></tr>
+  </table>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>08</span></div>
+</div>
+
+<!-- ============ 9. CASO KÜME ============ -->
+<div class="page">
+  <div class="kicker">Caso real</div>
+  <h2>Küme Pastelería:<br>de cero a presencia completa</h2>
+  <p class="lead">Un ejemplo de cómo se aplica todo lo anterior a un negocio local de verdad. Küme es una pastelería que llegó a Blastudios sin web, sin carta digital y sin nada que enseñar en redes más allá de fotos sueltas.</p>
+
+  <div class="grid3" style="margin-bottom:6mm;">
+    <div class="card"><div class="num">01</div><h3>Web</h3><p>Una página que carga rápido en móvil, con lo esencial arriba: qué es, dónde está y cómo pedir.</p></div>
+    <div class="card"><div class="num">02</div><h3>Identidad exterior</h3><p>Banner de fachada coherente con lo digital. Lo de fuera y lo de dentro tienen que contar lo mismo.</p></div>
+    <div class="card"><div class="num">03</div><h3>Menú digital</h3><p>Carta accesible desde el móvil, actualizable sin reimprimir nada cada vez que cambia un precio.</p></div>
+  </div>
+
+  <h3>Cómo se convirtió el proyecto en contenido</h3>
+  <p>El trabajo no se enseñó en un post. Se contó como una secuencia de <strong>9 stories</strong> con arco narrativo: gancho, presentación del cliente, el reto, las tres entregas una a una, el resultado y la llamada a la acción. Es exactamente lo que puedes hacer tú con cada trabajo que entregues.</p>
+
+  <table style="margin:4mm 0 6mm;">
+    <tr><th>Story</th><th>Función</th><th>Aplícalo tú</th></tr>
+    <tr><td class="d">1</td><td>Gancho sin logo, solo una frase que intriga</td><td>Empieza por el problema del cliente, no por tu marca</td></tr>
+    <tr><td class="d">2–3</td><td>Quién es el cliente y qué le pasaba</td><td>Haz que tu seguidor se reconozca en ese problema</td></tr>
+    <tr><td class="d">4–7</td><td>Cada entrega enseñada por separado</td><td>Una entrega por story: se retiene mejor que todo junto</td></tr>
+    <tr><td class="d">8</td><td>El resultado global</td><td>Si tienes un número, ponlo. Si no, pon la frase del cliente</td></tr>
+    <tr><td class="d">9</td><td>"¿Hablamos?" con enlace directo</td><td>Una sola acción, sin alternativas</td></tr>
+  </table>
+
+  <div class="quote">
+    <p><strong style="color:#fff;">La lección transferible:</strong> tu mejor contenido no hay que inventarlo, ya lo estás produciendo. Cada cliente al que atiendes, cada pedido que preparas y cada problema que resuelves es una secuencia de stories esperando a ser grabada. Lo único que hace falta es acordarse de sacar el móvil antes de empezar, no después de terminar.</p>
+    <div class="who">Caso Küme · Blastudios</div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>09</span></div>
+</div>
+
+<!-- ============ 10. ERRORES ============ -->
+<div class="page">
+  <div class="kicker">Antes de empezar</div>
+  <h2>7 errores que tiran<br>un mes entero a la basura</h2>
+
+  <div class="grid2">
+    <div class="card"><h3>1 · Empezar sin decidir el reparto</h3><p>Si no fijas cuántas publicaciones son de atraer y cuántas de vender, acabas vendiendo todos los días y el alcance se hunde.</p></div>
+    <div class="card"><h3>2 · Grabar día a día</h3><p>Es insostenible. A la tercera semana lo dejas. Graba en bloque un día fijo a la semana y programa.</p></div>
+    <div class="card"><h3>3 · Gastar el gancho en presentarte</h3><p>"Hola, soy X de Y" en el segundo 0 es la forma más rápida de perder al 60% de la audiencia.</p></div>
+    <div class="card"><h3>4 · Publicar lo que la IA escupe</h3><p>Sin pasarlo por tu voz, se nota. Y lo que se nota artificial no genera confianza ni ventas.</p></div>
+    <div class="card"><h3>5 · Cambiar de estrategia cada semana</h3><p>Un mes es el mínimo para tener datos. Antes de eso no estás midiendo, estás nervioso.</p></div>
+    <div class="card"><h3>6 · Ignorar los DMs</h3><p>Es donde se cierra. Un mensaje sin responder en 24 h es un cliente que ya está mirando a otro.</p></div>
+    <div class="card"><h3>7 · No pedir nunca nada</h3><p>Publicar bonito sin llamada a la acción entretiene. Entretener no paga facturas.</p></div>
+    <div class="card dark"><h3>Y el que los resume todos</h3><p>Esperar a tenerlo perfecto para empezar. El día 1 de este calendario es hoy, con el móvil que tienes en la mano.</p></div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>10</span></div>
+</div>
+
+<!-- ============ 11. CHECKLIST ============ -->
+<div class="page">
+  <div class="kicker">Rutina</div>
+  <h2>Checklist semanal</h2>
+  <p class="lead">Imprime esta página o cópiala a tus notas. Cinco minutos cada domingo.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Antes de publicar (cada pieza)</h3>
+      <ul class="chk">
+        <li>¿La primera línea funciona sin sonido?</li>
+        <li>¿Se entiende en 3 segundos de qué va?</li>
+        <li>¿Hay una sola llamada a la acción?</li>
+        <li>¿El texto en pantalla se lee en móvil pequeño?</li>
+        <li>¿Lo diría así en voz alta?</li>
+        <li>¿El pie de foto aporta o solo rellena?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Revisión del domingo</h3>
+      <ul class="chk">
+        <li>¿Cuál fue la publicación con más alcance?</li>
+        <li>¿Cuál tuvo más guardados? (vale más que los likes)</li>
+        <li>¿Cuántos DMs entraron y de dónde venían?</li>
+        <li>¿Respondí todos los mensajes y comentarios?</li>
+        <li>¿Qué formato repito la semana que viene?</li>
+        <li>¿Qué dejo de hacer?</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:6mm;">Las 4 métricas que sí miran los negocios que venden</h3>
+  <table>
+    <tr><th>Métrica</th><th>Qué te dice de verdad</th><th>Señal de alarma</th></tr>
+    <tr><td><strong>Retención a 3s</strong></td><td>Si tu gancho funciona</td><td>Por debajo del 50%: el problema es el segundo 0, no el vídeo</td></tr>
+    <tr><td><strong>Guardados</strong></td><td>Si aportas valor real</td><td>Cero guardados en 10 publicaciones: estás entreteniendo, no ayudando</td></tr>
+    <tr><td><strong>DMs recibidos</strong></td><td>Si tu CTA es claro</td><td>Alcance alto y cero DMs: no estás pidiendo nada</td></tr>
+    <tr><td><strong>Visitas al perfil</strong></td><td>Si generas curiosidad</td><td>Muchas visitas y pocos seguidores: tu bio no cierra</td></tr>
+  </table>
+
+  <div class="spacer"></div>
+  <div class="foot"><span>Kit Blastudios · 30 días de contenido con IA</span><span>11</span></div>
+</div>
+
+<!-- ============ 12. CIERRE ============ -->
+<div class="page cover" style="justify-content:center;">
+  <div class="glow" style="top:auto;bottom:-160mm;left:-140mm;right:auto;"></div>
+  <div style="position:relative;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.22em;color:#2563eb;margin-bottom:6mm;">SIGUIENTE PASO</div>
+    <h1 style="font-size:40px;">Ya tienes el<br>sistema. Ahora<br>toca ejecutarlo.</h1>
+    <p class="sub">Si prefieres que lo ejecutemos nosotros —web, campañas, automatizaciones con IA y contenido— en Blastudios trabajamos con negocios que quieren dejar de improvisar en digital.</p>
+    <div class="rule"></div>
+    <div style="display:flex;gap:30px;font-size:11px;color:rgba(255,255,255,.75);line-height:1.9;">
+      <div>
+        <div style="font-size:8.5px;letter-spacing:.14em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:3mm;">Contacto</div>
+        blastudios.contact@gmail.com<br>
+        WhatsApp +34 648 021 435<br>
+        blastudios.com
+      </div>
+      <div>
+        <div style="font-size:8.5px;letter-spacing:.14em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:3mm;">Servicios</div>
+        Diseño de páginas web<br>
+        Campañas digitales<br>
+        Automatizaciones con IA
+      </div>
+    </div>
+    <div style="margin-top:14mm;font-size:8px;color:rgba(255,255,255,.25);line-height:1.7;">
+      Uso personal o para tu propio negocio. No se permite la reventa ni la redistribución del archivo.<br>
+      © Blastudios · Todos los derechos reservados.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

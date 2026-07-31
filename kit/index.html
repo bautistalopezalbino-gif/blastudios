@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit Blastudios · 30 días de contenido con IA para tu negocio</title>
+<meta name="description" content="El sistema de Blastudios para que un negocio local publique cada día sin quedarse sin ideas. 30 días planificados, 12 prompts listos y un caso real. 10 €.">
+<meta property="og:title" content="30 días de contenido con IA para tu negocio · Kit Blastudios">
+<meta property="og:description" content="Calendario de 30 días, 12 prompts listos para copiar y la estructura de reel que retiene. Por 10 €.">
+<meta property="og:type" content="product">
+<meta property="og:image" content="/kit/preview/portada.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000; --surface:#0d0d0f; --surface2:#141417; --line:rgba(255,255,255,.09);
+    --fg:#f5f5f7; --muted:#98989f; --primary:#2563eb; --primary-soft:rgba(37,99,235,.12);
+    --max:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  h1,h2,h3{font-family:'Space Grotesk','Inter',sans-serif;letter-spacing:-.03em;line-height:1.1}
+  h1{font-size:clamp(34px,6.4vw,60px);font-weight:700}
+  h2{font-size:clamp(26px,4.2vw,40px);font-weight:700;letter-spacing:-.025em}
+  h3{font-size:18px;font-weight:600;letter-spacing:-.015em;line-height:1.3}
+  p{color:var(--muted)}
+  .kicker{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--primary)}
+
+  /* ---------- nav ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(0,0,0,.72);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .logo{font-size:20px;font-weight:800;letter-spacing:-.05em}
+  .logo span{font-weight:300}
+  .nav .right{display:flex;align-items:center;gap:18px}
+  .nav .back{font-size:13px;color:var(--muted)}
+  .nav .back:hover{color:var(--fg)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--primary);color:#fff;font-size:15px;font-weight:600;letter-spacing:-.01em;padding:15px 28px;border-radius:999px;border:none;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .25s,background .2s}
+  .btn:hover{background:#3b7bf5;transform:translateY(-1px);box-shadow:0 10px 34px rgba(37,99,235,.38)}
+  .btn:active{transform:translateY(0) scale(.985)}
+  .btn.sm{padding:10px 20px;font-size:14px}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--fg)}
+  .btn.ghost:hover{background:rgba(255,255,255,.06);box-shadow:none}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:76px 0 84px;overflow:hidden}
+  .hero .halo{position:absolute;width:900px;height:900px;border-radius:50%;top:-540px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(37,99,235,.30) 0%,rgba(37,99,235,0) 65%);pointer-events:none}
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:var(--primary-soft);border:1px solid rgba(37,99,235,.3);color:#8fb2ff;font-size:12px;font-weight:600;letter-spacing:.05em;padding:7px 14px;border-radius:999px;margin-bottom:22px}
+  .hero h1{margin-bottom:20px}
+  .hero h1 em{font-style:normal;color:var(--primary)}
+  .hero .sub{font-size:17px;font-weight:300;line-height:1.65;max-width:44ch;margin-bottom:28px}
+  .price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:22px}
+  .price{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;letter-spacing:-.04em}
+  .price-old{font-size:17px;color:#6b6b73;text-decoration:line-through}
+  .price-note{font-size:13px;color:var(--muted)}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:22px}
+  .trust{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--muted)}
+  .trust i{color:var(--primary);font-style:normal;margin-right:6px}
+
+  .stack{position:relative;height:440px}
+  .stack img{position:absolute;border-radius:9px;box-shadow:0 30px 70px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.07)}
+  .stack .a{width:70%;top:0;right:10%;transform:rotate(-4deg);z-index:3}
+  .stack .b{width:62%;top:78px;right:-2%;transform:rotate(4.5deg);z-index:2;opacity:.92}
+  .stack .c{width:58%;top:150px;left:-2%;transform:rotate(-1.5deg);z-index:1;opacity:.82}
+
+  /* ---------- secciones ---------- */
+  section.blk{padding:84px 0;border-top:1px solid var(--line)}
+  .sec-head{max-width:640px;margin-bottom:44px}
+  .sec-head .kicker{display:block;margin-bottom:10px}
+  .sec-head p{margin-top:14px;font-size:16px}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 24px;transition:border-color .25s,transform .25s}
+  .card:hover{border-color:rgba(37,99,235,.4);transform:translateY(-3px)}
+  .card .n{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.08em;margin-bottom:14px}
+  .card h3{margin-bottom:9px}
+  .card p{font-size:14.5px;line-height:1.6}
+
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .gallery figure{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .gallery img{width:100%}
+  .gallery figcaption{font-size:12px;color:var(--muted);padding:12px 14px;border-top:1px solid var(--line);letter-spacing:.02em}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .panel{border:1px solid var(--line);border-radius:16px;padding:28px;background:var(--surface)}
+  .panel.yes{border-color:rgba(37,99,235,.32)}
+  .panel h3{margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .panel ul{list-style:none}
+  .panel li{font-size:15px;color:var(--muted);line-height:1.55;padding-left:26px;position:relative;margin-bottom:12px}
+  .panel li:before{position:absolute;left:0;top:0;font-size:14px}
+  .panel.yes li:before{content:'✓';color:var(--primary);font-weight:700}
+  .panel.no li:before{content:'✕';color:#6b6b73}
+
+  .faq details{border-bottom:1px solid var(--line);padding:20px 0}
+  .faq summary{font-size:16.5px;font-weight:500;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary:after{content:'+';color:var(--primary);font-size:22px;line-height:1;flex:0 0 auto;transition:transform .2s}
+  .faq details[open] summary:after{transform:rotate(45deg)}
+  .faq p{margin-top:12px;font-size:15px;max-width:74ch}
+
+  .final{text-align:center;position:relative;overflow:hidden}
+  .final .halo{position:absolute;width:800px;height:800px;border-radius:50%;bottom:-560px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(37,99,235,.28) 0%,rgba(37,99,235,0) 65%);pointer-events:none}
+  .final .inner{position:relative}
+  .final p{max-width:52ch;margin:18px auto 30px;font-size:16.5px}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;font-size:13px;color:#6b6b73}
+  .foot{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center}
+  .foot a:hover{color:var(--fg)}
+
+  /* ---------- barra fija movil ---------- */
+  .sticky-buy{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;align-items:center;justify-content:space-between;gap:14px;padding:12px 18px;background:rgba(10,10,12,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+  .sticky-buy .p{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700}
+  .sticky-buy .s{font-size:11px;color:var(--muted);display:block;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0}
+
+  /* ---------- modal de pago ---------- */
+  .ov{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+  .ov.on{display:flex}
+  .modal{width:100%;max-width:440px;background:#111114;border:1px solid var(--line);border-radius:22px;padding:30px 28px;position:relative;max-height:92vh;overflow:auto}
+  .modal h3{font-size:22px;margin-bottom:8px}
+  .modal .lead{font-size:14.5px;color:var(--muted);margin-bottom:22px}
+  .modal .close{position:absolute;top:16px;right:18px;background:none;border:none;color:#6b6b73;font-size:24px;cursor:pointer;line-height:1}
+  .modal .close:hover{color:var(--fg)}
+  .pay-opt{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;background:#0b0b0e}
+  .pay-opt .ic{flex:0 0 34px;height:34px;border-radius:9px;background:var(--primary-soft);color:#8fb2ff;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .pay-opt .t{display:block;font-size:14.5px;font-weight:600;margin-bottom:3px}
+  .pay-opt .d{display:block;font-size:13px;color:var(--muted);line-height:1.5}
+  .pay-opt .d b{color:var(--fg);font-weight:600;letter-spacing:.02em}
+  .modal .btn{width:100%;margin-top:6px}
+  .modal .fine{font-size:12px;color:#6b6b73;margin-top:16px;line-height:1.55;text-align:center}
+
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .stack{height:340px;max-width:420px;margin:0 auto}
+    .cards,.gallery{grid-template-columns:1fr 1fr}
+    .two{grid-template-columns:1fr}
+  }
+  @media(max-width:620px){
+    .hero{padding:52px 0 60px}
+    section.blk{padding:60px 0}
+    .cards,.gallery{grid-template-columns:1fr}
+    .stack{height:300px}
+    .nav .right .btn{display:none}
+    .sticky-buy{display:flex}
+    body{padding-bottom:78px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div style="display:flex;align-items:center;gap:14px">
+      <a href="/" class="logo">bla<span>studios</span></a>
+    </div>
+    <div class="right">
+      <a class="back" href="/">← Volver a la web</a>
+      <button class="btn sm" data-buy>Comprar · 10 €</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="halo"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge">● KIT PRÁCTICO Nº 01 · DESCARGA INMEDIATA</span>
+      <h1>30 días de contenido con <em>IA</em> para tu negocio</h1>
+      <p class="sub">El sistema que usamos en Blastudios para que un negocio local publique cada día sin quedarse sin ideas, sin contratar a nadie y sin pasar horas delante de la pantalla.</p>
+
+      <div class="price-row">
+        <span class="price">10 €</span>
+        <span class="price-old">35 €</span>
+        <span class="price-note">pago único · sin suscripción</span>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn" data-buy>Quiero el kit por 10 €</button>
+        <a class="btn ghost" href="#dentro">Ver qué incluye</a>
+      </div>
+
+      <div class="trust">
+        <span><i>✓</i>PDF de 12 páginas</span>
+        <span><i>✓</i>Descarga inmediata</span>
+        <span><i>✓</i>Sirve para cualquier sector</span>
+      </div>
+    </div>
+
+    <div class="stack">
+      <img class="a" src="preview/portada.png" alt="Portada del kit">
+      <img class="b" src="preview/calendario.png" alt="Calendario de 30 días">
+      <img class="c" src="preview/prompts.png" alt="Prompts listos para copiar">
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROBLEMA ================= -->
+<section class="blk">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Por qué existe este kit</span>
+      <h2>El problema nunca fue<br>la falta de tiempo</h2>
+      <p>Es la pantalla en blanco. Abres Instagram para publicar, no sabes qué poner, lo dejas para mañana y mañana pasa lo mismo. Tres semanas después tu perfil sigue igual y tu competencia, no.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="n">SIN ESTO</div><h3>Publicas cuando te acuerdas</h3><p>Y el algoritmo trata igual a quien publica a ratos que a quien no publica: deja de enseñarte a gente nueva.</p></div>
+      <div class="card"><div class="n">SIN ESTO</div><h3>Vendes todos los días</h3><p>Cuando no sabes qué poner acabas poniendo producto. El alcance se hunde en dos semanas y no entiendes por qué.</p></div>
+      <div class="card"><div class="n">SIN ESTO</div><h3>La IA te devuelve texto vacío</h3><p>Le pides "un post para mi negocio" y te da algo que podría ser de cualquiera. El problema no es la IA: es el prompt.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUÉ INCLUYE ================= -->
+<section class="blk" id="dentro">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Qué hay dentro</span>
+      <h2>Seis piezas. Todas ejecutables hoy.</h2>
+      <p>No es un ebook de teoría. Es material para abrir, copiar y publicar.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="n">01</div><h3>Calendario de 30 días</h3><p>Día a día, con formato, tema y ángulo ya decididos. No eliges qué publicar: ya está elegido. Solo lo ejecutas.</p></div>
+      <div class="card"><div class="n">02</div><h3>12 prompts listos</h3><p>Copiar, cambiar lo que va entre corchetes y pegar en Claude, ChatGPT o Gemini. Escritos para que no suene a IA.</p></div>
+      <div class="card"><div class="n">03</div><h3>La estructura de reel que retiene</h3><p>Segundo a segundo: qué va en el 0–2, en el 3–5 y en el cierre. Con los errores que tiran el vídeo abajo.</p></div>
+      <div class="card"><div class="n">04</div><h3>20 ganchos y llamadas a la acción</h3><p>Frases probadas para la primera línea y para el cierre. Las dos partes donde se gana o se pierde una publicación.</p></div>
+      <div class="card"><div class="n">05</div><h3>Un caso real explicado</h3><p>Cómo convertimos el proyecto de una pastelería en una secuencia de 9 stories, y cómo replicarlo con tu propio trabajo.</p></div>
+      <div class="card"><div class="n">06</div><h3>Checklist semanal + métricas</h3><p>Cinco minutos cada domingo. Las 4 métricas que sí importan y qué significa de verdad cada una.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISTA PREVIA ================= -->
+<section class="blk">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Vista previa</span>
+      <h2>Páginas reales del kit</h2>
+      <p>Sin humo: esto es exactamente lo que vas a descargar.</p>
+    </div>
+    <div class="gallery">
+      <figure><img src="preview/calendario.png" alt="Calendario de 30 días"><figcaption>Calendario · días 1 a 15</figcaption></figure>
+      <figure><img src="preview/prompts.png" alt="Prompts de IA"><figcaption>12 prompts listos para copiar</figcaption></figure>
+      <figure><img src="preview/reels.png" alt="Estructura de reel"><figcaption>Estructura de reel + 10 ganchos</figcaption></figure>
+      <figure><img src="preview/caso.png" alt="Caso real Küme"><figcaption>Caso real · Küme Pastelería</figcaption></figure>
+      <figure><img src="preview/checklist.png" alt="Checklist semanal"><figcaption>Checklist semanal y métricas</figcaption></figure>
+      <figure><img src="preview/portada.png" alt="Portada"><figcaption>12 páginas en PDF · A4</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PARA QUIÉN ================= -->
+<section class="blk">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Sinceridad</span>
+      <h2>Esto no es para todo el mundo</h2>
+    </div>
+    <div class="two">
+      <div class="panel yes">
+        <h3>Es para ti si…</h3>
+        <ul>
+          <li>Tienes un negocio local o pequeño y llevas tú las redes</li>
+          <li>Publicas a ratos y sabes que deberías hacerlo mejor</li>
+          <li>Usas IA pero te devuelve textos que no publicarías</li>
+          <li>Prefieres un plan cerrado antes que otro curso de 6 horas</li>
+          <li>Puedes dedicarle 90 minutos un día a la semana</li>
+        </ul>
+      </div>
+      <div class="panel no">
+        <h3>No es para ti si…</h3>
+        <ul>
+          <li>Buscas un truco para crecer sin publicar nada</li>
+          <li>Ya tienes un equipo de contenido funcionando bien</li>
+          <li>Esperas que alguien lo haga por ti (para eso trabajamos con clientes)</li>
+          <li>Quieres teoría de marketing, no un plan de ejecución</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="blk">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Dudas razonables</span>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq">
+      <details open><summary>¿Sirve para mi sector?</summary><p>Sí. El calendario está escrito con huecos entre corchetes: sustituyes «[tu sector]» por pastelería, peluquería, taller, clínica, tienda o lo que sea. El ángulo de cada día funciona igual porque se apoya en cómo se consume el contenido, no en lo que vendes.</p></details>
+      <details><summary>¿Necesito saber usar IA?</summary><p>No. Los 12 prompts están escritos para copiar y pegar tal cual. Si sabes escribir un WhatsApp, sabes usarlos. Funcionan en Claude, ChatGPT y Gemini, también en sus versiones gratuitas.</p></details>
+      <details><summary>¿Cuánto tardo en tenerlo funcionando?</summary><p>El kit está pensado para que en unos 40 minutos tengas las dos primeras semanas planificadas. La primera publicación puede salir hoy mismo.</p></details>
+      <details><summary>¿Qué recibo exactamente y cómo?</summary><p>Un PDF de 12 páginas en A4, listo para leer en el móvil o imprimir. Lo recibes en cuanto se confirma el pago; si pagas por Bizum, te lo enviamos por WhatsApp o email en cuanto lo vemos.</p></details>
+      <details><summary>¿Por qué solo 10 €?</summary><p>Porque es una muestra de cómo trabajamos. Si el kit te sirve y luego quieres que ejecutemos nosotros —web, campañas, automatizaciones con IA—, ya sabrás si encajamos. Nos sale mejor que un anuncio.</p></details>
+      <details><summary>¿Y si no me sirve?</summary><p>Escríbenos por WhatsApp o email y te devolvemos los 10 € sin preguntas. Con un producto de este precio no tiene sentido discutir por él.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="blk final">
+  <div class="halo"></div>
+  <div class="wrap inner">
+    <span class="kicker">Último paso</span>
+    <h2 style="margin-top:12px">Mañana vuelves a no saber<br>qué publicar. O no.</h2>
+    <p>10 € y treinta días resueltos. Si dentro de un mes sigues improvisando, al menos que no sea por falta de plan.</p>
+    <button class="btn" data-buy>Descargar el kit por 10 €</button>
+    <p style="font-size:13px;margin-top:22px">Pago único · Descarga inmediata · Devolución sin preguntas</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>© <span id="y"></span> Blastudios · Valencia, España</span>
+    <span>
+      <a href="https://wa.me/34648021435">WhatsApp</a> ·
+      <a href="mailto:blastudios.contact@gmail.com">Email</a> ·
+      <a href="/">blastudios.com</a>
+    </span>
+  </div>
+</footer>
+
+<!-- barra fija movil -->
+<div class="sticky-buy">
+  <div class="p">10 €<span class="s">Kit · 30 días de contenido</span></div>
+  <button class="btn sm" data-buy>Lo quiero</button>
+</div>
+
+<!-- ================= MODAL DE PAGO ================= -->
+<div class="ov" id="ov">
+  <div class="modal">
+    <button class="close" id="x">×</button>
+    <h3>Kit Blastudios · 10 €</h3>
+    <p class="lead">Elige cómo prefieres pagar. En cuanto se confirme, recibes el PDF.</p>
+    <div id="opts"></div>
+    <p class="fine">¿Prefieres otra forma de pago? Escríbenos y lo resolvemos.</p>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN DE COBRO
+   ---------------------------------------------------------------------
+   Rellena lo que tengas. La página se adapta sola:
+   - Si hay enlace de Stripe, el botón principal lleva directo al checkout.
+   - Si no, se usa PayPal.
+   - Si tampoco, se muestra Bizum + WhatsApp (funciona sin configurar nada).
+   ===================================================================== */
+const PAGO = {
+  stripe:   "",                              // ej. "https://buy.stripe.com/xxxxxxxx"
+  paypal:   "",                              // ej. "https://paypal.me/blastudios/10"
+  bizum:    "648 021 435",                   // número para Bizum
+  whatsapp: "34648021435",                   // WhatsApp de contacto
+  email:    "blastudios.contact@gmail.com",
+  precio:   "10 €",
+  producto: "Kit Blastudios · 30 días de contenido con IA"
+};
+
+const MSG = encodeURIComponent(
+  "Hola Blastudios 👋 Quiero el Kit de 30 días de contenido con IA (10 €). ¿Cómo lo pago?"
+);
+const MSG_BIZUM = encodeURIComponent(
+  "Hola Blastudios 👋 Acabo de enviar el Bizum de 10 € por el Kit de 30 días. ¿Me pasáis el PDF?"
+);
+
+const ov = document.getElementById('ov');
+const opts = document.getElementById('opts');
+
+function optHTML(ic, t, d, href, primary) {
+  return `<a class="pay-opt" href="${href}" target="_blank" rel="noopener"
+            style="${primary ? 'border-color:rgba(37,99,235,.45)' : ''}">
+            <span class="ic">${ic}</span>
+            <span><span class="t">${t}</span><span class="d">${d}</span></span>
+          </a>`;
+}
+
+function buildOpts() {
+  let html = '';
+  if (PAGO.stripe) {
+    html += optHTML('💳', 'Pagar con tarjeta',
+      'Checkout seguro. Descarga automática al terminar.', PAGO.stripe, true);
+  }
+  if (PAGO.paypal) {
+    html += optHTML('🅿️', 'Pagar con PayPal',
+      'Pago protegido con tu cuenta de PayPal.', PAGO.paypal, !PAGO.stripe);
+  }
+  if (PAGO.bizum) {
+    html += optHTML('📱', 'Bizum · ' + PAGO.precio,
+      `Envía un Bizum al <b>${PAGO.bizum}</b> y avísanos por WhatsApp. Te mandamos el PDF al momento.`,
+      'https://wa.me/' + PAGO.whatsapp + '?text=' + MSG_BIZUM, !PAGO.stripe && !PAGO.paypal);
+  }
+  html += optHTML('💬', 'Prefiero preguntar antes',
+    'Te respondemos por WhatsApp en horario laboral.',
+    'https://wa.me/' + PAGO.whatsapp + '?text=' + MSG, false);
+  html += optHTML('✉️', 'Por email',
+    PAGO.email, 'mailto:' + PAGO.email + '?subject=' +
+    encodeURIComponent('Kit Blastudios 30 días (10 €)'), false);
+  opts.innerHTML = html;
+}
+
+function abrir() {
+  // Si hay checkout directo, no hace falta modal.
+  if (PAGO.stripe) { window.location.href = PAGO.stripe; return; }
+  if (PAGO.paypal) { window.location.href = PAGO.paypal; return; }
+  buildOpts();
+  ov.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function cerrar() {
+  ov.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-buy]').forEach(b => b.addEventListener('click', abrir));
+document.getElementById('x').addEventListener('click', cerrar);
+ov.addEventListener('click', e => { if (e.target === ov) cerrar(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrar(); });
+document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

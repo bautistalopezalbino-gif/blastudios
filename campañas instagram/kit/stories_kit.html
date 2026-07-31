@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Stories · Kit Blastudios 10 €</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#222;font-family:'Inter',system-ui,sans-serif;display:flex;flex-wrap:wrap;gap:20px;padding:20px}
+  .story{width:1080px;height:1920px;background:#000;color:#f5f5f7;position:relative;overflow:hidden;
+         display:flex;flex-direction:column;justify-content:center;padding:120px 90px;flex:0 0 auto}
+  .halo{position:absolute;width:1500px;height:1500px;border-radius:50%;
+        background:radial-gradient(circle,rgba(37,99,235,.34) 0%,rgba(37,99,235,0) 64%);pointer-events:none}
+  .halo.t{top:-980px;left:50%;transform:translateX(-50%)}
+  .halo.b{bottom:-980px;left:50%;transform:translateX(-50%)}
+  .logo{position:absolute;top:80px;left:90px;font-size:38px;font-weight:800;letter-spacing:-2px;z-index:5}
+  .logo span{font-weight:300}
+  .footmark{position:absolute;bottom:80px;left:90px;font-size:22px;letter-spacing:.16em;
+            text-transform:uppercase;color:rgba(245,245,247,.34);z-index:5}
+  .kick{font-size:26px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#2563eb;margin-bottom:44px;position:relative}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:104px;line-height:1.04;letter-spacing:-4px;font-weight:700;position:relative}
+  h1 em{font-style:normal;color:#2563eb}
+  p.sub{font-size:38px;font-weight:300;line-height:1.55;color:rgba(245,245,247,.6);margin-top:44px;position:relative}
+  .shot{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.85),0 0 0 2px rgba(255,255,255,.09)}
+  .list{position:relative;margin-top:56px}
+  .list div{display:flex;gap:26px;align-items:flex-start;font-size:36px;line-height:1.45;color:rgba(245,245,247,.78);margin-bottom:30px}
+  .list b{color:#2563eb;font-family:'Space Grotesk',sans-serif;font-size:34px;flex:0 0 90px}
+  .pricebox{position:relative;text-align:center}
+  .pricebox .big{font-family:'Space Grotesk',sans-serif;font-size:230px;font-weight:700;letter-spacing:-12px;line-height:1}
+  .pricebox .old{font-size:44px;color:rgba(245,245,247,.32);text-decoration:line-through;margin-top:10px}
+  .pricebox .tag{font-size:34px;color:rgba(245,245,247,.62);margin-top:28px;line-height:1.5}
+  .swipe{position:relative;margin-top:70px;display:inline-flex;align-self:center;align-items:center;gap:16px;
+         background:#2563eb;color:#fff;font-size:36px;font-weight:600;padding:30px 58px;border-radius:999px}
+</style>
+</head>
+<body>
+
+<!-- STORY 1 · GANCHO -->
+<div class="story" id="s1">
+  <div class="halo t"></div>
+  <div class="logo">bla<span>studios</span></div>
+  <div class="kick">Para quien lleva solo sus redes</div>
+  <h1>¿Cuántas veces<br>has abierto<br>Instagram para<br>publicar y lo has<br>cerrado <em>sin<br>publicar nada</em>?</h1>
+  <p class="sub">Desliza si te ha pasado esta semana.</p>
+  <div class="footmark">blastudios.com</div>
+</div>
+
+<!-- STORY 2 · PRODUCTO -->
+<div class="story" id="s2" style="justify-content:flex-start;padding-top:220px">
+  <div class="halo t"></div>
+  <div class="logo">bla<span>studios</span></div>
+  <div class="kick">Kit práctico nº 01</div>
+  <h1 style="font-size:88px">30 días de<br>contenido, ya<br><em>decididos</em>.</h1>
+  <p class="sub" style="font-size:36px;margin-top:36px">No eliges qué publicar.<br>Solo lo publicas.</p>
+  <div class="shot" style="width:600px;margin:70px auto 0">
+    <img src="../../kit/preview/portada.png" style="width:100%;display:block">
+  </div>
+  <div class="footmark">blastudios.com/kit</div>
+</div>
+
+<!-- STORY 3 · CALENDARIO -->
+<div class="story" id="s3" style="justify-content:flex-start;padding-top:220px">
+  <div class="halo t"></div>
+  <div class="logo">bla<span>studios</span></div>
+  <div class="kick">Dentro · el calendario</div>
+  <h1 style="font-size:80px">Día a día,<br>con el ángulo<br>ya resuelto.</h1>
+  <div class="list">
+    <div><b>Día 1</b><span>El error nº1 de tu sector</span></div>
+    <div><b>Día 2</b><span>Stories: un día normal en 5 pantallas</span></div>
+    <div><b>Día 3</b><span>Antes y después, corte seco</span></div>
+    <div><b>…</b><span>hasta el día 30</span></div>
+  </div>
+  <div class="footmark">blastudios.com/kit</div>
+</div>
+
+<!-- STORY 4 · PROMPTS -->
+<div class="story" id="s4" style="justify-content:flex-start;padding-top:220px">
+  <div class="halo t"></div>
+  <div class="logo">bla<span>studios</span></div>
+  <div class="kick">Dentro · los prompts</div>
+  <h1 style="font-size:80px">12 prompts<br>listos para<br><em>copiar</em>.</h1>
+  <p class="sub" style="font-size:34px;margin-top:32px">Los mismos que usamos nosotros.<br>Escritos para que no suene a IA.</p>
+  <div class="shot" style="margin-top:60px;max-height:600px">
+    <img src="../../kit/preview/prompts.png" style="width:100%;display:block">
+  </div>
+  <div class="footmark">blastudios.com/kit</div>
+</div>
+
+<!-- STORY 5 · PRECIO + CTA -->
+<div class="story" id="s5">
+  <div class="halo b"></div>
+  <div class="logo">bla<span>studios</span></div>
+  <div class="pricebox">
+    <div class="kick" style="margin-bottom:20px">12 páginas en PDF</div>
+    <div class="big">10 €</div>
+    <div class="old">35 €</div>
+    <div class="tag">Pago único · Sin suscripción<br>Descarga inmediata</div>
+    <div class="swipe">Toca aquí para verlo →</div>
+  </div>
+  <div class="footmark">blastudios.com/kit</div>
+</div>
+
+</body>
+</html>
