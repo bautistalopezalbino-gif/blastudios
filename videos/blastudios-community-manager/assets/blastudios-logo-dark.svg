@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 110" width="1040" height="220">
+
+  <!-- Icono — sobre negro el cuadro navy necesita un filo azul para separarse del fondo -->
+  <rect x="6" y="6" width="98" height="98" rx="20" fill="#0D1F3C" stroke="#2563EB" stroke-width="2"/>
+  <rect x="30" y="17" width="12" height="76" rx="6" fill="#F5F5F7"/>
+  <circle cx="61" cy="76" r="19" fill="#F5F5F7"/>
+  <circle cx="61" cy="76" r="10" fill="#0D1F3C"/>
+
+  <!-- Wordmark — tinta clara para fondo oscuro -->
+  <text x="125" y="78"
+    font-family="Inter, system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="58"
+    font-weight="800"
+    fill="#F5F5F7"
+    letter-spacing="-2">bla<tspan font-weight="300">studios</tspan></text>
+
+  <!-- Tagline -->
+  <text x="127" y="100"
+    font-family="Inter, system-ui, -apple-system, Helvetica Neue, Arial, sans-serif"
+    font-size="13"
+    font-weight="500"
+    fill="#2563EB"
+    letter-spacing="4">DIGITAL MARKETING AGENCY</text>
+
+</svg>

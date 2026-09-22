@@ -1,0 +1,11 @@
+# Skills de HyperFrames: herramienta, no contenido del proyecto.
+# Se reinstalan con `npx skills add heygen-com/hyperframes` (19 MB, ~890 ficheros).
+.agents/
+.claude/skills/
+skills-lock.json
+
+# Paquetes de despacho por frame: los regenera frame-packets.mjs desde STORYBOARD.md
+videos/*/.hyperframes/frame-packets/
+
+# Dependencias de los proyectos de vídeo
+videos/*/node_modules/
