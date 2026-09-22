@@ -1,0 +1,209 @@
+<template>
+  <style>
+    /* — Brand faces, served from the project (deterministic render; never a network @import) — */
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 600; font-display: block; src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: block; src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    /* Latin-Extended cuts, range-scoped so they only take over beyond Latin-1 */
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: block; src: url('assets/fonts/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: block; src: url('assets/fonts/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: block; src: url('assets/fonts/space-grotesk-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+    /* — Frame root: styled by #root, never by a class — */
+    #root {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      container-type: size;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    /* Full-frame layers (ids, so host .clip base styles cannot outrank them) */
+    #f05-bg,
+    #f05-chrome,
+    #f05-phrase,
+    #f05-proof,
+    #f05-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    /* Ground — full-bleed black on its own clip layer, never on #root */
+    #f05-bg { background: #000000; }
+
+    /* Persistent chrome — wordmark. Completely static: no entrance, no scale, no fade. */
+    .f05-wordmark {
+      position: absolute;
+      left: 72px;
+      top: 96px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 34px;
+      line-height: 1;
+      color: #F5F5F7;
+      opacity: 0.40;
+    }
+
+    /* The phrase — two symmetric halves: machine above, person below */
+    .f05-phrase-block {
+      position: absolute;
+      left: 0;
+      top: 600px;
+      width: 1080px;
+      text-align: center;
+    }
+    .f05-line {
+      display: block;
+      margin: 0 auto;
+      max-width: 936px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 84px;
+      line-height: 1.14;
+      letter-spacing: -0.02em;
+      color: #F5F5F7;
+    }
+    #f05-line-2 { margin-top: 72px; }
+    .f05-accent { color: #2563EB; }
+
+    /* Scene 4 — the 1px rule and the quiet proof line */
+    .f05-rule {
+      position: absolute;
+      left: 50%;
+      margin-left: -180px;
+      top: 1112px;
+      width: 360px;
+      height: 1px;
+      overflow: visible;
+    }
+    .f05-rule path {
+      fill: none;
+      stroke: rgba(245, 245, 247, 0.28);
+      stroke-width: 1;
+      stroke-linecap: butt;
+    }
+    .f05-proof-line {
+      position: absolute;
+      left: 0;
+      top: 1192px;
+      width: 1080px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 1.5;
+      color: #98989F;
+    }
+
+    /* Persistent chrome — progress bar, pinned to the bottom edge */
+    .f05-bar-track {
+      position: absolute;
+      left: 0;
+      top: 1916px;
+      width: 1080px;
+      height: 4px;
+      background: rgba(37, 99, 235, 0.10);
+    }
+    .f05-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 4px;
+      background: #2563EB;
+    }
+  </style>
+
+  <div id="root" data-composition-id="05-diferencial" data-width="1080" data-height="1920">
+    <div id="f05-bg" class="clip" data-start="0" data-duration="4.5" data-track-index="0"></div>
+
+    <div id="f05-chrome" class="clip" data-start="0" data-duration="4.5" data-track-index="1">
+      <div class="f05-wordmark">blastudios</div>
+    </div>
+
+    <div id="f05-phrase" class="clip" data-start="0" data-duration="4.5" data-track-index="2">
+      <div class="f05-phrase-block">
+        <div class="f05-line" id="f05-line-1"><span class="f05-accent">IA</span> para la velocidad.</div>
+        <div class="f05-line" id="f05-line-2">Una <span id="f05-persona">persona real</span></div>
+        <div class="f05-line" id="f05-line-3">para el criterio.</div>
+      </div>
+    </div>
+
+    <div id="f05-proof" class="clip" data-start="0" data-duration="4.5" data-track-index="3">
+      <svg class="f05-rule" id="f05-rule" viewBox="0 0 360 1" width="360" height="1" xmlns="http://www.w3.org/2000/svg">
+        <path id="f05-rule-path" d="M0 0.5 H360"></path>
+      </svg>
+      <div class="f05-proof-line" id="f05-proof-line">Ya lo hacemos para negocios como Küme Pastelería</div>
+    </div>
+
+    <div id="f05-progress" class="clip" data-start="0" data-duration="4.5" data-track-index="4">
+      <div class="f05-bar-track"><div class="f05-bar-fill" id="f05-bar-fill"></div></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var ID = "05-diferencial";
+      var q = function (sel) { return document.querySelector(sel); };
+
+      var line1 = q("#f05-line-1");
+      var line2 = q("#f05-line-2");
+      var line3 = q("#f05-line-3");
+      var persona = q("#f05-persona");
+      var rulePath = q("#f05-rule-path");
+      var proofLine = q("#f05-proof-line");
+      var barFill = q("#f05-bar-fill");
+
+      // svg-path-draw setup: dash pattern from the MEASURED path length, never a guess.
+      var ruleLen = rulePath.getTotalLength();
+      rulePath.style.strokeDasharray = String(ruleLen);
+      rulePath.style.strokeDashoffset = String(ruleLen);
+
+      var tl = gsap.timeline({ paused: true });
+
+      // The ONE restrained move: slide-up + crossfade. Identical gesture, zero variation,
+      // used once per line without variation — that sameness is what makes this shot a breather.
+      var RISE = 38;
+      var DUR = 0.72;
+      var EASE = "power2.out";
+
+      // Scene 1 (0.0-1.2s) — "IA para la velocidad."
+      tl.fromTo(line1, { y: RISE, opacity: 0 }, { y: 0, opacity: 1, duration: DUR, ease: EASE }, 0.08);
+
+      // Scene 2 (1.2-2.4s) — "Una persona real", same move, no variation.
+      tl.fromTo(line2, { y: RISE, opacity: 0 }, { y: 0, opacity: 1, duration: DUR, ease: EASE }, 1.2);
+
+      // Scene 3 (2.4-3.2s) — "para el criterio." closes the phrase; "persona real" resolves to primary.
+      tl.fromTo(line3, { y: RISE, opacity: 0 }, { y: 0, opacity: 1, duration: DUR, ease: EASE }, 2.4);
+      tl.fromTo(persona, { color: "#F5F5F7" }, { color: "#2563EB", duration: 0.55, ease: "power1.inOut" }, 2.62);
+
+      // Scene 4 (3.2-4.5s) — the 1px rule self-draws, then the quiet proof line arrives.
+      tl.fromTo(rulePath, { strokeDashoffset: ruleLen }, { strokeDashoffset: 0, duration: 0.56, ease: "power2.out" }, 3.2);
+      tl.fromTo(proofLine, { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58, ease: EASE }, 3.46);
+
+      // Persistent chrome — progress fill 75.0% -> 90.0% of canvas width, linear, no easing.
+      tl.fromTo(
+        barFill,
+        { scaleX: 0.75, transformOrigin: "left center" },
+        { scaleX: 0.90, transformOrigin: "left center", duration: 4.5, ease: "none" },
+        0
+      );
+
+      // Everything has landed by 4.04s. The remaining 0.46s is dead still on purpose:
+      // no camera drift, no breathing, no ambient float. The stillness IS the payload.
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

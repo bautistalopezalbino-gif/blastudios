@@ -1,0 +1,347 @@
+<template>
+  <style>
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 600; font-display: block; src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: block; src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2'); }
+
+    /* ---- frame root: styled by #root, never by a class ---- */
+    #root {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+    }
+
+    /* ---- full-bleed ground: its own clip layer, never a background on #root ---- */
+    #f-02-desglose-horas-bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      background: #000000;
+    }
+
+    /* ---- the camera stage (overflow hidden: phase 1 scale is < 1) ---- */
+    #f-02-desglose-horas-stage {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+    }
+    #f-02-desglose-horas-cam {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    /* ---- eyebrow (peach — this is a PAIN frame; no blue anywhere but the bar) ---- */
+    #f-02-desglose-horas-rule {
+      position: absolute;
+      left: 72px;
+      top: 268px;
+      width: 60px;
+      height: 4px;
+      border-radius: 2px;
+      background: #F4BA95;
+      transform-origin: 0% 50%;
+    }
+    #f-02-desglose-horas-eyebrow {
+      position: absolute;
+      left: 72px;
+      top: 300px;
+      width: 936px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 1.2;
+      letter-spacing: 0.14em;
+      color: #F4BA95;
+    }
+
+    /* ---- the three cost rows: the data grid, the hero of this frame ---- */
+    #f-02-desglose-horas-stack {
+      position: absolute;
+      left: 72px;
+      top: 440px;
+      width: 936px;
+      transform-origin: 50% 0%;
+      will-change: transform;
+    }
+    .f-02-desglose-horas-row {
+      --dof: 0px;
+      box-sizing: border-box;
+      position: relative;
+      width: 936px;
+      height: 208px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 0 40px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+      filter: blur(var(--dof));
+      will-change: filter, transform;
+    }
+    #f-02-desglose-horas-r2,
+    #f-02-desglose-horas-r3 {
+      margin-top: 26px;
+    }
+    .f-02-desglose-horas-time {
+      flex: 0 0 300px;
+      width: 300px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 92px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #F4BA95;
+      white-space: nowrap;
+    }
+    .f-02-desglose-horas-task {
+      flex: 1 1 auto;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 33px;
+      line-height: 1.35;
+      color: #F5F5F7;
+    }
+
+    /* ---- the arithmetic punchline ---- */
+    #f-02-desglose-horas-glow {
+      position: absolute;
+      left: 12px;
+      top: 1170px;
+      width: 1056px;
+      height: 320px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(244, 186, 149, 0.20) 0%, rgba(244, 186, 149, 0.07) 42%, rgba(244, 186, 149, 0) 72%);
+    }
+    #f-02-desglose-horas-total {
+      position: absolute;
+      left: 72px;
+      top: 1250px;
+      width: 936px;
+    }
+    #f-02-desglose-horas-totalbar {
+      width: 936px;
+      height: 4px;
+      background: #F4BA95;
+    }
+    #f-02-desglose-horas-totaltext {
+      margin-top: 34px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 88px;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #F4BA95;
+      white-space: nowrap;
+    }
+
+    /* ---- persistent chrome: identical in all six frames, completely static ---- */
+    #f-02-desglose-horas-wordmark {
+      position: absolute;
+      left: 72px;
+      top: 96px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 34px;
+      line-height: 1;
+      color: #F5F5F7;
+      opacity: 0.40;
+    }
+    #f-02-desglose-horas-prog {
+      position: absolute;
+      left: 0;
+      top: 1916px;
+      width: 1080px;
+      height: 4px;
+      background: rgba(37, 99, 235, 0.10);
+      overflow: hidden;
+    }
+    #f-02-desglose-horas-progfill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 4px;
+      background: #2563EB;
+      transform-origin: 0% 50%;
+    }
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="02-desglose-horas"
+    data-start="0"
+    data-duration="6"
+    data-width="1080"
+    data-height="1920"
+  >
+    <div id="f-02-desglose-horas-bg" class="clip" data-start="0" data-duration="6" data-track-index="0"></div>
+
+    <div id="f-02-desglose-horas-stage" class="clip" data-start="0" data-duration="6" data-track-index="1">
+      <div id="f-02-desglose-horas-cam">
+        <div id="f-02-desglose-horas-rule"></div>
+        <div id="f-02-desglose-horas-eyebrow">¿EN QUÉ SE TE VAN?</div>
+
+        <div id="f-02-desglose-horas-stack">
+          <div id="f-02-desglose-horas-r1" class="f-02-desglose-horas-row">
+            <div id="f-02-desglose-horas-t1" class="f-02-desglose-horas-time">40 min</div>
+            <div id="f-02-desglose-horas-k1" class="f-02-desglose-horas-task">Pensar qué publicar</div>
+          </div>
+          <div id="f-02-desglose-horas-r2" class="f-02-desglose-horas-row">
+            <div id="f-02-desglose-horas-t2" class="f-02-desglose-horas-time">1 h 20</div>
+            <div id="f-02-desglose-horas-k2" class="f-02-desglose-horas-task">Grabar y editar</div>
+          </div>
+          <div id="f-02-desglose-horas-r3" class="f-02-desglose-horas-row">
+            <div id="f-02-desglose-horas-t3" class="f-02-desglose-horas-time">1 h</div>
+            <div id="f-02-desglose-horas-k3" class="f-02-desglose-horas-task">Responder DMs y comentarios</div>
+          </div>
+        </div>
+
+        <div id="f-02-desglose-horas-glow"></div>
+        <div id="f-02-desglose-horas-total">
+          <div id="f-02-desglose-horas-totalbar"></div>
+          <div id="f-02-desglose-horas-totaltext">3 h/día · 90 h al mes</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="f-02-desglose-horas-wordmark" class="clip" data-start="0" data-duration="6" data-track-index="2">blastudios</div>
+
+    <div id="f-02-desglose-horas-prog" class="clip" data-start="0" data-duration="6" data-track-index="3">
+      <div id="f-02-desglose-horas-progfill"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var FID = "02-desglose-horas";
+      var D = 6;
+      var P = "#f-02-desglose-horas-";
+      var el = function (n) { return document.querySelector(P + n); };
+
+      var tl = gsap.timeline({ paused: true });
+
+      /* ============================================================
+         CAMERA — multi-phase-camera, "Steady push" → push-THROUGH.
+         One wrapper, one transform writer, phase scale + sine drift.
+         ============================================================ */
+      var cam = el("cam");
+      var phase = { scale: 0.98 };          // Phase 1 — initial value, no tween
+      var drift = { p: 0 };
+      var DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3, DRIFT_FREQ_RATIO = 1.3, DRIFT_CYCLES = 1.2;
+
+      function writeCam() {
+        var dx = Math.sin(drift.p) * DRIFT_AMP_X;
+        var dy = Math.sin(drift.p * DRIFT_FREQ_RATIO) * DRIFT_AMP_Y;
+        cam.style.transform = "scale(" + phase.scale + ") translate(" + dx + "px, " + dy + "px)";
+      }
+      writeCam();
+
+      // Phase 2 — settle to neutral focus while the rows cascade in.
+      tl.to(phase, { scale: 1.02, duration: 1.6, ease: "power2.out" }, 0.2);
+      // Phase 3 — the PUSH-THROUGH: accelerate into the cut at 4.4s (Scene 4).
+      tl.to(phase, { scale: 1.12, duration: 1.2, ease: "power2.in" }, 3.2);
+      // Phase 4 — the arrival decelerates the move onto the total (Scene 5).
+      tl.to(phase, { scale: 1.0, duration: 0.6, ease: "expo.out" }, 4.4);
+      // Drift driver — the ONE writer of cam.style.transform, spans the whole frame.
+      tl.to(drift, {
+        p: Math.PI * 2 * DRIFT_CYCLES,
+        duration: D,
+        ease: "none",
+        onUpdate: writeCam
+      }, 0);
+
+      /* ============================================================
+         Hidden-until-cut states, declared on the timeline (not in CSS)
+         ============================================================ */
+      tl.set(el("total"), { opacity: 0 }, 0);
+      tl.set(el("glow"), { opacity: 0 }, 0);
+
+      /* ============================================================
+         SCENE 1 (0.0–1.0s) — eyebrow + row 1 slide in from the left
+         ============================================================ */
+      tl.fromTo(el("rule"),
+        { scaleX: 0, opacity: 0 },
+        { scaleX: 1, opacity: 1, duration: 0.45, ease: "power3.out" }, 0);
+      tl.fromTo(el("eyebrow"),
+        { y: 18, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.04);
+
+      // waterfall cascade: panel first, then number, then task (0.15s internal offset)
+      var ROWS = [
+        { at: 0.10, panel: "r1", time: "t1", task: "k1" },
+        { at: 1.05, panel: "r2", time: "t2", task: "k2" },
+        { at: 2.15, panel: "r3", time: "t3", task: "k3" }
+      ];
+      ROWS.forEach(function (r) {
+        tl.fromTo(el(r.panel),
+          { x: -140, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.55, ease: "power4.out" }, r.at);
+        tl.fromTo(el(r.time),
+          { x: -56, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.50, ease: "expo.out" }, r.at + 0.06);
+        tl.fromTo(el(r.task),
+          { x: -56, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.50, ease: "expo.out" }, r.at + 0.21);
+      });
+      /* SCENE 2 (1.0–2.1s) and SCENE 3 (2.1–3.2s) are the 2nd and 3rd passes of
+         that cascade — rows already landed do not move again. */
+
+      /* ============================================================
+         SCENE 4 (3.2–4.4s) — the pile compresses up and falls out of
+         focus while the camera pushes through it (depth-of-field-blur
+         run at the same window as the camera's Phase-3 push).
+         ============================================================ */
+      tl.to(el("stack"),
+        { y: -86, scale: 0.92, duration: 1.2, ease: "power2.inOut" }, 3.2);
+      var FALLOFF = [
+        { n: "r1", dof: "10px", dim: 0.48 },
+        { n: "r2", dof: "8px", dim: 0.55 },
+        { n: "r3", dof: "6px", dim: 0.62 }
+      ];
+      FALLOFF.forEach(function (f) {
+        tl.to(el(f.n),
+          { "--dof": f.dof, opacity: f.dim, duration: 1.2, ease: "power2.inOut" }, 3.2);
+      });
+
+      /* ============================================================
+         SCENE 5 (4.4–6.0s) — HARD CUT. The total slams in at full
+         geometry (no fade), the rows step back one depth plane on the
+         same frame, and the camera decelerates onto the payoff.
+         ============================================================ */
+      tl.set(el("total"), { opacity: 1 }, 4.4);
+      tl.set(el("r1"), { "--dof": "14px", opacity: 0.30 }, 4.4);
+      tl.set(el("r2"), { "--dof": "12px", opacity: 0.32 }, 4.4);
+      tl.set(el("r3"), { "--dof": "10px", opacity: 0.34 }, 4.4);
+
+      // ambient peach bloom behind the hero metric — the only motion after the cut
+      tl.fromTo(el("glow"),
+        { opacity: 0 },
+        { opacity: 1, duration: 1.0, ease: "power2.out" }, 4.45);
+
+      /* ============================================================
+         PERSISTENT CHROME — progress bar, 13.333% → 33.333%, linear.
+         (The wordmark is deliberately untouched: fully static.)
+         ============================================================ */
+      tl.fromTo(el("progfill"),
+        { scaleX: 0.1333333 },
+        { scaleX: 0.3333333, duration: D, ease: "none" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FID] = tl;
+    })();
+  </script>
+</template>
