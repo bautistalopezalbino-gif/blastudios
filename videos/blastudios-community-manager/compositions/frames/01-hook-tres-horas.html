@@ -1,5 +1,7 @@
 <template>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <!-- GSAP lo aporta el host: index.html lo sirve desde assets/vendor. Cargarlo
+       aqui desde el CDN fallaba en el render (la CA del proxy no es de confianza
+       para el navegador headless) y tumbaba toda la composicion. -->
 
   <style>
     /* ── Brand faces — real files shipped with the project ───────────────── */
@@ -190,15 +192,15 @@
     id="root"
     data-composition-id="01-hook-tres-horas"
     data-start="0"
-    data-duration="4"
+    data-duration="4.5"
     data-width="1080"
     data-height="1920"
   >
     <!-- Ground -->
-    <div id="f01-bg" class="clip" data-start="0" data-duration="4" data-track-index="0"></div>
+    <div id="f01-bg" class="clip" data-start="0" data-duration="4.5" data-track-index="0"></div>
 
     <!-- Shot -->
-    <div id="f01-stage" class="clip" data-start="0" data-duration="4" data-track-index="1">
+    <div id="f01-stage" class="clip" data-start="0" data-duration="4.5" data-track-index="1">
       <div id="f01-eyebrow">COMMUNITY MANAGER</div>
 
       <div id="f01-headline">
@@ -215,7 +217,7 @@
     </div>
 
     <!-- Persistent chrome -->
-    <div id="f01-chrome" class="clip" data-start="0" data-duration="4" data-track-index="2">
+    <div id="f01-chrome" class="clip" data-start="0" data-duration="4.5" data-track-index="2">
       <div id="f01-wordmark">blastudios</div>
       <div id="f01-progress-track"><div id="f01-progress-fill"></div></div>
     </div>

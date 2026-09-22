@@ -14,7 +14,7 @@ music: none
 - voiceover: ""
 - duration: 4s
 - transition_in: cut
-- status: outline
+- status: animated
 - src: compositions/frames/01-hook-tres-horas.html
 - type: hook
 - persuasion: Pain validation con cifra propia
@@ -64,7 +64,7 @@ Paleta de dolor: melocotón `warn` sobre negro. El azul de marca NO aparece toda
 - voiceover: ""
 - duration: 6s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/02-desglose-horas.html
 - type: pain_point
 - persuasion: Pain agitation por desglose — el total ya no se puede discutir
@@ -112,7 +112,7 @@ Sigue todo en melocotón. Las horas son tiempo perdido, y en este sistema el tie
 - voiceover: ""
 - duration: 4s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/03-coste-real.html
 - type: pain_point
 - persuasion: Negative contrast — reencuadra las horas como ventas no hechas
@@ -157,7 +157,7 @@ melocotón; la siguiente transición es la bisagra del reel.
 - voiceover: ""
 - duration: 8.5s
 - transition_in: zoom-through
-- status: outline
+- status: animated
 - src: compositions/frames/04-servicio.html
 - type: benefit_highlight
 - persuasion: Friction reduction + Rule of three (ampliada a cuatro entregables concretos)
@@ -218,7 +218,7 @@ Contenido de las cuatro tarjetas:
 - voiceover: ""
 - duration: 4.5s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/05-diferencial.html
 - type: social_proof
 - persuasion: Authority by association con un caso real, sin cifras inventadas
@@ -262,7 +262,7 @@ inventado aquí destruiría el frame 2, que sí es honesto sobre lo que es.
 - voiceover: ""
 - duration: 3s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/06-cta.html
 - type: cta
 - persuasion: Friction reduction — la acción pedida son dos letras, no una llamada
