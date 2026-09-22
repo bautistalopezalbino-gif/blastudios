@@ -1,0 +1,349 @@
+<template>
+  <style>
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 800; font-display: block; src: url('assets/fonts/inter-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 600; font-display: block; src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: block; src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2'); }
+
+    #root {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      container-type: size;
+      font-family: Inter, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* every timed layer is a full-frame box; children are placed absolutely inside */
+    .frame-06-cta-layer {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    /* ── ground ───────────────────────────────────────────── */
+    .frame-06-cta-ground { background: #000000; }
+
+    /* ── atmosphere: closing rings + the CTA bloom ────────── */
+    .frame-06-cta-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(37, 99, 235, 0.12);
+    }
+    #frame-06-cta-ring-1 { left: 340px; top: 956px; width: 400px; height: 400px; border-color: rgba(37, 99, 235, 0.16); }
+    #frame-06-cta-ring-2 { left: 220px; top: 836px; width: 640px; height: 640px; border-color: rgba(37, 99, 235, 0.12); }
+    #frame-06-cta-ring-3 { left: 110px; top: 726px; width: 860px; height: 860px; border-color: rgba(37, 99, 235, 0.08); }
+    #frame-06-cta-glow {
+      position: absolute;
+      left: 130px;
+      top: 746px;
+      width: 820px;
+      height: 820px;
+      border-radius: 50%;
+      transform-origin: 50% 50%;
+      background: radial-gradient(circle closest-side,
+        rgba(37, 99, 235, 0.34) 0%,
+        rgba(37, 99, 235, 0.16) 40%,
+        rgba(37, 99, 235, 0.00) 72%);
+    }
+
+    /* ── hero: the real brand logo, inlined so Inter applies ─ */
+    #frame-06-cta-logo {
+      position: absolute;
+      left: 216px;
+      top: 892px;
+      width: 648px;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+    #frame-06-cta-logo svg { display: block; width: 100%; height: auto; }
+
+    /* ── headline ─────────────────────────────────────────── */
+    #frame-06-cta-headline {
+      position: absolute;
+      left: 54px;
+      right: 54px;
+      top: 807px;
+      text-align: center;
+      transform-origin: 50% 50%;
+    }
+    .frame-06-cta-hl-line {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 6cqw;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #F5F5F7;
+      white-space: nowrap;
+    }
+
+    /* ── the one solid element in the whole reel ──────────── */
+    #frame-06-cta-pill-row {
+      position: absolute;
+      left: 0;
+      top: 1097px;
+      width: 1080px;
+      display: flex;
+      justify-content: center;
+    }
+    #frame-06-cta-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #2563EB;
+      color: #FFFFFF;
+      border-radius: 100px;
+      padding: 38px 62px;
+      font-family: Inter, sans-serif;
+      font-weight: 600;
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+    #frame-06-cta-phone {
+      position: absolute;
+      left: 0;
+      top: 1290px;
+      width: 1080px;
+      text-align: center;
+      font-family: Inter, sans-serif;
+      font-weight: 400;
+      font-size: 27px;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      color: #98989F;
+    }
+
+    /* ── persistent chrome ────────────────────────────────── */
+    #frame-06-cta-wordmark {
+      position: absolute;
+      left: 72px;
+      top: 96px;
+      font-family: Inter, sans-serif;
+      font-weight: 500;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: #F5F5F7;
+      opacity: 1;
+    }
+    #frame-06-cta-progress-track {
+      position: absolute;
+      left: 0;
+      top: 1916px;
+      width: 1080px;
+      height: 4px;
+      background: rgba(37, 99, 235, 0.10);
+    }
+    #frame-06-cta-progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 4px;
+      background: #2563EB;
+      transform-origin: 0% 50%;
+    }
+  </style>
+
+  <div id="root" data-composition-id="06-cta" data-width="1080" data-height="1920">
+
+    <!-- track 0 — full-bleed ground -->
+    <div class="clip frame-06-cta-layer frame-06-cta-ground"
+         data-start="0" data-duration="3" data-track-index="0"></div>
+
+    <!-- track 1 — closing atmosphere -->
+    <div class="clip frame-06-cta-layer"
+         data-start="0" data-duration="3" data-track-index="1">
+      <div id="frame-06-cta-glow"></div>
+      <div class="frame-06-cta-ring" id="frame-06-cta-ring-3"></div>
+      <div class="frame-06-cta-ring" id="frame-06-cta-ring-2"></div>
+      <div class="frame-06-cta-ring" id="frame-06-cta-ring-1"></div>
+    </div>
+
+    <!-- track 2 — the brand mark (focal) -->
+    <div class="clip frame-06-cta-layer"
+         data-start="0" data-duration="3" data-track-index="2">
+      <div id="frame-06-cta-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 110">
+          <defs>
+            <clipPath id="frame-06-cta-wordmark-clip" clipPathUnits="userSpaceOnUse">
+              <rect id="frame-06-cta-wipe" x="118" y="24" width="0" height="76"></rect>
+            </clipPath>
+          </defs>
+
+          <!-- Icono -->
+          <rect id="frame-06-cta-icon-outline" x="6" y="6" width="98" height="98" rx="20" fill="#0D1F3C" stroke="#2563EB" stroke-width="2"/>
+          <rect id="frame-06-cta-icon-bar" x="30" y="17" width="12" height="76" rx="6" fill="#F5F5F7"/>
+          <circle id="frame-06-cta-icon-disc" cx="61" cy="76" r="19" fill="#F5F5F7"/>
+          <circle id="frame-06-cta-icon-hole" cx="61" cy="76" r="10" fill="#0D1F3C"/>
+
+          <!-- Wordmark -->
+          <g clip-path="url(#frame-06-cta-wordmark-clip)">
+            <text x="125" y="78"
+              font-family="Inter, sans-serif"
+              font-size="58"
+              font-weight="800"
+              fill="#F5F5F7"
+              letter-spacing="-2">bla<tspan font-weight="300">studios</tspan></text>
+          </g>
+
+          <!-- Tagline -->
+          <text id="frame-06-cta-tagline" x="127" y="100"
+            font-family="Inter, sans-serif"
+            font-size="13"
+            font-weight="500"
+            fill="#2563EB"
+            letter-spacing="4">DIGITAL MARKETING AGENCY</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- track 3 — headline -->
+    <div class="clip frame-06-cta-layer"
+         data-start="0" data-duration="3" data-track-index="3">
+      <div id="frame-06-cta-headline">
+        <div class="frame-06-cta-hl-line" id="frame-06-cta-hl-1">Tu pr&oacute;ximo mes de contenido,</div>
+        <div class="frame-06-cta-hl-line" id="frame-06-cta-hl-2">planificado esta semana.</div>
+      </div>
+    </div>
+
+    <!-- track 4 — the ask -->
+    <div class="clip frame-06-cta-layer"
+         data-start="0" data-duration="3" data-track-index="4">
+      <div id="frame-06-cta-pill-row">
+        <div id="frame-06-cta-pill">Escribe CM por DM</div>
+      </div>
+      <div id="frame-06-cta-phone">blastudios &middot; 648 021 435</div>
+    </div>
+
+    <!-- track 5 — persistent chrome -->
+    <div class="clip frame-06-cta-layer"
+         data-start="0" data-duration="3" data-track-index="5">
+      <div id="frame-06-cta-wordmark">blastudios</div>
+      <div id="frame-06-cta-progress-track">
+        <div id="frame-06-cta-progress-fill"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+
+      var root = document.querySelector('[data-composition-id="06-cta"]') || document;
+      var q = function (sel) { return root.querySelector(sel); };
+
+      var outline  = q('#frame-06-cta-icon-outline');
+      var bar      = q('#frame-06-cta-icon-bar');
+      var disc     = q('#frame-06-cta-icon-disc');
+      var hole     = q('#frame-06-cta-icon-hole');
+      var wipe     = q('#frame-06-cta-wipe');
+      var tagline  = q('#frame-06-cta-tagline');
+      var logo     = q('#frame-06-cta-logo');
+      var headline = q('#frame-06-cta-headline');
+      var hl1      = q('#frame-06-cta-hl-1');
+      var hl2      = q('#frame-06-cta-hl-2');
+      var pill     = q('#frame-06-cta-pill');
+      var phone    = q('#frame-06-cta-phone');
+      var glow     = q('#frame-06-cta-glow');
+      var ring1    = q('#frame-06-cta-ring-1');
+      var ring2    = q('#frame-06-cta-ring-2');
+      var ring3    = q('#frame-06-cta-ring-3');
+      var fill     = q('#frame-06-cta-progress-fill');
+
+      // svg-path-draw: the dash pattern is MEASURED geometry, never a magic number.
+      // Rounded-rect perimeter fallback = 2*(98+98) - 8*20 + 2*PI*20.
+      var outlineLen = 2 * (98 + 98) - 8 * 20 + 2 * Math.PI * 20;
+      if (outline && typeof outline.getTotalLength === 'function') {
+        try {
+          var measured = outline.getTotalLength();
+          if (measured && isFinite(measured) && measured > 0) outlineLen = measured;
+        } catch (e) { /* keep the computed fallback */ }
+      }
+      if (outline) {
+        outline.style.strokeDasharray = outlineLen;
+        outline.style.strokeDashoffset = outlineLen;
+      }
+
+      var tl = gsap.timeline({ paused: true });
+
+      /* ── chrome: progress 90.0% → 100% across the frame, linear ───────── */
+      tl.fromTo(fill,
+        { scaleX: 0.9 },
+        { scaleX: 1, duration: 3, ease: 'none' }, 0);
+
+      /* ── SCENE 1 (0.0–0.9s) — the mark draws itself into dead centre ──── */
+      // svg-path-draw: outer keyline strokes on, then the navy field fills behind it.
+      tl.fromTo(outline,
+        { strokeDashoffset: outlineLen },
+        { strokeDashoffset: 0, duration: 0.38, ease: 'power2.out' }, 0.04);
+      tl.fromTo(outline,
+        { fillOpacity: 0 },
+        { fillOpacity: 1, duration: 0.22, ease: 'power1.out' }, 0.30);
+      // the vertical stroke of the mark draws bottom-up, then the disc closes it
+      tl.fromTo(bar,
+        { scaleY: 0, svgOrigin: '36 93' },
+        { scaleY: 1, svgOrigin: '36 93', duration: 0.24, ease: 'power2.out' }, 0.24);
+      tl.fromTo(disc,
+        { scale: 0, svgOrigin: '61 76' },
+        { scale: 1, svgOrigin: '61 76', duration: 0.24, ease: 'power3.out' }, 0.34);
+      tl.fromTo(hole,
+        { scale: 0, svgOrigin: '61 76' },
+        { scale: 1, svgOrigin: '61 76', duration: 0.20, ease: 'power3.out' }, 0.44);
+      // wordmark builds left→right behind an animated clip, tagline settles after
+      tl.fromTo(wipe,
+        { attr: { width: 0 } },
+        { attr: { width: 335 }, duration: 0.32, ease: 'power2.out' }, 0.48);
+      tl.fromTo(tagline,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.26, ease: 'power1.out' }, 0.72);
+      // the closing rings breathe up under the mark and then stay put
+      tl.fromTo([ring3, ring2, ring1],
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5, ease: 'power1.out', stagger: 0.07 }, 0.62);
+
+      /* ── SCENE 2 (0.9–1.7s) — scale exchange: mark yields the centre ──── */
+      // scale-swap-transition, adapted: the outgoing shrinks and RELOCATES
+      // (it stays on as the signature) while the incoming pops into the vacated centre.
+      tl.fromTo(logo,
+        { scale: 1, y: 0 },
+        { scale: 0.48, y: -404, duration: 0.52, ease: 'power2.inOut' }, 0.9);
+      tl.fromTo(headline,
+        { scale: 0.9 },
+        { scale: 1, duration: 0.46, ease: 'power3.out' }, 1.24);
+      tl.fromTo(hl1,
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: 0.38, ease: 'power3.out' }, 1.24);
+      tl.fromTo(hl2,
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: 0.38, ease: 'power3.out' }, 1.33);
+
+      /* ── SCENE 3 (1.7–2.5s) — the ask ─────────────────────────────────── */
+      // spring-pop-entrance: single hero, scale 0 → 1, smooth long-tail settle.
+      tl.fromTo(pill,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.42, ease: 'power3.out' }, 1.72);
+      tl.fromTo(phone,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.32, ease: 'power3.out' }, 1.96);
+      // the primary bloom flowers behind the pill and is fully settled at 2.50s
+      tl.fromTo(glow,
+        { opacity: 0, scale: 0.72 },
+        { opacity: 1, scale: 1, duration: 0.34, ease: 'power2.out' }, 2.14);
+
+      /* ── SCENE 4 (2.5–3.0s) — dead-still lockup. Nothing moves but the
+            mandated progress fill reaching exactly 100% on the last frame. ─ */
+
+      window.__timelines['06-cta'] = tl;
+      tl.seek(0);
+    })();
+  </script>
+</template>

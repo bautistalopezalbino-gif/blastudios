@@ -267,6 +267,7 @@
       /* ============================================================
          Hidden-until-cut states, declared on the timeline (not in CSS)
          ============================================================ */
+      gsap.set([el("total"), el("glow")], { opacity: 0 }); // build-time: no first-paint flash
       tl.set(el("total"), { opacity: 0 }, 0);
       tl.set(el("glow"), { opacity: 0 }, 0);
 
@@ -305,16 +306,18 @@
          focus while the camera pushes through it (depth-of-field-blur
          run at the same window as the camera's Phase-3 push).
          ============================================================ */
-      tl.to(el("stack"),
-        { y: -86, scale: 0.92, duration: 1.2, ease: "power2.inOut" }, 3.2);
+      tl.fromTo(el("stack"),
+        { y: 0, scale: 1 },
+        { y: -86, scale: 0.92, duration: 1.2, ease: "power2.inOut", immediateRender: false }, 3.2);
       var FALLOFF = [
         { n: "r1", dof: "10px", dim: 0.48 },
         { n: "r2", dof: "8px", dim: 0.55 },
         { n: "r3", dof: "6px", dim: 0.62 }
       ];
       FALLOFF.forEach(function (f) {
-        tl.to(el(f.n),
-          { "--dof": f.dof, opacity: f.dim, duration: 1.2, ease: "power2.inOut" }, 3.2);
+        tl.fromTo(el(f.n),
+          { "--dof": "0px", opacity: 1 },
+          { "--dof": f.dof, opacity: f.dim, duration: 1.2, ease: "power2.inOut", immediateRender: false }, 3.2);
       });
 
       /* ============================================================

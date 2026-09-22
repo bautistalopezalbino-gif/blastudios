@@ -165,14 +165,14 @@
       var barFill = q("#f05-bar-fill");
 
       // svg-path-draw setup: dash pattern from the MEASURED path length, never a guess.
-      var ruleLen = rulePath.getTotalLength();
+      var ruleLen = rulePath.getTotalLength() || 360;
       rulePath.style.strokeDasharray = String(ruleLen);
       rulePath.style.strokeDashoffset = String(ruleLen);
 
       var tl = gsap.timeline({ paused: true });
 
-      // The ONE restrained move: slide-up + crossfade. Identical gesture, zero variation,
-      // used once per line without variation — that sameness is what makes this shot a breather.
+      // The ONE restrained move: slide-up + crossfade — the same gesture, same distance,
+      // same ease, once per line. That sameness is what makes this shot read as a breather.
       var RISE = 38;
       var DUR = 0.72;
       var EASE = "power2.out";

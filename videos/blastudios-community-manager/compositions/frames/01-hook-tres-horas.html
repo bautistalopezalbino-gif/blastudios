@@ -63,7 +63,7 @@
     .f01-line {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 7.5cqw;
+      font-size: 7.75cqw;
       line-height: 1.08;
       letter-spacing: -0.02em;
       color: #F5F5F7;
@@ -144,7 +144,7 @@
       text-align: center;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 7.5cqw;
+      font-size: 7.75cqw;
       line-height: 1.08;
       letter-spacing: -0.02em;
       color: #F4BA95;
@@ -226,7 +226,7 @@
       window.__timelines = window.__timelines || {};
       var tl = gsap.timeline({ paused: true });
 
-      /* ── One tempo grid drives every onset (kinetic-beat-beats spine) ──── */
+      /* ── One tempo grid drives every onset (kinetic-beat-slam spine) ──── */
       var PULSE = 0.06;
       var B = {
         eyebrow: PULSE * 1,   // 0.06  · Scene 1
@@ -235,7 +235,7 @@
         small:   PULSE * 30,  // 1.80  · Scene 3
         timer:   PULSE * 32,  // 1.92  · Scene 3 — spring-pop
         count:   PULSE * 33,  // 1.98  · Scene 3 — the climb
-        lock:    PULSE * 47,  // 2.82  · Scene 4 — it clavs on 3:04
+        lock:    PULSE * 47,  // 2.82  · Scene 4 — it locks on 3:04
         payoff:  PULSE * 49   // 2.94  · Scene 4
       };
       var COUNT_DUR = B.lock - B.count;   // 0.84s
@@ -273,9 +273,13 @@
       );
 
       /* ══ Scene 3 (1.8–2.8s) — the small line, then the timer climbs ═════ */
+      /* letter-spacing reflows text and snaps glyphs to integer device pixels,
+         which stutters under the seek-by-frame capture engine. The tracking is
+         held statically in CSS (0.04em) and the entrance rides a transform
+         instead — the same short rise + fade the rest of the reel uses. */
       tl.fromTo("#f01-small",
-        { opacity: 0, letterSpacing: "0.34em" },
-        { opacity: 1, letterSpacing: "0.04em", duration: 0.34, ease: "expo.out" },
+        { opacity: 0, y: 14 },
+        { opacity: 1, y: 0, duration: 0.34, ease: "expo.out" },
         B.small
       );
 
