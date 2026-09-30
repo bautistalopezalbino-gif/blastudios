@@ -1,3 +1,4 @@
+import type { SourceFrame } from "./export";
 import type { CaptionStyle, FaceBox, Word } from "./types";
 
 const CAPTION_LOW = 0.72;
@@ -19,12 +20,12 @@ export type FrameOptions = {
  */
 export function drawFrame(
   ctx: CanvasRenderingContext2D,
-  video: HTMLVideoElement,
+  frame: SourceFrame,
   { group, t, style, face, zoom = 1, emoji }: FrameOptions,
 ) {
   const { width: W, height: H } = ctx.canvas;
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
+  const vw = frame.width;
+  const vh = frame.height;
   let captionY = CAPTION_LOW;
   if (vw && vh) {
     const baseScale = Math.max(W / vw, H / vh);
@@ -37,7 +38,7 @@ export function drawFrame(
       return { x, y, dw, dh };
     };
     const { x, y, dw, dh } = place(baseScale * zoom);
-    ctx.drawImage(video, x, y, dw, dh);
+    ctx.drawImage(frame.image, x, y, dw, dh);
 
     if (face) {
       // Se decide con el encuadre sin zoom para que los subtítulos no salten durante el zoom.
@@ -98,7 +99,9 @@ function drawCaption(
 
   // Pop de entrada al aparecer cada frase.
   const age = t - group[0].start;
-  const pop = style === "tiktok" ? 1 + Math.max(0, 0.15 - age) * 1.5 : 1;
+  // Si la frase no cabe en el 90 % del ancho, se reduce para que no se salga.
+  const fit = Math.min(1, (W * 0.9) / total);
+  const pop = (style === "tiktok" ? 1 + Math.max(0, 0.15 - age) * 1.5 : 1) * fit;
   const y = H * yRatio;
 
   ctx.save();

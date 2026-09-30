@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { analyzeFaces, faceAt } from "@/lib/face";
 import { emojiAt, zoomAt } from "@/lib/highlights";
+import { exportFast, type SourceFrame } from "@/lib/export";
 import { detectSpeechSegments } from "@/lib/silence";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
@@ -33,6 +34,7 @@ export default function Editor() {
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [exportUrl, setExportUrl] = useState("");
+  const [exportExt, setExportExt] = useState("mp4");
 
   const groups = useMemo(() => groupWords(words), [words]);
   const duration = videoRef.current?.duration ?? 0;
@@ -120,9 +122,13 @@ export default function Editor() {
     const video = videoRef.current;
     const ctx = canvasRef.current?.getContext("2d");
     if (!video || !ctx) return;
+    drawAt(ctx, { image: video, width: video.videoWidth, height: video.videoHeight }, video.currentTime);
+  }
+
+  /** Dibuja el fotograma de salida para el instante t del original (vista previa y exportación). */
+  function drawAt(ctx: CanvasRenderingContext2D, frame: SourceFrame, t: number) {
     const { groups, style, track, activeHighlights: hl } = live.current;
-    const t = video.currentTime;
-    drawFrame(ctx, video, {
+    drawFrame(ctx, frame, {
       group: groupAt(groups, t),
       t,
       style,
@@ -178,6 +184,33 @@ export default function Editor() {
   }
 
   async function exportVideo() {
+    setBusy(true);
+    setExportUrl("");
+    const started = performance.now();
+    try {
+      setStatus("Exportando…");
+      const blob = await exportFast(file!, {
+        segments: live.current.activeSegments,
+        width: OUT_W,
+        height: OUT_H,
+        draw: drawAt,
+        onProgress: (p) => setStatus(`Exportando… ${Math.round(p * 100)} %`),
+      });
+      if (blob) {
+        setExportUrl(URL.createObjectURL(blob));
+        setExportExt("mp4");
+        setStatus(`Exportación lista en ${((performance.now() - started) / 1000).toFixed(1)} s.`);
+        setBusy(false);
+        return;
+      }
+    } catch (e) {
+      console.error("Exportación rápida fallida, se usa la de tiempo real:", e);
+    }
+    await exportRealtime();
+  }
+
+  /** Alternativa para navegadores sin WebCodecs: graba el canvas mientras se reproduce. */
+  async function exportRealtime() {
     const canvas = canvasRef.current!;
     const stream = new MediaStream([
       ...canvas.captureStream(30).getVideoTracks(),
@@ -197,11 +230,11 @@ export default function Editor() {
     recorder.stop();
     await new Promise((r) => (recorder.onstop = r));
     setExportUrl(URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType })));
+    setExportExt(recorder.mimeType.startsWith("video/mp4") ? "mp4" : "webm");
     setStatus("Exportación lista.");
     setBusy(false);
   }
 
-  const ext = exportUrl && file ? (MediaRecorder.isTypeSupported("video/mp4") ? "mp4" : "webm") : "";
 
   return (
     <div className="editor">
@@ -279,7 +312,7 @@ export default function Editor() {
             </div>
 
             {exportUrl && (
-              <a href={exportUrl} download={`editado.${ext}`}>
+              <a href={exportUrl} download={`editado.${exportExt}`}>
                 <button className="primary">Descargar video</button>
               </a>
             )}
