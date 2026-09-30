@@ -8,7 +8,8 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 3. Transcribe con Whisper (`/api/transcribe`) y obtiene la marca de tiempo de cada palabra.
 4. Dibuja subtítulos animados (estilos TikTok, Karaoke y Minimal) sobre un canvas 9:16.
 5. Sigue la cara con MediaPipe: el recorte 9:16 la mantiene centrada (útil con videos horizontales) y los subtítulos suben si la taparían.
-6. Exporta en el navegador (MediaRecorder, MP4 o WebM según el navegador).
+6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige un LLM si hay `OPENAI_API_KEY`; si no, una heurística por palabras clave.
+7. Exporta en el navegador (MediaRecorder, MP4 o WebM según el navegador).
 
 ## Arrancar
 
@@ -25,13 +26,16 @@ npm run dev
 - `lib/silence.ts`: detección de silencios
 - `lib/timeline.ts`: tramos, agrupación de palabras en subtítulos
 - `lib/face.ts`: detección y suavizado de la posición de la cara
+- `lib/highlights.ts`: heurística de momentos clave y animación de zooms y emojis
 - `lib/render.ts`: dibujo del fotograma y de los subtítulos
 - `app/api/transcribe/route.ts`: proxy a Whisper (OpenAI)
+- `app/api/highlights/route.ts`: elige zooms y emojis (LLM o heurística)
 
 ## Siguientes pasos
 
 - Modelo de cara de largo alcance: el actual (`blaze_face_short_range`) solo detecta caras cercanas, tipo selfie
-- Zooms y emojis en los momentos clave elegidos por un LLM
+- Editar a mano los zooms y emojis (añadir, quitar, cambiar el emoji)
+- Efectos de sonido sincronizados con los zooms
 - Exportación más rápida que el tiempo real con WebCodecs y `mp4-muxer`
 - Cuentas, créditos y pagos (Supabase y Stripe)
 

@@ -16,3 +16,6 @@ export type Timeline = {
 export type FaceBox = { cx: number; cy: number; h: number };
 
 export type FaceSample = FaceBox & { t: number };
+
+/** Momento destacado: zoom de énfasis y/o emoji, anclado al inicio de una palabra. */
+export type Highlight = { time: number; zoom: boolean; emoji?: string };

@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { analyzeFaces, faceAt } from "@/lib/face";
+import { emojiAt, zoomAt } from "@/lib/highlights";
 import { detectSpeechSegments } from "@/lib/silence";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
-import type { CaptionStyle, FaceSample, Segment, Word } from "@/lib/types";
+import type { CaptionStyle, FaceSample, Highlight, Segment, Word } from "@/lib/types";
 
 const OUT_W = 720;
 const OUT_H = 1280;
@@ -25,6 +26,9 @@ export default function Editor() {
   const [cutSilences, setCutSilences] = useState(true);
   const [faceTrack, setFaceTrack] = useState<FaceSample[]>([]);
   const [followFace, setFollowFace] = useState(true);
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
+  const [useZooms, setUseZooms] = useState(true);
+  const [useEmojis, setUseEmojis] = useState(true);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -39,18 +43,26 @@ export default function Editor() {
 
   // Refs para que el bucle de render lea siempre el estado actual.
   const track = followFace ? faceTrack : [];
-  const live = useRef({ groups, style, activeSegments, track });
-  live.current = { groups, style, activeSegments, track };
+  const activeHighlights = useMemo(
+    () =>
+      highlights
+        .map((h) => ({ ...h, zoom: useZooms && h.zoom, emoji: useEmojis ? h.emoji : undefined }))
+        .filter((h) => h.zoom || h.emoji),
+    [highlights, useZooms, useEmojis],
+  );
+  const live = useRef({ groups, style, activeSegments, track, activeHighlights });
+  live.current = { groups, style, activeSegments, track, activeHighlights };
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
   // Redibuja al cambiar ajustes con el video en pausa.
-  useEffect(() => renderCurrent(), [groups, style, track]);
+  useEffect(() => renderCurrent(), [groups, style, track, activeHighlights]);
 
   async function handleFile(f: File) {
     setExportUrl("");
     setWords([]);
     setSegments([]);
     setFaceTrack([]);
+    setHighlights([]);
     setFile(f);
     const objectUrl = URL.createObjectURL(f);
     setUrl(objectUrl);
@@ -79,6 +91,14 @@ export default function Editor() {
       if (!res.ok) throw new Error(data.error);
       setWords(data.words);
 
+      setStatus("Buscando momentos clave…");
+      const hl = await fetch("/api/highlights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ words: data.words }),
+      }).then((r) => r.json());
+      setHighlights(hl.highlights ?? []);
+
       try {
         setFaceTrack(
           await analyzeFaces(objectUrl, {
@@ -100,9 +120,16 @@ export default function Editor() {
     const video = videoRef.current;
     const ctx = canvasRef.current?.getContext("2d");
     if (!video || !ctx) return;
-    const { groups, style, track } = live.current;
+    const { groups, style, track, activeHighlights: hl } = live.current;
     const t = video.currentTime;
-    drawFrame(ctx, video, groupAt(groups, t), t, style, faceAt(track, t));
+    drawFrame(ctx, video, {
+      group: groupAt(groups, t),
+      t,
+      style,
+      face: faceAt(track, t),
+      zoom: zoomAt(hl, t),
+      emoji: emojiAt(hl, t),
+    });
   }
 
   /** Reproduce el montaje saltando los cortes. Resuelve cuando termina. */
@@ -215,11 +242,18 @@ export default function Editor() {
                 <input type="checkbox" checked={followFace} onChange={(e) => setFollowFace(e.target.checked)} />{" "}
                 Seguir la cara
               </label>
+              <label>
+                <input type="checkbox" checked={useZooms} onChange={(e) => setUseZooms(e.target.checked)} /> Zooms
+              </label>
+              <label>
+                <input type="checkbox" checked={useEmojis} onChange={(e) => setUseEmojis(e.target.checked)} /> Emojis
+              </label>
             </div>
 
             <div className="status">
               Duración: {duration.toFixed(1)} s → {editedDuration(activeSegments).toFixed(1)} s ·{" "}
-              {segments.length} tramos con voz · {faceTrack.length ? "cara detectada" : "sin datos de cara"}
+              {segments.length} tramos con voz · {faceTrack.length ? "cara detectada" : "sin datos de cara"} ·{" "}
+              {highlights.filter((h) => h.zoom).length} zooms · {highlights.filter((h) => h.emoji).length} emojis
             </div>
 
             <div className="row">
