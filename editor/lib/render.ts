@@ -1,26 +1,54 @@
-import type { CaptionStyle, Word } from "./types";
+import type { CaptionStyle, FaceBox, Word } from "./types";
 
-/** Dibuja el fotograma en formato 9:16 recortando al centro, más los subtítulos. */
+const CAPTION_LOW = 0.72;
+const CAPTION_HIGH = 0.2;
+
+/**
+ * Dibuja el fotograma en formato 9:16 y los subtítulos.
+ * Con `face`, el recorte sigue a la cara y los subtítulos se apartan si la taparían.
+ */
 export function drawFrame(
   ctx: CanvasRenderingContext2D,
   video: HTMLVideoElement,
   group: Word[] | undefined,
   t: number,
   style: CaptionStyle,
+  face?: FaceBox,
 ) {
   const { width: W, height: H } = ctx.canvas;
   const vw = video.videoWidth;
   const vh = video.videoHeight;
+  let captionY = CAPTION_LOW;
   if (vw && vh) {
     const scale = Math.max(W / vw, H / vh);
     const dw = vw * scale;
     const dh = vh * scale;
-    ctx.drawImage(video, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    // Centra la cara (o el centro del video) y limita para no dejar bordes negros.
+    const x = clamp(W / 2 - (face?.cx ?? 0.5) * dw, W - dw, 0);
+    const y = clamp(H * 0.4 - (face?.cy ?? 0.5) * dh, H - dh, 0);
+    ctx.drawImage(video, x, y, dw, dh);
+
+    if (face) {
+      const faceTop = (y + (face.cy - face.h / 2) * dh) / H;
+      const faceBottom = (y + (face.cy + face.h / 2) * dh) / H;
+      const band = 0.08;
+      if (faceBottom > CAPTION_LOW - band && faceTop < CAPTION_LOW + band) captionY = CAPTION_HIGH;
+    }
   }
-  if (group) drawCaption(ctx, group, t, style);
+  if (group) drawCaption(ctx, group, t, style, captionY);
 }
 
-function drawCaption(ctx: CanvasRenderingContext2D, group: Word[], t: number, style: CaptionStyle) {
+function clamp(v: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, v));
+}
+
+function drawCaption(
+  ctx: CanvasRenderingContext2D,
+  group: Word[],
+  t: number,
+  style: CaptionStyle,
+  yRatio: number,
+) {
   const { width: W, height: H } = ctx.canvas;
   const size = Math.round(W * (style === "minimal" ? 0.055 : 0.075));
   ctx.font = `900 ${size}px system-ui, sans-serif`;
@@ -36,7 +64,7 @@ function drawCaption(ctx: CanvasRenderingContext2D, group: Word[], t: number, st
   // Pop de entrada al aparecer cada frase.
   const age = t - group[0].start;
   const pop = style === "tiktok" ? 1 + Math.max(0, 0.15 - age) * 1.5 : 1;
-  const y = H * 0.72;
+  const y = H * yRatio;
 
   ctx.save();
   ctx.translate(W / 2, y);

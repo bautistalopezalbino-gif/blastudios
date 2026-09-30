@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { analyzeFaces, faceAt } from "@/lib/face";
 import { detectSpeechSegments } from "@/lib/silence";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
-import type { CaptionStyle, Segment, Word } from "@/lib/types";
+import type { CaptionStyle, FaceSample, Segment, Word } from "@/lib/types";
 
 const OUT_W = 720;
 const OUT_H = 1280;
@@ -22,6 +23,8 @@ export default function Editor() {
   const [words, setWords] = useState<Word[]>([]);
   const [style, setStyle] = useState<CaptionStyle>("tiktok");
   const [cutSilences, setCutSilences] = useState(true);
+  const [faceTrack, setFaceTrack] = useState<FaceSample[]>([]);
+  const [followFace, setFollowFace] = useState(true);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -35,15 +38,19 @@ export default function Editor() {
   );
 
   // Refs para que el bucle de render lea siempre el estado actual.
-  const live = useRef({ groups, style, activeSegments });
-  live.current = { groups, style, activeSegments };
+  const track = followFace ? faceTrack : [];
+  const live = useRef({ groups, style, activeSegments, track });
+  live.current = { groups, style, activeSegments, track };
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+  // Redibuja al cambiar ajustes con el video en pausa.
+  useEffect(() => renderCurrent(), [groups, style, track]);
 
   async function handleFile(f: File) {
     setExportUrl("");
     setWords([]);
     setSegments([]);
+    setFaceTrack([]);
     setFile(f);
     const objectUrl = URL.createObjectURL(f);
     setUrl(objectUrl);
@@ -71,6 +78,16 @@ export default function Editor() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setWords(data.words);
+
+      try {
+        setFaceTrack(
+          await analyzeFaces(objectUrl, {
+            onProgress: (p) => setStatus(`Detectando la cara… ${Math.round(p * 100)} %`),
+          }),
+        );
+      } catch (e) {
+        console.error(e);
+      }
       setStatus(data.demo ? "Listo (transcripción de demo: falta OPENAI_API_KEY)." : "Listo.");
     } catch (e) {
       setStatus(`Error: ${(e as Error).message}`);
@@ -83,8 +100,9 @@ export default function Editor() {
     const video = videoRef.current;
     const ctx = canvasRef.current?.getContext("2d");
     if (!video || !ctx) return;
-    const { groups, style } = live.current;
-    drawFrame(ctx, video, groupAt(groups, video.currentTime), video.currentTime, style);
+    const { groups, style, track } = live.current;
+    const t = video.currentTime;
+    drawFrame(ctx, video, groupAt(groups, t), t, style, faceAt(track, t));
   }
 
   /** Reproduce el montaje saltando los cortes. Resuelve cuando termina. */
@@ -193,11 +211,15 @@ export default function Editor() {
                 <input type="checkbox" checked={cutSilences} onChange={(e) => setCutSilences(e.target.checked)} />{" "}
                 Recortar silencios
               </label>
+              <label>
+                <input type="checkbox" checked={followFace} onChange={(e) => setFollowFace(e.target.checked)} />{" "}
+                Seguir la cara
+              </label>
             </div>
 
             <div className="status">
               Duración: {duration.toFixed(1)} s → {editedDuration(activeSegments).toFixed(1)} s ·{" "}
-              {segments.length} tramos con voz
+              {segments.length} tramos con voz · {faceTrack.length ? "cara detectada" : "sin datos de cara"}
             </div>
 
             <div className="row">

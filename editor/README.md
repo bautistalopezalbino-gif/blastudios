@@ -7,7 +7,8 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 2. Detecta los silencios en el navegador (Web Audio, volumen RMS) y los recorta.
 3. Transcribe con Whisper (`/api/transcribe`) y obtiene la marca de tiempo de cada palabra.
 4. Dibuja subtítulos animados (estilos TikTok, Karaoke y Minimal) sobre un canvas 9:16.
-5. Exporta en el navegador (MediaRecorder, MP4 o WebM según el navegador).
+5. Sigue la cara con MediaPipe: el recorte 9:16 la mantiene centrada (útil con videos horizontales) y los subtítulos suben si la taparían.
+6. Exporta en el navegador (MediaRecorder, MP4 o WebM según el navegador).
 
 ## Arrancar
 
@@ -23,15 +24,18 @@ npm run dev
 - `components/Editor.tsx`: interfaz, vista previa y exportación
 - `lib/silence.ts`: detección de silencios
 - `lib/timeline.ts`: tramos, agrupación de palabras en subtítulos
+- `lib/face.ts`: detección y suavizado de la posición de la cara
 - `lib/render.ts`: dibujo del fotograma y de los subtítulos
 - `app/api/transcribe/route.ts`: proxy a Whisper (OpenAI)
 
 ## Siguientes pasos
 
-- Seguimiento facial con MediaPipe (encuadre y subtítulos que no tapen la cara)
+- Modelo de cara de largo alcance: el actual (`blaze_face_short_range`) solo detecta caras cercanas, tipo selfie
 - Zooms y emojis en los momentos clave elegidos por un LLM
 - Exportación más rápida que el tiempo real con WebCodecs y `mp4-muxer`
 - Cuentas, créditos y pagos (Supabase y Stripe)
+
+El WASM de MediaPipe se copia a `public/mediapipe/wasm` al hacer `npm install` y el modelo está en `public/mediapipe/`, así que no depende de ninguna CDN.
 
 ## Despliegue
 

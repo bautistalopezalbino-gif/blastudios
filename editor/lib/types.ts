@@ -11,3 +11,8 @@ export type Timeline = {
   words: Word[];
   style: CaptionStyle;
 };
+
+/** Cara detectada, en coordenadas normalizadas (0–1) del fotograma original. */
+export type FaceBox = { cx: number; cy: number; h: number };
+
+export type FaceSample = FaceBox & { t: number };
