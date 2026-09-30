@@ -5,19 +5,18 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * Recibe el audio/video y devuelve las palabras con su marca de tiempo.
- * Sin OPENAI_API_KEY responde con una transcripción de demo para poder probar la interfaz.
+ * Recibe el audio/video y devuelve las palabras con su marca de tiempo usando Whisper de OpenAI.
+ * Sin OPENAI_API_KEY responde 501 y el cliente transcribe en el navegador.
  */
 export async function POST(req: Request) {
   const form = await req.formData();
   const file = form.get("file");
-  const duration = Number(form.get("duration")) || 10;
   if (!(file instanceof Blob)) {
     return NextResponse.json({ error: "Falta el archivo" }, { status: 400 });
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return NextResponse.json({ words: demoWords(duration), demo: true });
+  if (!apiKey) return NextResponse.json({ error: "no_key" }, { status: 501 });
 
   const body = new FormData();
   body.append("file", file, "audio.mp4");
@@ -35,12 +34,5 @@ export async function POST(req: Request) {
   }
   const data = (await res.json()) as { words?: { word: string; start: number; end: number }[] };
   const words: Word[] = (data.words ?? []).map((w) => ({ text: w.word.trim(), start: w.start, end: w.end }));
-  return NextResponse.json({ words, demo: false });
-}
-
-function demoWords(duration: number): Word[] {
-  const text =
-    "Esta es una transcripción de demo. Añade tu clave de OpenAI para ver tus propias palabras aquí.".split(" ");
-  const step = duration / text.length;
-  return text.map((t, i) => ({ text: t, start: i * step, end: (i + 1) * step - 0.05 }));
+  return NextResponse.json({ words });
 }

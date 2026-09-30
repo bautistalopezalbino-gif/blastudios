@@ -5,10 +5,10 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 **Qué hace**
 1. Subes un video (máx. 180 s).
 2. Detecta los silencios en el navegador (Web Audio, volumen RMS) y los recorta.
-3. Transcribe con Whisper (`/api/transcribe`) y obtiene la marca de tiempo de cada palabra.
+3. Transcribe con Whisper y obtiene la marca de tiempo de cada palabra: en el navegador (Transformers.js, sin clave; el modelo de ~77 MB se descarga la primera vez) o en el servidor con OpenAI si hay `OPENAI_API_KEY`.
 4. Dibuja subtítulos animados (estilos TikTok, Karaoke y Minimal) sobre un canvas 9:16.
 5. Sigue la cara con MediaPipe: el recorte 9:16 la mantiene centrada (útil con videos horizontales) y los subtítulos suben si la taparían.
-6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige un LLM si hay `OPENAI_API_KEY`; si no, una heurística por palabras clave.
+6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige Gemini (`GEMINI_API_KEY`) u OpenAI; si no hay clave, una heurística por palabras clave.
 7. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. Sin WebCodecs, graba en tiempo real con MediaRecorder.
 
 ## Arrancar
@@ -16,7 +16,7 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 ```bash
 cd editor
 npm install
-cp .env.example .env.local   # añade OPENAI_API_KEY (sin ella se usa una transcripción de demo)
+cp .env.example .env.local   # opcional: GEMINI_API_KEY / OPENAI_API_KEY
 npm run dev
 ```
 
@@ -28,9 +28,10 @@ npm run dev
 - `lib/face.ts`: detección y suavizado de la posición de la cara
 - `lib/highlights.ts`: heurística de momentos clave y animación de zooms y emojis
 - `lib/export.ts`: exportación rápida (decodifica, dibuja y codifica cada fotograma; corta el audio por tramos)
+- `lib/whisper.ts`, `lib/whisper.worker.ts`: transcripción en el navegador en un Web Worker
 - `lib/render.ts`: dibujo del fotograma y de los subtítulos
-- `app/api/transcribe/route.ts`: proxy a Whisper (OpenAI)
-- `app/api/highlights/route.ts`: elige zooms y emojis (LLM o heurística)
+- `app/api/transcribe/route.ts`: proxy a Whisper de OpenAI (responde 501 sin clave)
+- `app/api/highlights/route.ts`: elige zooms y emojis (Gemini, OpenAI o heurística)
 
 ## Siguientes pasos
 

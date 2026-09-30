@@ -5,6 +5,7 @@ import { analyzeFaces, faceAt } from "@/lib/face";
 import { emojiAt, zoomAt } from "@/lib/highlights";
 import { exportFast, type SourceFrame } from "@/lib/export";
 import { detectSpeechSegments } from "@/lib/silence";
+import { transcribeInBrowser } from "@/lib/whisper";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
 import type { CaptionStyle, FaceSample, Highlight, Segment, Word } from "@/lib/types";
@@ -24,6 +25,7 @@ export default function Editor() {
   const [segments, setSegments] = useState<Segment[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [style, setStyle] = useState<CaptionStyle>("tiktok");
+  const [language, setLanguage] = useState("spanish");
   const [cutSilences, setCutSilences] = useState(true);
   const [faceTrack, setFaceTrack] = useState<FaceSample[]>([]);
   const [followFace, setFollowFace] = useState(true);
@@ -85,19 +87,14 @@ export default function Editor() {
       setSegments(await detectSpeechSegments(f));
 
       setStatus("Transcribiendo…");
-      const body = new FormData();
-      body.append("file", f);
-      body.append("duration", String(video.duration));
-      const res = await fetch("/api/transcribe", { method: "POST", body });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setWords(data.words);
+      const transcript = await transcribe(f);
+      setWords(transcript);
 
       setStatus("Buscando momentos clave…");
       const hl = await fetch("/api/highlights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ words: data.words }),
+        body: JSON.stringify({ words: transcript }),
       }).then((r) => r.json());
       setHighlights(hl.highlights ?? []);
 
@@ -110,12 +107,23 @@ export default function Editor() {
       } catch (e) {
         console.error(e);
       }
-      setStatus(data.demo ? "Listo (transcripción de demo: falta OPENAI_API_KEY)." : "Listo.");
+      setStatus(transcript.length ? "Listo." : "Listo (no se ha detectado voz).");
     } catch (e) {
       setStatus(`Error: ${(e as Error).message}`);
     } finally {
       setBusy(false);
     }
+  }
+
+  /** Usa Whisper de OpenAI en el servidor si está configurado; si no, Whisper en el navegador. */
+  async function transcribe(f: File) {
+    const body = new FormData();
+    body.append("file", f);
+    const res = await fetch("/api/transcribe", { method: "POST", body });
+    if (res.ok) return (await res.json()).words as Word[];
+    const data = await res.json().catch(() => ({}));
+    if (res.status !== 501) throw new Error(data.error ?? `Error ${res.status} al transcribir`);
+    return transcribeInBrowser(f, { language, onStatus: setStatus });
   }
 
   function renderCurrent() {
@@ -245,6 +253,18 @@ export default function Editor() {
 
       <div className="panel">
         {!url && (
+          <label>
+            Idioma del video{" "}
+            <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+              <option value="spanish">Español</option>
+              <option value="english">Inglés</option>
+              <option value="portuguese">Portugués</option>
+              <option value="french">Francés</option>
+              <option value="italian">Italiano</option>
+            </select>
+          </label>
+        )}
+        {!url && (
           <label className="drop">
             Haz clic para subir un video (MP4, máx. {MAX_SECONDS} s)
             <input
@@ -323,6 +343,7 @@ export default function Editor() {
                   <input
                     key={i}
                     value={w.text}
+                    title={`${w.start.toFixed(2)} – ${w.end.toFixed(2)} s`}
                     size={Math.max(2, w.text.length)}
                     onChange={(e) =>
                       setWords((ws) => ws.map((x, j) => (j === i ? { ...x, text: e.target.value } : x)))
