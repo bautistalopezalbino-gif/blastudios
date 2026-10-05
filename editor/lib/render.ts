@@ -1,5 +1,6 @@
 import type { SourceFrame } from "./export";
-import type { CaptionStyle, FaceBox, Word } from "./types";
+import { drawCaption, type CaptionPreset } from "./captions";
+import type { FaceBox, Word } from "./types";
 
 const CAPTION_LOW = 0.72;
 const CAPTION_HIGH = 0.2;
@@ -7,7 +8,7 @@ const CAPTION_HIGH = 0.2;
 export type FrameOptions = {
   group?: Word[];
   t: number;
-  style: CaptionStyle;
+  caption: { preset: CaptionPreset; colors: { text: string; accent: string } };
   face?: FaceBox;
   /** Factor de zoom de énfasis (1 = sin zoom). */
   zoom?: number;
@@ -21,7 +22,7 @@ export type FrameOptions = {
 export function drawFrame(
   ctx: CanvasRenderingContext2D,
   frame: SourceFrame,
-  { group, t, style, face, zoom = 1, emoji }: FrameOptions,
+  { group, t, caption, face, zoom = 1, emoji }: FrameOptions,
 ) {
   const { width: W, height: H } = ctx.canvas;
   const vw = frame.width;
@@ -49,17 +50,19 @@ export function drawFrame(
       if (faceBottom > CAPTION_LOW - band && faceTop < CAPTION_LOW + band) captionY = CAPTION_HIGH;
     }
   }
-  if (group) drawCaption(ctx, group, t, style, captionY);
-  if (emoji) drawEmoji(ctx, emoji.emoji, emoji.progress, captionY);
+  if (group) drawCaption(ctx, group, t, caption.preset, captionY, caption.colors);
+  if (emoji) drawEmoji(ctx, emoji.emoji, emoji.progress, captionY, caption.preset.size);
 }
 
 /** Emoji con rebote de entrada y desvanecido de salida, junto a los subtítulos. */
-function drawEmoji(ctx: CanvasRenderingContext2D, emoji: string, progress: number, captionY: number) {
+function drawEmoji(ctx: CanvasRenderingContext2D, emoji: string, progress: number, captionY: number, captionSize: number) {
   const { width: W, height: H } = ctx.canvas;
   const pop = progress < 0.15 ? backOut(progress / 0.15) : 1;
   const fade = progress > 0.8 ? 1 - (progress - 0.8) / 0.2 : 1;
   const size = W * 0.16;
-  const y = captionY === CAPTION_LOW ? H * (CAPTION_LOW - 0.1) : H * (CAPTION_HIGH + 0.1);
+  // Separación según el tamaño de los subtítulos (que pueden ocupar dos líneas).
+  const gap = 0.06 + captionSize * 0.9;
+  const y = captionY === CAPTION_LOW ? H * (CAPTION_LOW - gap) : H * (CAPTION_HIGH + gap);
   ctx.save();
   ctx.globalAlpha = fade;
   ctx.translate(W / 2, y);
@@ -76,50 +79,4 @@ const backOut = (x: number) => 1 + 2.7 * (x - 1) ** 3 + 1.7 * (x - 1) ** 2;
 
 function clamp(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, v));
-}
-
-function drawCaption(
-  ctx: CanvasRenderingContext2D,
-  group: Word[],
-  t: number,
-  style: CaptionStyle,
-  yRatio: number,
-) {
-  const { width: W, height: H } = ctx.canvas;
-  const size = Math.round(W * (style === "minimal" ? 0.055 : 0.075));
-  ctx.font = `900 ${size}px system-ui, sans-serif`;
-  ctx.textAlign = "left";
-  ctx.textBaseline = "middle";
-  ctx.lineJoin = "round";
-
-  const words = group.map((w) => (style === "minimal" ? w.text : w.text.toUpperCase()));
-  const space = ctx.measureText(" ").width;
-  const widths = words.map((w) => ctx.measureText(w).width);
-  const total = widths.reduce((a, b) => a + b, 0) + space * (words.length - 1);
-
-  // Pop de entrada al aparecer cada frase.
-  const age = t - group[0].start;
-  // Si la frase no cabe en el 90 % del ancho, se reduce para que no se salga.
-  const fit = Math.min(1, (W * 0.9) / total);
-  const pop = (style === "tiktok" ? 1 + Math.max(0, 0.15 - age) * 1.5 : 1) * fit;
-  const y = H * yRatio;
-
-  ctx.save();
-  ctx.translate(W / 2, y);
-  ctx.scale(pop, pop);
-  let x = -total / 2;
-  words.forEach((text, i) => {
-    const w = group[i];
-    const active = t >= w.start && t <= w.end;
-    ctx.lineWidth = size * 0.18;
-    ctx.strokeStyle = "black";
-    ctx.strokeText(text, x, 0);
-    ctx.fillStyle =
-      style === "karaoke" ? (t >= w.start ? "#ffe600" : "white")
-      : style === "tiktok" && active ? "#ffe600"
-      : "white";
-    ctx.fillText(text, x, 0);
-    x += widths[i] + space;
-  });
-  ctx.restore();
 }

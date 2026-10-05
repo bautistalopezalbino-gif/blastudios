@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { CAPTION_PRESETS, ensureFont, getPreset } from "@/lib/captions";
 import { analyzeFaces, faceAt } from "@/lib/face";
 import { emojiAt, zoomAt } from "@/lib/highlights";
 import { exportFast, type SourceFrame } from "@/lib/export";
@@ -9,11 +10,30 @@ import { detectSpeechSegments } from "@/lib/silence";
 import { transcribeInBrowser } from "@/lib/whisper";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
-import type { CaptionStyle, FaceSample, Highlight, Segment, Word } from "@/lib/types";
+import type { FaceSample, Highlight, Segment, Word } from "@/lib/types";
 
 const OUT_W = 720;
 const OUT_H = 1280;
 const MAX_SECONDS = 180;
+const BRAND_KEY = "blastudios-editor-estilo";
+
+type CaptionSettings = { presetId: string; text: string; accent: string };
+
+function defaultsFor(presetId: string): CaptionSettings {
+  const p = getPreset(presetId);
+  return { presetId: p.id, text: p.text, accent: p.accent };
+}
+
+/** Estilo y colores de marca guardados en este navegador (si se puede). */
+function loadSaved(): CaptionSettings {
+  try {
+    const saved = JSON.parse(localStorage.getItem(BRAND_KEY) ?? "null") as CaptionSettings | null;
+    if (saved?.presetId) return { ...defaultsFor(saved.presetId), ...saved };
+  } catch {
+    // Sin almacenamiento disponible: se usan los valores por defecto.
+  }
+  return defaultsFor("tiktok");
+}
 
 export default function Editor() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -26,7 +46,7 @@ export default function Editor() {
   const [url, setUrl] = useState<string>("");
   const [segments, setSegments] = useState<Segment[]>([]);
   const [words, setWords] = useState<Word[]>([]);
-  const [style, setStyle] = useState<CaptionStyle>("tiktok");
+  const [caption, setCaption] = useState<CaptionSettings>(() => defaultsFor("tiktok"));
   const [language, setLanguage] = useState("spanish");
   const [cutSilences, setCutSilences] = useState(true);
   const [faceTrack, setFaceTrack] = useState<FaceSample[]>([]);
@@ -42,7 +62,12 @@ export default function Editor() {
   const [exportUrl, setExportUrl] = useState("");
   const [exportExt, setExportExt] = useState("mp4");
 
-  const groups = useMemo(() => groupWords(words), [words]);
+  const preset = getPreset(caption.presetId);
+  const groups = useMemo(() => groupWords(words, preset.maxWords), [words, preset.maxWords]);
+  const captionStyle = useMemo(
+    () => ({ preset, colors: { text: caption.text, accent: caption.accent } }),
+    [preset, caption.text, caption.accent],
+  );
   const duration = videoRef.current?.duration ?? 0;
   const activeSegments = useMemo(
     () => (cutSilences && segments.length ? segments : [{ start: 0, end: duration }]),
@@ -62,12 +87,23 @@ export default function Editor() {
     () => (useSfx ? sfxEvents(activeHighlights, activeSegments) : []),
     [useSfx, activeHighlights, activeSegments],
   );
-  const live = useRef({ groups, style, activeSegments, track, activeHighlights, sfx, sfxVolume });
-  live.current = { groups, style, activeSegments, track, activeHighlights, sfx, sfxVolume };
+  const live = useRef({ groups, captionStyle, activeSegments, track, activeHighlights, sfx, sfxVolume });
+  live.current = { groups, captionStyle, activeSegments, track, activeHighlights, sfx, sfxVolume };
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
   // Redibuja al cambiar ajustes con el video en pausa.
-  useEffect(() => renderCurrent(), [groups, style, track, activeHighlights]);
+  useEffect(() => renderCurrent(), [groups, captionStyle, track, activeHighlights]);
+  // Recupera el estilo guardado al abrir el editor.
+  useEffect(() => setCaption(loadSaved()), []);
+  // Al cambiar de estilo, carga su fuente, redibuja y lo recuerda.
+  useEffect(() => {
+    ensureFont(preset).then(() => renderCurrent());
+    try {
+      localStorage.setItem(BRAND_KEY, JSON.stringify(caption));
+    } catch {
+      // Sin almacenamiento disponible: no se recuerda.
+    }
+  }, [caption, preset]);
 
   async function handleFile(f: File) {
     setExportUrl("");
@@ -143,11 +179,11 @@ export default function Editor() {
 
   /** Dibuja el fotograma de salida para el instante t del original (vista previa y exportación). */
   function drawAt(ctx: CanvasRenderingContext2D, frame: SourceFrame, t: number) {
-    const { groups, style, track, activeHighlights: hl } = live.current;
+    const { groups, captionStyle, track, activeHighlights: hl } = live.current;
     drawFrame(ctx, frame, {
       group: groupAt(groups, t),
       t,
-      style,
+      caption: captionStyle,
       face: faceAt(track, t),
       zoom: zoomAt(hl, t),
       emoji: emojiAt(hl, t),
@@ -222,6 +258,7 @@ export default function Editor() {
     const started = performance.now();
     try {
       setStatus("Exportando…");
+      await ensureFont(preset);
       const blob = await exportFast(file!, {
         segments: live.current.activeSegments,
         width: OUT_W,
@@ -307,11 +344,29 @@ export default function Editor() {
             <div className="row">
               <label>
                 Estilo{" "}
-                <select value={style} onChange={(e) => setStyle(e.target.value as CaptionStyle)}>
-                  <option value="tiktok">TikTok</option>
-                  <option value="karaoke">Karaoke</option>
-                  <option value="minimal">Minimal</option>
+                <select value={caption.presetId} onChange={(e) => setCaption(defaultsFor(e.target.value))}>
+                  {CAPTION_PRESETS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}
+                    </option>
+                  ))}
                 </select>
+              </label>
+              <label>
+                Texto{" "}
+                <input
+                  type="color"
+                  value={caption.text}
+                  onChange={(e) => setCaption((c) => ({ ...c, text: e.target.value }))}
+                />
+              </label>
+              <label>
+                Resaltado{" "}
+                <input
+                  type="color"
+                  value={caption.accent}
+                  onChange={(e) => setCaption((c) => ({ ...c, accent: e.target.value }))}
+                />
               </label>
               <label>
                 <input type="checkbox" checked={cutSilences} onChange={(e) => setCutSilences(e.target.checked)} />{" "}

@@ -6,7 +6,7 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 1. Subes un video (máx. 180 s).
 2. Detecta los silencios en el navegador (Web Audio, volumen RMS) y los recorta.
 3. Transcribe con Whisper y obtiene la marca de tiempo de cada palabra: en el navegador (Transformers.js, sin clave; el modelo de ~77 MB se descarga la primera vez) o en el servidor con OpenAI si hay `OPENAI_API_KEY`.
-4. Dibuja subtítulos animados (estilos TikTok, Karaoke y Minimal) sobre un canvas 9:16.
+4. Dibuja subtítulos animados sobre un canvas 9:16 con 8 estilos (TikTok, Hormozi, MrBeast, Caja, Karaoke, Neón, Editorial y Minimal) y colores de marca personalizables, que se recuerdan en el navegador. Las fuentes van incluidas con `@fontsource` (sin Google Fonts en tiempo de ejecución).
 5. Sigue la cara con MediaPipe: el recorte 9:16 la mantiene centrada (útil con videos horizontales) y los subtítulos suben si la taparían.
 6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige Gemini (`GEMINI_API_KEY`) u OpenAI; si no hay clave, una heurística por palabras clave.
 7. Efectos de sonido generados con Web Audio (sin archivos): un "whoosh" justo antes de cada zoom y un "pop" con cada emoji. Suenan en la vista previa y se mezclan en el audio exportado, con volumen ajustable.
@@ -31,7 +31,8 @@ npm run dev
 - `lib/export.ts`: exportación rápida (decodifica, dibuja y codifica cada fotograma; corta el audio por tramos)
 - `lib/whisper.ts`, `lib/whisper.worker.ts`: transcripción en el navegador en un Web Worker
 - `lib/sfx.ts`: generación, reproducción y mezcla de los efectos de sonido
-- `lib/render.ts`: dibujo del fotograma y de los subtítulos
+- `lib/captions.ts`: estilos de subtítulos (fuente, colores, resaltado, animación) y su dibujo
+- `lib/render.ts`: dibujo del fotograma, del emoji y colocación de los subtítulos
 - `app/api/transcribe/route.ts`: proxy a Whisper de OpenAI (responde 501 sin clave)
 - `app/api/highlights/route.ts`: elige zooms y emojis (Gemini, OpenAI o heurística)
 
