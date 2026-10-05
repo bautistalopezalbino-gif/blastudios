@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * Recibe el audio/video y devuelve las palabras con su marca de tiempo usando Whisper de OpenAI.
+ * Recibe un bloque de audio (WAV, ≤ 2 min) y devuelve las palabras con su marca de tiempo usando Whisper de OpenAI.
  * Sin OPENAI_API_KEY responde 501 y el cliente transcribe en el navegador.
  */
 export async function POST(req: Request) {
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   if (!apiKey) return NextResponse.json({ error: "no_key" }, { status: 501 });
 
   const body = new FormData();
-  body.append("file", file, "audio.mp4");
+  body.append("file", file, file instanceof File && file.name ? file.name : "audio.wav");
   body.append("model", "whisper-1");
   body.append("response_format", "verbose_json");
   body.append("timestamp_granularities[]", "word");

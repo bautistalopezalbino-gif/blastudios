@@ -70,3 +70,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .emoji-picker button { padding: 6px 8px; font-size: 18px; }
 .emoji-picker button:first-child { font-size: 13px; }
 .emoji-picker button.active { outline: 2px solid var(--accent); }
+.tl-wrap { display: flex; flex-direction: column; gap: 6px; }
+.tl-zoom { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.tl-scroll { overflow-x: auto; border-radius: 10px; }

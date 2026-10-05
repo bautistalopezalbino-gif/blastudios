@@ -23,16 +23,6 @@ export function sfxEvents(highlights: Highlight[], segments: Segment[]): SfxEven
   return events.sort((a, b) => a.time - b.time);
 }
 
-/** Instante del montaje (tras recortar silencios) que corresponde a t del original, o null si cae en un corte. */
-export function toOutputTime(segments: Segment[], t: number): number | null {
-  let offset = 0;
-  for (const s of segments) {
-    if (t >= s.start && t < s.end) return offset + (t - s.start);
-    offset += s.end - s.start;
-  }
-  return null;
-}
-
 const cache = new Map<string, Promise<AudioBuffer>>();
 
 /** Genera (y guarda en caché) el sonido a la frecuencia de muestreo indicada. */
@@ -100,25 +90,6 @@ function renderPop(sampleRate: number) {
   osc.stop(duration);
   return ctx.startRendering();
 }
-
-/** Suma los efectos al audio del montaje (exportación), en sus instantes de salida. */
-export async function mixSfx(target: AudioBuffer, events: SfxEvent[], segments: Segment[], volume: number) {
-  const sr = target.sampleRate;
-  for (const e of events) {
-    const at = toOutputTime(segments, e.time);
-    if (at === null) continue;
-    const sfx = await renderSfx(e.kind, sr);
-    const offset = Math.round(at * sr);
-    for (let c = 0; c < target.numberOfChannels; c++) {
-      const dst = target.getChannelData(c);
-      const src = sfx.getChannelData(Math.min(c, sfx.numberOfChannels - 1));
-      const n = Math.min(src.length, dst.length - offset);
-      for (let i = 0; i < n; i++) dst[offset + i] = clampSample(dst[offset + i] + src[i] * volume);
-    }
-  }
-}
-
-const clampSample = (x: number) => (x > 1 ? 1 : x < -1 ? -1 : x);
 
 /** Reproduce los efectos en directo (vista previa y exportación en tiempo real). */
 export async function playSfx(ctx: AudioContext, kind: SfxKind, volume: number, destinations: AudioNode[]) {

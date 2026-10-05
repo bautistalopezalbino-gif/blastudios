@@ -1,22 +1,26 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CAPTION_PRESETS, ensureFont, getPreset } from "@/lib/captions";
 import { removeSegment, restoreGap, splitAt } from "@/lib/edit";
 import { analyzeFaces, faceAt } from "@/lib/face";
 import { emojiAt, zoomAt } from "@/lib/highlights";
 import { exportFast, type SourceFrame } from "@/lib/export";
 import { playSfx, sfxEvents } from "@/lib/sfx";
+import { extractAudio16k, SAMPLE_RATE } from "@/lib/audio";
 import { detectSpeechSegments } from "@/lib/silence";
-import { transcribeInBrowser } from "@/lib/whisper";
+import { transcribe } from "@/lib/transcribe";
 import Timeline from "./Timeline";
+import WordList from "./WordList";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
 import type { FaceSample, Highlight, Segment, Word } from "@/lib/types";
 
 const OUT_W = 720;
 const OUT_H = 1280;
-const MAX_SECONDS = 180;
+const MAX_SECONDS = 30 * 60;
+/** A partir de esta duración, la exportación se escribe directamente en disco (si el navegador lo permite). */
+const SAVE_TO_DISK_FROM = 3 * 60;
 const BRAND_KEY = "blastudios-editor-estilo";
 const QUICK_EMOJIS = ["🔥", "💡", "💰", "⚠️", "😂", "👀", "🚀", "❤️", "🏆", "✅", "🤯", "👇"];
 
@@ -147,7 +151,7 @@ export default function Editor() {
     video.src = objectUrl;
     await new Promise((r) => (video.onloadedmetadata = r));
     if (video.duration > MAX_SECONDS) {
-      setStatus(`El video dura más de ${MAX_SECONDS} s. Recórtalo antes de subirlo.`);
+      setStatus(`El video dura más de ${MAX_SECONDS / 60} minutos. Recórtalo antes de subirlo.`);
       return;
     }
     video.currentTime = 0;
@@ -159,11 +163,13 @@ export default function Editor() {
     setBusy(true);
     try {
       setStatus("Detectando silencios…");
-      detectedRef.current = await detectSpeechSegments(f);
+      const audio = await extractAudio16k(f, (p) => setStatus(`Leyendo el audio… ${Math.round(p * 100)} %`));
+      setStatus("Detectando silencios…");
+      const speech = audio.length ? detectSpeechSegments(audio, SAMPLE_RATE) : [];
+      detectedRef.current = speech.length ? speech : [{ start: 0, end: video.duration }];
       setSegments(cutSilences ? detectedRef.current : [{ start: 0, end: video.duration }]);
 
-      setStatus("Transcribiendo…");
-      const transcript = await transcribe(f);
+      const transcript = audio.length ? await transcribe(audio, speech, { language, onStatus: setStatus }) : [];
       setWords(transcript);
 
       setStatus("Buscando momentos clave…");
@@ -176,7 +182,9 @@ export default function Editor() {
 
       try {
         setFaceTrack(
-          await analyzeFaces(objectUrl, {
+          await analyzeFaces(f, objectUrl, {
+            // En videos largos basta con mirar la cara cada medio segundo.
+            step: video.duration > 180 ? 0.5 : 0.25,
             onProgress: (p) => setStatus(`Detectando la cara… ${Math.round(p * 100)} %`),
           }),
         );
@@ -226,6 +234,15 @@ export default function Editor() {
     setStatus("Tramo dividido: haz clic en uno de los trozos para quitarlo.");
   }
 
+  // Versiones estables para la lista de palabras (que está memorizada).
+  const seekRef = useRef(seek);
+  seekRef.current = seek;
+  const stableSeek = useCallback((t: number) => seekRef.current(t), []);
+  const changeWord = useCallback(
+    (index: number, text: string) => setWords((ws) => ws.map((w, i) => (i === index ? { ...w, text } : w))),
+    [],
+  );
+
   function addHighlight(h: Partial<Highlight>) {
     const next = [...highlights, { time: currentTime, zoom: false, ...h }];
     commit({ highlights: next });
@@ -241,17 +258,6 @@ export default function Editor() {
     if (selected === null) return;
     commit({ highlights: highlights.filter((_, i) => i !== selected) });
     setSelected(null);
-  }
-
-  /** Usa Whisper de OpenAI en el servidor si está configurado; si no, Whisper en el navegador. */
-  async function transcribe(f: File) {
-    const body = new FormData();
-    body.append("file", f);
-    const res = await fetch("/api/transcribe", { method: "POST", body });
-    if (res.ok) return (await res.json()).words as Word[];
-    const data = await res.json().catch(() => ({}));
-    if (res.status !== 501) throw new Error(data.error ?? `Error ${res.status} al transcribir`);
-    return transcribeInBrowser(f, { language, onStatus: setStatus });
   }
 
   function renderCurrent() {
@@ -340,24 +346,50 @@ export default function Editor() {
   }
 
   async function exportVideo() {
+    // En montajes largos, el MP4 se escribe directamente en un archivo para no llenar la memoria.
+    // El selector de archivo tiene que abrirse antes de cualquier espera, mientras dura el clic.
+    let saveTo: FileSystemWritableFileStream | undefined;
+    let savedName = "";
+    const picker = (window as Window & { showSaveFilePicker?: (o: object) => Promise<FileSystemFileHandle> })
+      .showSaveFilePicker;
+    if (editedDuration(live.current.activeSegments) > SAVE_TO_DISK_FROM && picker) {
+      try {
+        const handle = await picker({
+          suggestedName: "editado.mp4",
+          types: [{ description: "Video MP4", accept: { "video/mp4": [".mp4"] } }],
+        });
+        savedName = handle.name;
+        saveTo = await handle.createWritable();
+      } catch {
+        setStatus("Exportación cancelada.");
+        return;
+      }
+    }
+
     setBusy(true);
     setExportUrl("");
     const started = performance.now();
     try {
       setStatus("Exportando…");
       await ensureFont(preset);
-      const blob = await exportFast(file!, {
+      const result = await exportFast(file!, {
         segments: live.current.activeSegments,
         width: OUT_W,
         height: OUT_H,
         draw: drawAt,
         onProgress: (p) => setStatus(`Exportando… ${Math.round(p * 100)} %`),
         sfx: { events: live.current.sfx, volume: live.current.sfxVolume },
+        saveTo,
       });
-      if (blob) {
-        setExportUrl(URL.createObjectURL(blob));
-        setExportExt("mp4");
-        setStatus(`Exportación lista en ${((performance.now() - started) / 1000).toFixed(1)} s.`);
+      if (result) {
+        const secs = ((performance.now() - started) / 1000).toFixed(1);
+        if (result === "saved") {
+          setStatus(`Exportación lista en ${secs} s: guardada como "${savedName}".`);
+        } else {
+          setExportUrl(URL.createObjectURL(result));
+          setExportExt("mp4");
+          setStatus(`Exportación lista en ${secs} s.`);
+        }
         setBusy(false);
         return;
       }
@@ -416,7 +448,7 @@ export default function Editor() {
         )}
         {!url && (
           <label className="drop">
-            Haz clic para subir un video (MP4, máx. {MAX_SECONDS} s)
+            Haz clic para subir un video (MP4, hasta {MAX_SECONDS / 60} minutos)
             <input
               type="file"
               accept="video/*"
@@ -595,22 +627,7 @@ export default function Editor() {
               </a>
             )}
 
-            {words.length > 0 && (
-              <div className="words">
-                {words.map((w, i) => (
-                  <input
-                    key={i}
-                    value={w.text}
-                    title={`${w.start.toFixed(2)} – ${w.end.toFixed(2)} s`}
-                    size={Math.max(2, w.text.length)}
-                    onFocus={() => seek(w.start)}
-                    onChange={(e) =>
-                      setWords((ws) => ws.map((x, j) => (j === i ? { ...x, text: e.target.value } : x)))
-                    }
-                  />
-                ))}
-              </div>
-            )}
+            <WordList words={words} onChange={changeWord} onSeek={stableSeek} />
           </>
         )}
 
