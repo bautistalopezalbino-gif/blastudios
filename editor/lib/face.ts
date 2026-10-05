@@ -1,4 +1,5 @@
 import { FaceDetector, FilesetResolver } from "@mediapipe/tasks-vision";
+import { ALL_FORMATS, BlobSource, CanvasSink, Input } from "mediabunny";
 import type { FaceBox, FaceSample } from "./types";
 
 // Servidos desde public/: el WASM lo copia scripts/copy-mediapipe.mjs al instalar.
@@ -21,12 +22,58 @@ function getDetector(): Promise<FaceDetector> {
 /**
  * Recorre el video cada `step` segundos y localiza la cara más grande.
  * Devuelve posiciones normalizadas (0–1) respecto al fotograma original, ya suavizadas.
+ * Decodifica los fotogramas en orden y a baja resolución con WebCodecs (rápido también en videos largos);
+ * si no se puede, salta por el video con un elemento <video>.
  */
 export async function analyzeFaces(
+  file: File,
   url: string,
   { step = 0.25, onProgress }: { step?: number; onProgress?: (p: number) => void } = {},
 ): Promise<FaceSample[]> {
   const detector = await getDetector();
+  let samples: { t: number; box: FaceBox | null }[] | null = null;
+  try {
+    samples = await scanWithDecoder(file, step, detector, onProgress);
+  } catch (e) {
+    console.warn("Detección de caras con WebCodecs no disponible, se usa el <video>:", e);
+  }
+  samples ??= await scanWithVideo(url, step, detector, onProgress);
+  return smooth(fillGaps(samples.map((s) => s.box))).map((box, i) => ({ t: samples![i].t, ...box }));
+}
+
+type Detector = Awaited<ReturnType<typeof getDetector>>;
+
+function biggestFace(detector: Detector, image: HTMLCanvasElement | OffscreenCanvas, w: number, h: number) {
+  const box = detector
+    .detect(image as HTMLCanvasElement)
+    .detections.map((d) => d.boundingBox!)
+    .sort((a, b) => b.width * b.height - a.width * a.height)[0];
+  return box ? { cx: (box.originX + box.width / 2) / w, cy: (box.originY + box.height / 2) / h, h: box.height / h } : null;
+}
+
+async function scanWithDecoder(file: File, step: number, detector: Detector, onProgress?: (p: number) => void) {
+  const input = new Input({ source: new BlobSource(file), formats: ALL_FORMATS });
+  try {
+    const track = await input.getPrimaryVideoTrack();
+    if (!track || typeof VideoDecoder === "undefined" || !(await track.canDecode())) return null;
+    const duration = await track.computeDuration();
+    const times = Array.from({ length: Math.floor(duration / step) + 1 }, (_, i) => i * step);
+    // 480 px de ancho es de sobra para el detector (trabaja a 128 px) y decodificar es mucho más barato.
+    const sink = new CanvasSink(track, { width: 480, poolSize: 1 });
+    const out: { t: number; box: FaceBox | null }[] = [];
+    let i = 0;
+    for await (const wrapped of sink.canvasesAtTimestamps(times)) {
+      const c = wrapped?.canvas;
+      out.push({ t: times[i], box: c ? biggestFace(detector, c, c.width, c.height) : null });
+      if (++i % 10 === 0) onProgress?.(i / times.length);
+    }
+    return out;
+  } finally {
+    input.dispose();
+  }
+}
+
+async function scanWithVideo(url: string, step: number, detector: Detector, onProgress?: (p: number) => void) {
   const video = document.createElement("video");
   video.muted = true;
   video.playsInline = true;
@@ -39,30 +86,16 @@ export async function analyzeFaces(
   canvas.height = video.videoHeight;
   const ctx = canvas.getContext("2d")!;
 
-  const raw: (FaceBox | null)[] = [];
-  const times: number[] = [];
+  const out: { t: number; box: FaceBox | null }[] = [];
   for (let t = 0; t < video.duration; t += step) {
     video.currentTime = t;
     await new Promise((r) => (video.onseeked = r));
     ctx.drawImage(video, 0, 0);
-    const faces = detector.detect(canvas).detections;
-    const biggest = faces
-      .map((d) => d.boundingBox!)
-      .sort((a, b) => b.width * b.height - a.width * a.height)[0];
-    raw.push(
-      biggest
-        ? {
-            cx: (biggest.originX + biggest.width / 2) / video.videoWidth,
-            cy: (biggest.originY + biggest.height / 2) / video.videoHeight,
-            h: biggest.height / video.videoHeight,
-          }
-        : null,
-    );
-    times.push(t);
+    out.push({ t, box: biggestFace(detector, canvas, canvas.width, canvas.height) });
     onProgress?.(Math.min(1, t / video.duration));
   }
   video.removeAttribute("src");
-  return smooth(fillGaps(raw)).map((box, i) => ({ t: times[i], ...box }));
+  return out;
 }
 
 /** Si no hay cara en un fotograma, mantiene la última posición conocida. Sin ninguna cara, devuelve []. */
