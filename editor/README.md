@@ -9,7 +9,8 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 4. Dibuja subtítulos animados (estilos TikTok, Karaoke y Minimal) sobre un canvas 9:16.
 5. Sigue la cara con MediaPipe: el recorte 9:16 la mantiene centrada (útil con videos horizontales) y los subtítulos suben si la taparían.
 6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige Gemini (`GEMINI_API_KEY`) u OpenAI; si no hay clave, una heurística por palabras clave.
-7. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. Sin WebCodecs, graba en tiempo real con MediaRecorder.
+7. Efectos de sonido generados con Web Audio (sin archivos): un "whoosh" justo antes de cada zoom y un "pop" con cada emoji. Suenan en la vista previa y se mezclan en el audio exportado, con volumen ajustable.
+8. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. Sin WebCodecs, graba en tiempo real con MediaRecorder.
 
 ## Arrancar
 
@@ -29,6 +30,7 @@ npm run dev
 - `lib/highlights.ts`: heurística de momentos clave y animación de zooms y emojis
 - `lib/export.ts`: exportación rápida (decodifica, dibuja y codifica cada fotograma; corta el audio por tramos)
 - `lib/whisper.ts`, `lib/whisper.worker.ts`: transcripción en el navegador en un Web Worker
+- `lib/sfx.ts`: generación, reproducción y mezcla de los efectos de sonido
 - `lib/render.ts`: dibujo del fotograma y de los subtítulos
 - `app/api/transcribe/route.ts`: proxy a Whisper de OpenAI (responde 501 sin clave)
 - `app/api/highlights/route.ts`: elige zooms y emojis (Gemini, OpenAI o heurística)
@@ -37,7 +39,7 @@ npm run dev
 
 - Modelo de cara de largo alcance: el actual (`blaze_face_short_range`) solo detecta caras cercanas, tipo selfie
 - Editar a mano los zooms y emojis (añadir, quitar, cambiar el emoji)
-- Efectos de sonido sincronizados con los zooms
+- Más efectos de sonido (ding en cifras, impacto en remates) y música de fondo
 - Cuentas, créditos y pagos (Supabase y Stripe)
 
 El WASM de MediaPipe se copia a `public/mediapipe/wasm` al hacer `npm install` y el modelo está en `public/mediapipe/`, así que no depende de ninguna CDN.

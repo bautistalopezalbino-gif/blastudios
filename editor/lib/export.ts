@@ -13,6 +13,7 @@ import {
   QUALITY_HIGH,
   type VideoCodec,
 } from "mediabunny";
+import { mixSfx, type SfxEvent } from "./sfx";
 import type { Segment } from "./types";
 
 export type SourceFrame = { image: CanvasImageSource; width: number; height: number };
@@ -25,6 +26,8 @@ type Options = {
   /** Dibuja el fotograma de salida a partir del fotograma original en el instante `t` (del original). */
   draw: (ctx: CanvasRenderingContext2D, frame: SourceFrame, t: number) => void;
   onProgress?: (p: number) => void;
+  /** Efectos de sonido que se mezclan con el audio. */
+  sfx?: { events: SfxEvent[]; volume: number };
 };
 
 /**
@@ -32,7 +35,8 @@ type Options = {
  * así que va más rápido que el tiempo real. Devuelve null si el navegador no puede codificar
  * ningún formato compatible (y hay que usar la exportación en tiempo real).
  */
-export async function exportFast(file: File, { segments, width, height, fps = 30, draw, onProgress }: Options) {
+export async function exportFast(file: File, options: Options) {
+  const { width, height } = options;
   if (typeof VideoEncoder === "undefined") return null;
   const format = new Mp4OutputFormat({ fastStart: "in-memory" });
   const videoCodec = await getFirstEncodableVideoCodec(format.getSupportedVideoCodecs(), { width, height });
@@ -40,7 +44,7 @@ export async function exportFast(file: File, { segments, width, height, fps = 30
 
   const input = new Input({ source: new BlobSource(file), formats: ALL_FORMATS });
   try {
-    return await encode(input, file, format, videoCodec, { segments, width, height, fps, draw, onProgress });
+    return await encode(input, file, format, videoCodec, options);
   } finally {
     input.dispose();
   }
@@ -51,7 +55,7 @@ async function encode(
   file: File,
   format: Mp4OutputFormat,
   videoCodec: VideoCodec,
-  { segments, width, height, fps = 30, draw, onProgress }: Options,
+  { segments, width, height, fps = 30, draw, onProgress, sfx }: Options,
 ) {
   const videoTrack = await input.getPrimaryVideoTrack();
   if (!videoTrack || !(await videoTrack.canDecode())) return null;
@@ -68,7 +72,12 @@ async function encode(
   const frameCounts = segments.map((s) => Math.max(1, Math.round((s.end - s.start) * fps)));
   const totalFrames = frameCounts.reduce((a, b) => a + b, 0);
 
-  const audio = await editedAudio(file, segments, frameCounts, fps);
+  let audio = await editedAudio(file, segments, frameCounts, fps);
+  if (sfx?.events.length) {
+    // Sin audio en el video, los efectos van sobre silencio.
+    audio ??= new AudioBuffer({ length: Math.round((totalFrames / fps) * 48000), numberOfChannels: 2, sampleRate: 48000 });
+    await mixSfx(audio, sfx.events, segments, sfx.volume);
+  }
   const audioCodec = audio && (await getFirstEncodableAudioCodec(format.getSupportedAudioCodecs()));
   const audioSource = audioCodec ? new AudioBufferSource({ codec: audioCodec, bitrate: QUALITY_HIGH }) : null;
   if (audioSource) output.addAudioTrack(audioSource);

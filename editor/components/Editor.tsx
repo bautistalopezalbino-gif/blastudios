@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { analyzeFaces, faceAt } from "@/lib/face";
 import { emojiAt, zoomAt } from "@/lib/highlights";
 import { exportFast, type SourceFrame } from "@/lib/export";
+import { playSfx, sfxEvents } from "@/lib/sfx";
 import { detectSpeechSegments } from "@/lib/silence";
 import { transcribeInBrowser } from "@/lib/whisper";
 import { drawFrame } from "@/lib/render";
@@ -17,6 +18,7 @@ const MAX_SECONDS = 180;
 export default function Editor() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const audioDestRef = useRef<MediaStreamAudioDestinationNode | null>(null);
   const rafRef = useRef<number>(0);
 
@@ -32,6 +34,8 @@ export default function Editor() {
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [useZooms, setUseZooms] = useState(true);
   const [useEmojis, setUseEmojis] = useState(true);
+  const [useSfx, setUseSfx] = useState(true);
+  const [sfxVolume, setSfxVolume] = useState(0.6);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -54,8 +58,12 @@ export default function Editor() {
         .filter((h) => h.zoom || h.emoji),
     [highlights, useZooms, useEmojis],
   );
-  const live = useRef({ groups, style, activeSegments, track, activeHighlights });
-  live.current = { groups, style, activeSegments, track, activeHighlights };
+  const sfx = useMemo(
+    () => (useSfx ? sfxEvents(activeHighlights, activeSegments) : []),
+    [useSfx, activeHighlights, activeSegments],
+  );
+  const live = useRef({ groups, style, activeSegments, track, activeHighlights, sfx, sfxVolume });
+  live.current = { groups, style, activeSegments, track, activeHighlights, sfx, sfxVolume };
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
   // Redibuja al cambiar ajustes con el video en pausa.
@@ -149,10 +157,19 @@ export default function Editor() {
   /** Reproduce el montaje saltando los cortes. Resuelve cuando termina. */
   function playEdited(): Promise<void> {
     const video = videoRef.current!;
+    const ctx = audioCtx();
+    let prevT = -1;
     return new Promise((resolve) => {
       const tick = () => {
-        const { activeSegments: segs } = live.current;
+        const { activeSegments: segs, sfx, sfxVolume } = live.current;
         const t = video.currentTime;
+        // Dispara los efectos cuyo instante se acaba de pasar.
+        for (const e of sfx) {
+          if (e.time > prevT && e.time <= t) {
+            playSfx(ctx, e.kind, sfxVolume, [ctx.destination, ...(audioDestRef.current ? [audioDestRef.current] : [])]);
+          }
+        }
+        prevT = t;
         if (segmentAt(segs, t) === -1) {
           const next = segs.find((s) => s.start > t);
           if (!next || video.ended) {
@@ -162,11 +179,14 @@ export default function Editor() {
             return resolve();
           }
           video.currentTime = next.start;
+          prevT = next.start - 0.001;
         }
         renderCurrent();
         rafRef.current = requestAnimationFrame(tick);
       };
       video.currentTime = live.current.activeSegments[0]?.start ?? 0;
+      prevT = video.currentTime - 0.001;
+      if (ctx.state === "suspended") ctx.resume();
       setPlaying(true);
       video.play().then(tick);
     });
@@ -178,10 +198,15 @@ export default function Editor() {
     setPlaying(false);
   }
 
+  function audioCtx() {
+    audioCtxRef.current ??= new AudioContext();
+    return audioCtxRef.current;
+  }
+
   function audioStream(): MediaStream {
     // Enruta el audio del <video> por Web Audio para poder grabarlo (y seguir oyéndolo).
     if (!audioDestRef.current) {
-      const ctx = new AudioContext();
+      const ctx = audioCtx();
       const source = ctx.createMediaElementSource(videoRef.current!);
       const dest = ctx.createMediaStreamDestination();
       source.connect(dest);
@@ -203,6 +228,7 @@ export default function Editor() {
         height: OUT_H,
         draw: drawAt,
         onProgress: (p) => setStatus(`Exportando… ${Math.round(p * 100)} %`),
+        sfx: { events: live.current.sfx, volume: live.current.sfxVolume },
       });
       if (blob) {
         setExportUrl(URL.createObjectURL(blob));
@@ -301,12 +327,29 @@ export default function Editor() {
               <label>
                 <input type="checkbox" checked={useEmojis} onChange={(e) => setUseEmojis(e.target.checked)} /> Emojis
               </label>
+              <label>
+                <input type="checkbox" checked={useSfx} onChange={(e) => setUseSfx(e.target.checked)} /> Efectos de
+                sonido
+              </label>
+              {useSfx && (
+                <label>
+                  Volumen{" "}
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={sfxVolume}
+                    onChange={(e) => setSfxVolume(Number(e.target.value))}
+                  />
+                </label>
+              )}
             </div>
 
             <div className="status">
               Duración: {duration.toFixed(1)} s → {editedDuration(activeSegments).toFixed(1)} s ·{" "}
               {segments.length} tramos con voz · {faceTrack.length ? "cara detectada" : "sin datos de cara"} ·{" "}
-              {highlights.filter((h) => h.zoom).length} zooms · {highlights.filter((h) => h.emoji).length} emojis
+              {highlights.filter((h) => h.zoom).length} zooms · {highlights.filter((h) => h.emoji).length} emojis · {sfx.length} efectos de sonido
             </div>
 
             <div className="row">
