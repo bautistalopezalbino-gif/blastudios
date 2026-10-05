@@ -10,7 +10,8 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 5. Sigue la cara con MediaPipe: el recorte 9:16 la mantiene centrada (útil con videos horizontales) y los subtítulos suben si la taparían.
 6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige Gemini (`GEMINI_API_KEY`) u OpenAI; si no hay clave, una heurística por palabras clave.
 7. Efectos de sonido generados con Web Audio (sin archivos): un "whoosh" justo antes de cada zoom y un "pop" con cada emoji. Suenan en la vista previa y se mezclan en el audio exportado, con volumen ajustable.
-8. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. Sin WebCodecs, graba en tiempo real con MediaRecorder.
+8. Editor visual: línea de tiempo con los tramos (clic para quitar o recuperar), "Cortar aquí" para dividir un tramo, marcadores de zoom y emoji que se arrastran y se editan (zoom sí/no, emoji, eliminar), "Deshacer" (Ctrl+Z) y Supr para borrar el seleccionado.
+9. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. Sin WebCodecs, graba en tiempo real con MediaRecorder.
 
 ## Arrancar
 
@@ -23,7 +24,9 @@ npm run dev
 
 ## Estructura
 
-- `components/Editor.tsx`: interfaz, vista previa y exportación
+- `components/Editor.tsx`: interfaz, vista previa, edición y exportación
+- `components/Timeline.tsx`: línea de tiempo (tramos, cortes, marcadores, cabezal)
+- `lib/edit.ts`: operaciones de edición de tramos (dividir, quitar, recuperar)
 - `lib/silence.ts`: detección de silencios
 - `lib/timeline.ts`: tramos, agrupación de palabras en subtítulos
 - `lib/face.ts`: detección y suavizado de la posición de la cara
@@ -39,7 +42,7 @@ npm run dev
 ## Siguientes pasos
 
 - Modelo de cara de largo alcance: el actual (`blaze_face_short_range`) solo detecta caras cercanas, tipo selfie
-- Editar a mano los zooms y emojis (añadir, quitar, cambiar el emoji)
+- Editar los subtítulos en la línea de tiempo (mover y ajustar la duración de las palabras)
 - Más efectos de sonido (ding en cifras, impacto en remates) y música de fondo
 - Cuentas, créditos y pagos (Supabase y Stripe)
 

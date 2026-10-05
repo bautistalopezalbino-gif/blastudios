@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CAPTION_PRESETS, ensureFont, getPreset } from "@/lib/captions";
+import { removeSegment, restoreGap, splitAt } from "@/lib/edit";
 import { analyzeFaces, faceAt } from "@/lib/face";
 import { emojiAt, zoomAt } from "@/lib/highlights";
 import { exportFast, type SourceFrame } from "@/lib/export";
 import { playSfx, sfxEvents } from "@/lib/sfx";
 import { detectSpeechSegments } from "@/lib/silence";
 import { transcribeInBrowser } from "@/lib/whisper";
+import Timeline from "./Timeline";
 import { drawFrame } from "@/lib/render";
 import { editedDuration, groupAt, groupWords, segmentAt } from "@/lib/timeline";
 import type { FaceSample, Highlight, Segment, Word } from "@/lib/types";
@@ -16,6 +18,9 @@ const OUT_W = 720;
 const OUT_H = 1280;
 const MAX_SECONDS = 180;
 const BRAND_KEY = "blastudios-editor-estilo";
+const QUICK_EMOJIS = ["🔥", "💡", "💰", "⚠️", "😂", "👀", "🚀", "❤️", "🏆", "✅", "🤯", "👇"];
+
+type EditState = { segments: Segment[]; highlights: Highlight[] };
 
 type CaptionSettings = { presetId: string; text: string; accent: string };
 
@@ -41,6 +46,8 @@ export default function Editor() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioDestRef = useRef<MediaStreamAudioDestinationNode | null>(null);
   const rafRef = useRef<number>(0);
+  const detectedRef = useRef<Segment[]>([]);
+  const historyRef = useRef<EditState[]>([]);
 
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string>("");
@@ -61,6 +68,9 @@ export default function Editor() {
   const [playing, setPlaying] = useState(false);
   const [exportUrl, setExportUrl] = useState("");
   const [exportExt, setExportExt] = useState("mp4");
+  const [currentTime, setCurrentTime] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [canUndo, setCanUndo] = useState(false);
 
   const preset = getPreset(caption.presetId);
   const groups = useMemo(() => groupWords(words, preset.maxWords), [words, preset.maxWords]);
@@ -70,8 +80,8 @@ export default function Editor() {
   );
   const duration = videoRef.current?.duration ?? 0;
   const activeSegments = useMemo(
-    () => (cutSilences && segments.length ? segments : [{ start: 0, end: duration }]),
-    [cutSilences, segments, duration],
+    () => (segments.length ? segments : [{ start: 0, end: duration }]),
+    [segments, duration],
   );
 
   // Refs para que el bucle de render lea siempre el estado actual.
@@ -91,6 +101,21 @@ export default function Editor() {
   live.current = { groups, captionStyle, activeSegments, track, activeHighlights, sfx, sfxVolume };
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+  // Atajos: Supr borra el momento seleccionado y Ctrl+Z deshace (salvo escribiendo en un campo).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).closest("input, select, textarea")) return;
+      if ((e.key === "Delete" || e.key === "Backspace") && selected !== null) {
+        e.preventDefault();
+        deleteSelected();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+        e.preventDefault();
+        undo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
   // Redibuja al cambiar ajustes con el video en pausa.
   useEffect(() => renderCurrent(), [groups, captionStyle, track, activeHighlights]);
   // Recupera el estilo guardado al abrir el editor.
@@ -111,6 +136,9 @@ export default function Editor() {
     setSegments([]);
     setFaceTrack([]);
     setHighlights([]);
+    setSelected(null);
+    historyRef.current = [];
+    setCanUndo(false);
     setFile(f);
     const objectUrl = URL.createObjectURL(f);
     setUrl(objectUrl);
@@ -123,12 +151,16 @@ export default function Editor() {
       return;
     }
     video.currentTime = 0;
-    video.onseeked = () => renderCurrent();
+    video.onseeked = () => {
+      setCurrentTime(video.currentTime);
+      renderCurrent();
+    };
 
     setBusy(true);
     try {
       setStatus("Detectando silencios…");
-      setSegments(await detectSpeechSegments(f));
+      detectedRef.current = await detectSpeechSegments(f);
+      setSegments(cutSilences ? detectedRef.current : [{ start: 0, end: video.duration }]);
 
       setStatus("Transcribiendo…");
       const transcript = await transcribe(f);
@@ -157,6 +189,58 @@ export default function Editor() {
     } finally {
       setBusy(false);
     }
+  }
+
+  /** Aplica un cambio de edición guardando el estado anterior para poder deshacerlo. */
+  function commit(next: Partial<EditState>) {
+    historyRef.current.push({ segments, highlights });
+    if (historyRef.current.length > 100) historyRef.current.shift();
+    setCanUndo(true);
+    if (next.segments) setSegments(next.segments);
+    if (next.highlights) setHighlights(next.highlights);
+  }
+
+  function undo() {
+    const prev = historyRef.current.pop();
+    if (!prev) return;
+    setSegments(prev.segments);
+    setHighlights(prev.highlights);
+    setSelected(null);
+    setCanUndo(historyRef.current.length > 0);
+  }
+
+  function seek(t: number) {
+    const video = videoRef.current;
+    if (!video || playing) return;
+    video.currentTime = t;
+    setCurrentTime(t);
+  }
+
+  function cutHere() {
+    const next = splitAt(activeSegments, currentTime);
+    if (next.length === activeSegments.length) {
+      setStatus("El cabezal está en un corte o en el borde de un tramo: muévelo dentro de un tramo verde.");
+      return;
+    }
+    commit({ segments: next });
+    setStatus("Tramo dividido: haz clic en uno de los trozos para quitarlo.");
+  }
+
+  function addHighlight(h: Partial<Highlight>) {
+    const next = [...highlights, { time: currentTime, zoom: false, ...h }];
+    commit({ highlights: next });
+    setSelected(next.length - 1);
+  }
+
+  function updateSelected(patch: Partial<Highlight>) {
+    if (selected === null) return;
+    commit({ highlights: highlights.map((h, i) => (i === selected ? { ...h, ...patch } : h)) });
+  }
+
+  function deleteSelected() {
+    if (selected === null) return;
+    commit({ highlights: highlights.filter((_, i) => i !== selected) });
+    setSelected(null);
   }
 
   /** Usa Whisper de OpenAI en el servidor si está configurado; si no, Whisper en el navegador. */
@@ -195,6 +279,7 @@ export default function Editor() {
     const video = videoRef.current!;
     const ctx = audioCtx();
     let prevT = -1;
+    let lastShown = -1;
     return new Promise((resolve) => {
       const tick = () => {
         const { activeSegments: segs, sfx, sfxVolume } = live.current;
@@ -205,6 +290,8 @@ export default function Editor() {
             playSfx(ctx, e.kind, sfxVolume, [ctx.destination, ...(audioDestRef.current ? [audioDestRef.current] : [])]);
           }
         }
+        // El cabezal de la línea de tiempo se actualiza ~10 veces por segundo, no en cada fotograma.
+        if (Math.abs(t - lastShown) > 0.1) setCurrentTime((lastShown = t));
         prevT = t;
         if (segmentAt(segs, t) === -1) {
           const next = segs.find((s) => s.start > t);
@@ -369,7 +456,14 @@ export default function Editor() {
                 />
               </label>
               <label>
-                <input type="checkbox" checked={cutSilences} onChange={(e) => setCutSilences(e.target.checked)} />{" "}
+                <input
+                  type="checkbox"
+                  checked={cutSilences}
+                  onChange={(e) => {
+                    setCutSilences(e.target.checked);
+                    commit({ segments: e.target.checked ? detectedRef.current : [{ start: 0, end: duration }] });
+                  }}
+                />{" "}
                 Recortar silencios
               </label>
               <label>
@@ -403,7 +497,7 @@ export default function Editor() {
 
             <div className="status">
               Duración: {duration.toFixed(1)} s → {editedDuration(activeSegments).toFixed(1)} s ·{" "}
-              {segments.length} tramos con voz · {faceTrack.length ? "cara detectada" : "sin datos de cara"} ·{" "}
+              {segments.length} tramos · {faceTrack.length ? "cara detectada" : "sin datos de cara"} ·{" "}
               {highlights.filter((h) => h.zoom).length} zooms · {highlights.filter((h) => h.emoji).length} emojis · {sfx.length} efectos de sonido
             </div>
 
@@ -429,6 +523,72 @@ export default function Editor() {
               </button>
             </div>
 
+            <Timeline
+              duration={duration}
+              segments={activeSegments}
+              highlights={highlights}
+              currentTime={currentTime}
+              selected={selected}
+              onSeek={seek}
+              onSelect={setSelected}
+              onRemoveSegment={(i) => commit({ segments: removeSegment(activeSegments, i) })}
+              onRestoreGap={(g) => commit({ segments: restoreGap(activeSegments, g) })}
+              onMoveHighlight={(i, time) =>
+                commit({ highlights: highlights.map((h, j) => (j === i ? { ...h, time } : h)) })
+              }
+            />
+
+            <div className="row">
+              <button onClick={cutHere} disabled={playing}>
+                ✂ Cortar aquí
+              </button>
+              <button onClick={() => addHighlight({ zoom: true })} disabled={playing}>
+                + Zoom aquí
+              </button>
+              <button onClick={() => addHighlight({ emoji: "🔥" })} disabled={playing}>
+                + Emoji aquí
+              </button>
+              <button onClick={undo} disabled={!canUndo || playing}>
+                ↶ Deshacer
+              </button>
+              <span className="status">{currentTime.toFixed(2)} s</span>
+            </div>
+
+            {selected !== null && highlights[selected] && (
+              <div className="selection">
+                <div className="row">
+                  <strong>Momento en {highlights[selected].time.toFixed(2)} s</strong>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={highlights[selected].zoom}
+                      onChange={(e) => updateSelected({ zoom: e.target.checked })}
+                    />{" "}
+                    Zoom
+                  </label>
+                  <button onClick={deleteSelected}>Eliminar</button>
+                  <button onClick={() => setSelected(null)}>Cerrar</button>
+                </div>
+                <div className="row emoji-picker">
+                  <button
+                    className={!highlights[selected].emoji ? "active" : ""}
+                    onClick={() => updateSelected({ emoji: undefined })}
+                  >
+                    Sin emoji
+                  </button>
+                  {QUICK_EMOJIS.map((em) => (
+                    <button
+                      key={em}
+                      className={highlights[selected].emoji === em ? "active" : ""}
+                      onClick={() => updateSelected({ emoji: em })}
+                    >
+                      {em}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {exportUrl && (
               <a href={exportUrl} download={`editado.${exportExt}`}>
                 <button className="primary">Descargar video</button>
@@ -443,6 +603,7 @@ export default function Editor() {
                     value={w.text}
                     title={`${w.start.toFixed(2)} – ${w.end.toFixed(2)} s`}
                     size={Math.max(2, w.text.length)}
+                    onFocus={() => seek(w.start)}
                     onChange={(e) =>
                       setWords((ws) => ws.map((x, j) => (j === i ? { ...x, text: e.target.value } : x)))
                     }
