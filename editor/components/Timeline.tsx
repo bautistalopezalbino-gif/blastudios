@@ -5,6 +5,8 @@ import { gaps } from "@/lib/edit";
 import type { Highlight, Segment } from "@/lib/types";
 
 type Props = {
+  /** Rango visible del video original (todo el video, o el de un clip). */
+  start?: number;
   duration: number;
   segments: Segment[];
   highlights: Highlight[];
@@ -20,6 +22,7 @@ type Props = {
 
 /** Línea de tiempo del video original: tramos conservados y cortes, momentos clave y cabezal. */
 export default function Timeline({
+  start = 0,
   duration,
   segments,
   highlights,
@@ -53,20 +56,22 @@ export default function Timeline({
   useEffect(() => {
     const el = scrollRef.current;
     if (!el || !duration || drag) return;
-    const x = (currentTime / duration) * el.scrollWidth;
+    const x = ((currentTime - start) / duration) * el.scrollWidth;
     if (x < el.scrollLeft || x > el.scrollLeft + el.clientWidth - 20) el.scrollLeft = x - el.clientWidth * 0.2;
-  }, [currentTime, duration, zoom, drag]);
+  }, [currentTime, start, duration, zoom, drag]);
   if (!duration) return null;
 
-  const pct = (t: number) => `${(t / duration) * 100}%`;
+  const pct = (t: number) => `${((t - start) / duration) * 100}%`;
+  const len = (d: number) => `${(d / duration) * 100}%`;
   const timeAt = (clientX: number) => {
     const r = ref.current!.getBoundingClientRect();
-    return Math.min(duration, Math.max(0, ((clientX - r.left) / r.width) * duration));
+    return start + Math.min(duration, Math.max(0, ((clientX - r.left) / r.width) * duration));
   };
   // Marcas de la regla separadas al menos ~60 px.
   const pxPerSec = (viewWidth * zoom) / duration;
   const step = TICK_STEPS.find((s) => s * pxPerSec >= 60) ?? 600;
-  const ticks = Array.from({ length: Math.floor(duration / step) + 1 }, (_, i) => i * step);
+  const first = Math.ceil(start / step) * step;
+  const ticks = Array.from({ length: Math.floor((start + duration - first) / step) + 1 }, (_, i) => first + i * step);
 
   return (
     <div className="tl-wrap">
@@ -103,16 +108,16 @@ export default function Timeline({
               <button
                 key={`s${i}`}
                 className="tl-seg"
-                style={{ left: pct(s.start), width: pct(s.end - s.start) }}
+                style={{ left: pct(s.start), width: len(s.end - s.start) }}
                 title={`Tramo ${s.start.toFixed(1)}–${s.end.toFixed(1)} s · clic para quitarlo`}
                 onClick={() => onRemoveSegment(i)}
               />
             ))}
-            {gaps(segments, duration).map((g) => (
+            {gaps(segments, start + duration, start).map((g) => (
               <button
                 key={`g${g.start}`}
                 className="tl-gap"
-                style={{ left: pct(g.start), width: pct(g.end - g.start) }}
+                style={{ left: pct(g.start), width: len(g.end - g.start) }}
                 title={`Corte ${g.start.toFixed(1)}–${g.end.toFixed(1)} s · clic para recuperarlo`}
                 onClick={() => onRestoreGap(g)}
               />
@@ -122,6 +127,7 @@ export default function Timeline({
           <div className="tl-track tl-marks">
             {highlights.map((h, i) => {
               const time = drag?.index === i ? drag.time : h.time;
+              if (time < start || time > start + duration) return null;
               return (
                 <button
                   key={i}
@@ -155,7 +161,9 @@ export default function Timeline({
             })}
           </div>
 
-          <div className="tl-playhead" style={{ left: pct(currentTime) }} />
+          {currentTime >= start && currentTime <= start + duration && (
+            <div className="tl-playhead" style={{ left: pct(currentTime) }} />
+          )}
         </div>
       </div>
     </div>

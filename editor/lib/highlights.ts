@@ -23,6 +23,17 @@ const EMPHASIS = /^(nunca|siempre|nadie|todo|importante|secreto|clave|gratis|inc
 
 const MIN_GAP = 2.5;
 
+/** Puntuación de "interés" de una palabra, para la heurística de clips. */
+export function wordScore(text: string): number {
+  const n = normalize(text);
+  let score = 0;
+  if (EMPHASIS.test(n)) score += 1;
+  if (EMOJIS.some(([re]) => re.test(n))) score += 0.5;
+  if (/[!?¡¿]/.test(text)) score += 0.5;
+  if (/\d/.test(text)) score += 0.5;
+  return score;
+}
+
 function normalize(text: string) {
   return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zñ]/g, "");
 }

@@ -11,7 +11,8 @@ Editor automático de videos verticales, inspirado en herramientas como ViroEdit
 6. Zooms y emojis automáticos en los momentos clave (`/api/highlights`): los elige Gemini (`GEMINI_API_KEY`) u OpenAI; si no hay clave, una heurística por palabras clave.
 7. Efectos de sonido generados con Web Audio (sin archivos): un "whoosh" justo antes de cada zoom y un "pop" con cada emoji. Suenan en la vista previa y se mezclan en el audio exportado, con volumen ajustable.
 8. Editor visual: línea de tiempo con los tramos (clic para quitar o recuperar), "Cortar aquí" para dividir un tramo, marcadores de zoom y emoji que se arrastran y se editan (zoom sí/no, emoji, eliminar), "Deshacer" (Ctrl+Z) y Supr para borrar el seleccionado.
-9. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. El audio se decodifica y codifica por trozos, intercalado con el video. Si el montaje dura más de 3 minutos y el navegador lo permite (Chrome, Edge), el MP4 se escribe directamente en un archivo elegido por el usuario, así que la memoria no crece con la duración. Sin WebCodecs, graba en tiempo real con MediaRecorder.
+9. Clips cortos de videos largos: Gemini u OpenAI eligen los mejores fragmentos (15–30, 30–60 o 60–90 s) que funcionan solos, con título y puntuación; sin clave, una heurística por palabras clave. Cada clip se edita aparte con todo el editor (sus cambios no tocan el video completo), puede llevar el título como gancho los primeros 3 s y se exporta por separado o todos seguidos.
+10. Exporta a MP4 en el navegador con WebCodecs ([Mediabunny](https://mediabunny.dev)), fotograma a fotograma y más rápido que el tiempo real. Usa H.264 + AAC si el navegador los tiene (Chrome, Edge, Safari) y, si no, VP9 + Opus. El audio se decodifica y codifica por trozos, intercalado con el video. Si el montaje dura más de 3 minutos y el navegador lo permite (Chrome, Edge), el MP4 se escribe directamente en un archivo elegido por el usuario, así que la memoria no crece con la duración. Sin WebCodecs, graba en tiempo real con MediaRecorder.
 
 ## Arrancar
 
@@ -41,6 +42,9 @@ npm run dev
 - `lib/render.ts`: dibujo del fotograma, del emoji y colocación de los subtítulos
 - `app/api/transcribe/route.ts`: proxy a Whisper de OpenAI (responde 501 sin clave)
 - `app/api/highlights/route.ts`: elige zooms y emojis (Gemini, OpenAI o heurística)
+- `app/api/clips/route.ts`: elige los clips cortos (Gemini, OpenAI o heurística)
+- `lib/clips.ts`: frases, validación de clips y heurística sin IA
+- `lib/llm.ts`: llamada a Gemini u OpenAI con respuesta JSON
 
 ## Siguientes pasos
 

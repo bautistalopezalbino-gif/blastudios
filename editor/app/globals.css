@@ -73,3 +73,16 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .tl-wrap { display: flex; flex-direction: column; gap: 6px; }
 .tl-zoom { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .tl-scroll { overflow-x: auto; border-radius: 10px; }
+
+/* Clips */
+.clips, .clip-banner { background: #121216; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.clip-banner { border: 1px solid var(--accent); }
+.clip-title {
+  flex: 1; min-width: 200px; font: inherit; padding: 8px 10px; border-radius: 8px;
+  border: 1px solid #333; background: #1a1a1f; color: var(--text);
+}
+.clip-card { border-top: 1px solid #26262e; padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.clip-score {
+  min-width: 34px; text-align: center; padding: 2px 6px; border-radius: 6px;
+  background: var(--accent); color: #000; font-weight: 800; font-size: 14px;
+}
